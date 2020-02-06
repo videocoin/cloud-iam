@@ -1,0 +1,221 @@
+---
+name: e2e tests
+
+vars:
+  grpcUrl: "iamd:5000"
+  grpcService: "cloud.api.iam.v1.IAM"
+
+testcases:
+  - name: create invalid service account - name must begin with "projects/"
+    steps:
+      - type: grpc
+        plaintext: true
+        url: "{{.grpcUrl}}"
+        service: "{{.grpcService}}"
+        method: CreateServiceAccount
+        data:
+          name: accounts/videocoin-test
+          account_id: abcdef
+        assertions:
+          - result.code ShouldEqual 3
+          - result.systemerr ShouldContainSubstring 'value does not match regex pattern'
+
+  - name: create invalid service account - account id must be less than 31 characters (31)
+    steps:
+      - type: grpc
+        plaintext: true
+        url: "{{.grpcUrl}}"
+        service: "{{.grpcService}}"
+        method: CreateServiceAccount
+        data:
+          name: projects/videocoin-test
+          account_id: asasdasdsadafsdfafasdfasdfasdfs
+        assertions:
+          - result.code ShouldEqual 3
+          - result.systemerr ShouldContainSubstring 'value does not match regex pattern'
+
+  - name: create invalid service account - account id must be at least 6 characters long (5)
+    steps:
+      - type: grpc
+        plaintext: true
+        url: "{{.grpcUrl}}"
+        service: "{{.grpcService}}"
+        method: CreateServiceAccount
+        data:
+          name: projects/videocoin-test
+          account_id: abcde
+        assertions:
+          - result.code ShouldEqual 3
+          - result.systemerr ShouldContainSubstring 'value does not match regex pattern'
+
+  - name: create valid service account
+    steps:
+      - type: grpc
+        plaintext: true
+        url: "{{.grpcUrl}}"
+        service: "{{.grpcService}}"
+        method: CreateServiceAccount
+        data:
+          name: projects/videocoin-test
+          account_id: account1
+        assertions:
+          - result.code ShouldEqual 0
+          - result.systemoutjson.name ShouldEqual "projects/videocoin-test/serviceAccounts/account1"
+          - result.systemoutjson.projectid ShouldEqual videocoin-test
+          - result.systemoutjson.uniqueid ShouldEqual account1
+          - result.systemoutjson.email ShouldEqual account1@videocoin-test.vserviceaccount.com
+
+  - name: list service accounts for projects/videocoin-test (1)
+    steps:
+      - type: grpc
+        plaintext: true
+        url: "{{.grpcUrl}}"
+        service: "{{.grpcService}}"
+        method: ListServiceAccounts
+        data:
+          name: projects/videocoin-test
+        assertions:
+          - result.code ShouldEqual 0
+          - result.systemoutjson.accounts.__len__ ShouldEqual 1
+          - result.systemoutjson.accounts.accounts0.name ShouldEqual "projects/videocoin-test/serviceAccounts/account1"
+          - result.systemoutjson.accounts.accounts0.projectid ShouldEqual videocoin-test
+          - result.systemoutjson.accounts.accounts0.uniqueid ShouldEqual account1
+          - result.systemoutjson.accounts.accounts0.email ShouldEqual account1@videocoin-test.vserviceaccount.com
+
+  - name: get service account (unique id) projects/videocoin-test/serviceAccounts/account1
+    steps:
+      - type: grpc
+        plaintext: true
+        url: "{{.grpcUrl}}"
+        service: "{{.grpcService}}"
+        method: GetServiceAccount
+        data:
+          name: projects/videocoin-test/serviceAccounts/account1
+        assertions:
+          - result.code ShouldEqual 0
+          - result.systemoutjson.name ShouldEqual "projects/videocoin-test/serviceAccounts/account1"
+          - result.systemoutjson.projectid ShouldEqual videocoin-test
+          - result.systemoutjson.uniqueid ShouldEqual account1
+          - result.systemoutjson.email ShouldEqual account1@videocoin-test.vserviceaccount.com
+
+  #  - name: get service account (email) projects/videocoin-test/serviceAccounts/account1@videocoin-test.vserviceaccount.com
+  #    steps:
+  #      - type: grpc
+  #        plaintext: true
+  #        url: "{{.grpcUrl}}"
+  #        service: "{{.grpcService}}"
+  #        method: GetServiceAccount
+  #        data:
+  #          name: projects/videocoin-test/serviceAccounts/account1@videocoin-test.vserviceaccount.com
+  #        assertions:
+  #          - result.code ShouldEqual 0
+  #          - result.systemoutjson.name ShouldEqual "projects/videocoin-test/serviceAccounts/account1"
+  #          - result.systemoutjson.projectid ShouldEqual videocoin-test
+  #          - result.systemoutjson.uniqueid ShouldEqual account1
+  #          - result.systemoutjson.email ShouldEqual account1@videocoin-test.vserviceaccount.com
+
+  - name: delete service account (unique id) projects/videocoin-test/serviceAccounts/account1
+    steps:
+      - type: grpc
+        plaintext: true
+        url: "{{.grpcUrl}}"
+        service: "{{.grpcService}}"
+        method: DeleteServiceAccount
+        data:
+          name: projects/videocoin-test/serviceAccounts/account1
+        assertions:
+          - result.code ShouldEqual 0
+
+  - name: list service accounts for projects/videocoin-test (0)
+    steps:
+      - type: grpc
+        plaintext: true
+        url: "{{.grpcUrl}}"
+        service: "{{.grpcService}}"
+        method: ListServiceAccounts
+        data:
+          name: projects/videocoin-test
+        assertions:
+          - result.code ShouldEqual 0
+          - result.systemoutjson.__len__ ShouldEqual 0
+
+  - name: create service account
+    steps:
+      - type: grpc
+        plaintext: true
+        url: "{{.grpcUrl}}"
+        service: "{{.grpcService}}"
+        method: CreateServiceAccount
+        data:
+          name: projects/videocoin-test
+          account_id: account1
+        assertions:
+          - result.code ShouldEqual 0
+          - result.systemoutjson.name ShouldEqual "projects/videocoin-test/serviceAccounts/account1"
+          - result.systemoutjson.projectid ShouldEqual videocoin-test
+          - result.systemoutjson.uniqueid ShouldEqual account1
+          - result.systemoutjson.email ShouldEqual account1@videocoin-test.vserviceaccount.com
+
+  - name: key1
+    steps:
+      - type: grpc
+        plaintext: true
+        url: "{{.grpcUrl}}"
+        service: "{{.grpcService}}"
+        method: CreateServiceAccountKey
+        data:
+          name: projects/videocoin-test/serviceAccounts/account1
+        assertions:
+          - result.code ShouldEqual 0
+
+  - name: get service account key (key1)
+    steps:
+      - type: grpc
+        plaintext: true
+        url: "{{.grpcUrl}}"
+        service: "{{.grpcService}}"
+        method: GetServiceAccountKey
+        data:
+          name: "{{.key1.result.systemoutjson.name}}"
+        assertions:
+          - result.code ShouldEqual 0
+          - result.systemoutjson.name ShouldEqual {{.key1.result.systemoutjson.name}}
+          - result.systemoutjson.privatekeydata ShouldEqual {{.key1.result.systemoutjson.privatekeydata}}
+
+  - name: list service account keys for projects/videocoin-test/serviceAccounts/account1 (1)
+    steps:
+      - type: grpc
+        plaintext: true
+        url: "{{.grpcUrl}}"
+        service: "{{.grpcService}}"
+        method: ListServiceAccountKeys
+        data:
+          name: projects/videocoin-test/serviceAccounts/account1
+        assertions:
+          - result.code ShouldEqual 0
+          - result.systemoutjson.keys.__len__ ShouldEqual 1
+
+  - name: delete service account key (key1)
+    steps:
+      - type: grpc
+        plaintext: true
+        url: "{{.grpcUrl}}"
+        service: "{{.grpcService}}"
+        method: DeleteServiceAccountKey
+        data:
+          name: "{{.key1.result.systemoutjson.name}}"
+        assertions:
+          - result.code ShouldEqual 0
+
+  - name: list service account keys for projects/videocoin-test/serviceAccounts/account1 (0)
+    steps:
+      - type: grpc
+        plaintext: true
+        url: "{{.grpcUrl}}"
+        service: "{{.grpcService}}"
+        method: ListServiceAccountKeys
+        data:
+          name: projects/videocoin-test/serviceAccounts/account1
+        assertions:
+          - result.code ShouldEqual 0
+          - result.systemoutjson.__len__ ShouldEqual 0
