@@ -45,7 +45,7 @@ deploy:
 e2e:
 	cd test/e2e && docker-compose up -d --build mysql
 	sleep 30
-	cd test/e2e && docker-compose up -d --build migrate iamd  
+	cd test/e2e && docker-compose up -d --build migrate ${BIN}
 	sleep 3
 	go test -mod=vendor ./test/e2e/...
 
@@ -53,7 +53,7 @@ e2e:
 e2e-nobuild:
 	cd test/e2e && docker-compose up -d --no-build mysql 
 	sleep 30
-	cd test/e2e && docker-compose up -d --no-build migrate iamd
+	cd test/e2e && docker-compose up -d --no-build migrate ${BIN}
 	sleep 3
 	go test -mod=vendor ./test/e2e/...
 	
