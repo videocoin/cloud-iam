@@ -115,4 +115,10 @@ func TestIAMService(t *testing.T) {
 	empty, err = cli.DeleteServiceAccountKey(ctx, &iam.DeleteServiceAccountKeyRequest{Name: key.Name})
 	require.NoError(t, err)
 	require.NotNil(t, empty)
+
+	// list service account keys
+	keys, err = cli.ListServiceAccountKeys(ctx, &iam.ListServiceAccountKeysRequest{Name: string(accName)})
+	require.NoError(t, err)
+	require.NotNil(t, keys)
+	require.Nil(t, keys.Keys)
 }
