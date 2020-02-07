@@ -109,7 +109,7 @@ github.com/uber/jaeger-lib/metrics
 # github.com/videocoin/cloud-api v0.3.1-0.20200206041936-260732c1cfb1
 github.com/videocoin/cloud-api/iam/v1
 github.com/videocoin/cloud-api/rpc
-# github.com/videocoin/cloud-pkg v0.0.8-0.20200207023524-d9b46239c07c
+# github.com/videocoin/cloud-pkg v0.0.8-0.20200207052840-495efec72284
 github.com/videocoin/cloud-pkg/api/resources
 github.com/videocoin/cloud-pkg/api/resources/key
 github.com/videocoin/cloud-pkg/api/resources/project

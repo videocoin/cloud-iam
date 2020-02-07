@@ -28,7 +28,7 @@ var (
 	// IDPattern is the key identifier pattern.
 	IDPattern = regexp.MustCompile(`^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-4[a-fA-F0-9]{3}-[8|9|aA|bB][a-fA-F0-9]{3}-[a-fA-F0-9]{12}$`)
 	// NamePattern is the key name pattern.
-	NamePattern = regexp.MustCompile(`^projects/(([a-z0-9][-a-z0-9]{3,48}[a-z0-9])|\-)/serviceAccounts/[a-z][-a-z0-9]{4,28}[a-z0-9]@[a-z][-a-z0-9]{3,48}[a-z0-9]\.vserviceaccount\.com/keys/[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-4[a-fA-F0-9]{3}-[8|9|aA|bB][a-fA-F0-9]{3}-[a-fA-F0-9]{12}$`)
+	NamePattern = regexp.MustCompile(`^projects/(([a-z0-9][-a-z0-9]{3,48}[a-z0-9])|\-)/serviceAccounts/[a-z][-a-z0-9]{4,28}[a-z0-9]@[a-z0-9][-a-z0-9]{3,48}[a-z0-9]\.vserviceaccount\.com/keys/[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-4[a-fA-F0-9]{3}-[8|9|aA|bB][a-fA-F0-9]{3}-[a-fA-F0-9]{12}$`)
 )
 
 // Name is the key's name.
