@@ -21,7 +21,6 @@ import (
 	"golang.org/x/sync/errgroup"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/health"
-	"google.golang.org/grpc/reflection"
 )
 
 var (
@@ -80,7 +79,6 @@ func main() {
 		defer DB.Close()
 
 		grpcSrv = grpc.NewServer(grpcutil.DefaultServerOpts(log)...)
-		reflection.Register(grpcSrv)
 		iam.RegisterIAMServer(grpcSrv, service.NewServer(log, DB, cfg.EncryptionPassphrase))
 		healthpb.RegisterHealthServer(grpcSrv, healthSrv)
 

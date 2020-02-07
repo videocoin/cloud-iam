@@ -32,9 +32,5 @@ services:
       IAM_ENCRYPTIONPASSPHRASE: "test"
     ports:
       - "5000:5000"
-
-  venom:
-    build:
-      context: ./venom
 volumes:
   db_data: {}

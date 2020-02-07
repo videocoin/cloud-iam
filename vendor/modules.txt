@@ -2,6 +2,8 @@
 github.com/beorn7/perks/quantile
 # github.com/certifi/gocertifi v0.0.0-20190506164543-d2eda7129713
 github.com/certifi/gocertifi
+# github.com/davecgh/go-spew v1.1.1
+github.com/davecgh/go-spew/spew
 # github.com/evalphobia/logrus_sentry v0.8.2
 github.com/evalphobia/logrus_sentry
 # github.com/getsentry/raven-go v0.2.0
@@ -62,6 +64,8 @@ github.com/opentracing/opentracing-go/ext
 github.com/opentracing/opentracing-go/log
 # github.com/pkg/errors v0.8.1
 github.com/pkg/errors
+# github.com/pmezard/go-difflib v1.0.0
+github.com/pmezard/go-difflib/difflib
 # github.com/prometheus/client_golang v0.9.4
 github.com/prometheus/client_golang/prometheus
 github.com/prometheus/client_golang/prometheus/internal
@@ -78,6 +82,9 @@ github.com/prometheus/procfs/internal/fs
 github.com/sirupsen/logrus
 # github.com/streadway/amqp v0.0.0-20190404075320-75d898a42a94
 github.com/streadway/amqp
+# github.com/stretchr/testify v1.4.0
+github.com/stretchr/testify/assert
+github.com/stretchr/testify/require
 # github.com/uber/jaeger-client-go v2.22.1+incompatible
 github.com/uber/jaeger-client-go
 github.com/uber/jaeger-client-go/config
@@ -102,18 +109,19 @@ github.com/uber/jaeger-lib/metrics
 # github.com/videocoin/cloud-api v0.3.1-0.20200206041936-260732c1cfb1
 github.com/videocoin/cloud-api/iam/v1
 github.com/videocoin/cloud-api/rpc
-# github.com/videocoin/cloud-pkg v0.0.8-0.20200206170900-9a2dd9ec690b
+# github.com/videocoin/cloud-pkg v0.0.8-0.20200207023524-d9b46239c07c
+github.com/videocoin/cloud-pkg/api/resources
+github.com/videocoin/cloud-pkg/api/resources/key
+github.com/videocoin/cloud-pkg/api/resources/project
+github.com/videocoin/cloud-pkg/api/resources/serviceaccount
+github.com/videocoin/cloud-pkg/dbutil/models
 github.com/videocoin/cloud-pkg/grpcutil
 github.com/videocoin/cloud-pkg/logger
 github.com/videocoin/cloud-pkg/mqmux
+github.com/videocoin/cloud-pkg/strings
 github.com/videocoin/cloud-pkg/tracer
-# github.com/videocoin/common v0.4.0
-github.com/videocoin/common/api/resources
-github.com/videocoin/common/api/resources/key
-github.com/videocoin/common/api/resources/project
-github.com/videocoin/common/api/resources/serviceaccount
-github.com/videocoin/common/models
-github.com/videocoin/common/strings
+# github.com/videocoin/oauth2 v0.0.0-20200129165645-551506ee10d6
+github.com/videocoin/oauth2
 # go.uber.org/atomic v1.5.1
 go.uber.org/atomic
 # golang.org/x/lint v0.0.0-20191125180803-fdd1cda4f05f
@@ -121,12 +129,18 @@ golang.org/x/lint
 golang.org/x/lint/golint
 # golang.org/x/net v0.0.0-20190620200207-3b0461eec859
 golang.org/x/net/context
+golang.org/x/net/context/ctxhttp
 golang.org/x/net/http/httpguts
 golang.org/x/net/http2
 golang.org/x/net/http2/hpack
 golang.org/x/net/idna
 golang.org/x/net/internal/timeseries
 golang.org/x/net/trace
+# golang.org/x/oauth2 v0.0.0-20200107190931-bf48bf16ab8d
+golang.org/x/oauth2
+golang.org/x/oauth2/internal
+golang.org/x/oauth2/jws
+golang.org/x/oauth2/jwt
 # golang.org/x/sync v0.0.0-20190911185100-cd5d95a43a6e
 golang.org/x/sync/errgroup
 # golang.org/x/sys v0.0.0-20190602015325-4c4f7f33c9ed
@@ -142,6 +156,13 @@ golang.org/x/tools/go/gcexportdata
 golang.org/x/tools/go/internal/gcimporter
 # google.golang.org/appengine v1.5.0
 google.golang.org/appengine/cloudsql
+google.golang.org/appengine/internal
+google.golang.org/appengine/internal/base
+google.golang.org/appengine/internal/datastore
+google.golang.org/appengine/internal/log
+google.golang.org/appengine/internal/remote_api
+google.golang.org/appengine/internal/urlfetch
+google.golang.org/appengine/urlfetch
 # google.golang.org/genproto v0.0.0-20190819201941-24fa4b261c55
 google.golang.org/genproto/googleapis/api/httpbody
 google.golang.org/genproto/googleapis/rpc/status
@@ -180,10 +201,10 @@ google.golang.org/grpc/keepalive
 google.golang.org/grpc/metadata
 google.golang.org/grpc/naming
 google.golang.org/grpc/peer
-google.golang.org/grpc/reflection
-google.golang.org/grpc/reflection/grpc_reflection_v1alpha
 google.golang.org/grpc/resolver
 google.golang.org/grpc/serviceconfig
 google.golang.org/grpc/stats
 google.golang.org/grpc/status
 google.golang.org/grpc/tap
+# gopkg.in/yaml.v2 v2.2.2
+gopkg.in/yaml.v2

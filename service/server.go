@@ -8,9 +8,9 @@ import (
 
 	guuid "github.com/google/uuid"
 	iam "github.com/videocoin/cloud-api/iam/v1"
-	key "github.com/videocoin/common/api/resources/key"
-	project "github.com/videocoin/common/api/resources/project"
-	account "github.com/videocoin/common/api/resources/serviceaccount"
+	key "github.com/videocoin/cloud-pkg/api/resources/key"
+	project "github.com/videocoin/cloud-pkg/api/resources/project"
+	account "github.com/videocoin/cloud-pkg/api/resources/serviceaccount"
 
 	"github.com/gogo/protobuf/types"
 	"github.com/jinzhu/gorm"
@@ -74,14 +74,14 @@ func (srv *Server) GetServiceAccount(ctx context.Context, req *iam.GetServiceAcc
 		return nil, status.Error(codes.InvalidArgument, err.Error())
 	}
 
-	acc, err := srv.ds.GetServiceAccount(name.Email())
+	acc, err := srv.ds.GetServiceAccountByEmail(name.Email())
 	if err != nil {
 		if gorm.IsRecordNotFoundError(err) {
 			return nil, status.Error(codes.NotFound, err.Error())
 		}
 		return nil, status.Error(codes.Unknown, err.Error())
 	}
-
+	srv.logger.Error(acc)
 	return &iam.ServiceAccount{
 		Name:      string(account.NewName(acc.ProjectID, acc.Email)),
 		ProjectId: acc.ProjectID,
@@ -227,7 +227,7 @@ func (srv *Server) ListServiceAccountKeys(ctx context.Context, req *iam.ListServ
 	}
 
 	accEmail := accName.Email()
-	accKeys, projID, err := srv.ds.ListServiceAccountKeys(accEmail)
+	accKeys, projID, err := srv.ds.ListServiceAccountKeysByEmail(accEmail)
 	if err != nil {
 		if gorm.IsRecordNotFoundError(err) {
 			return nil, status.Error(codes.NotFound, err.Error())
@@ -278,5 +278,8 @@ func (srv *Server) DeleteServiceAccountKey(ctx context.Context, req *iam.DeleteS
 	if err != nil {
 		return nil, status.Error(codes.InvalidArgument, err.Error())
 	}
-	return new(types.Empty), status.Error(codes.Unknown, srv.ds.DeleteServiceAccountKey(name.ID()).Error())
+	if err := srv.ds.DeleteServiceAccountKey(name.ID()); err != nil {
+		return nil, status.Error(codes.Unknown, err.Error())
+	}
+	return new(types.Empty), nil
 }

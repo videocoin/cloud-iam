@@ -1,5 +1,3 @@
--include ./test/e2e/e2e.mk
-
 NAME := iam
 BIN := iamd
 VERSION=$$(git describe --abbrev=0 --always)-$$(git rev-parse --abbrev-ref HEAD)-$$(git rev-parse --short HEAD)
@@ -24,10 +22,6 @@ version:
 build:
 		go build $(BUILD_FLAGS) -o $(OUTPUT) ./cmd/${BIN}
 
-.PHONY: install
-install:
-		go install $(BUILD_FLAGS) ./cmd/${BIN}
-
 .PHONY: deps		
 deps:
 		GO111MODULE=on go mod vendor
@@ -46,3 +40,23 @@ release: docker-build docker-push
 .PHONY: deploy
 deploy:
 		ENV=${ENV} deployments/deploy.sh
+
+.PHONY: e2e
+e2e:
+	cd test/e2e && docker-compose up -d --build mysql
+	sleep 30
+	cd test/e2e && docker-compose up -d --build migrate iamd  
+	sleep 3
+	go test -mod=vendor ./test/e2e/...
+
+.PHONY: e2e-nobuild
+e2e-nobuild:
+	cd test/e2e && docker-compose up -d --no-build mysql 
+	sleep 30
+	cd test/e2e && docker-compose up -d --no-build migrate iamd
+	sleep 3
+	go test -mod=vendor ./test/e2e/...
+	
+.PHONY: e2e-stop
+e2e-stop:
+	cd test/e2e && docker-compose down --volumes

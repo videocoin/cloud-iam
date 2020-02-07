@@ -3,7 +3,7 @@ package datastore
 import (
 	"time"
 
-	"github.com/videocoin/common/models"
+	"github.com/videocoin/cloud-pkg/dbutil/models"
 )
 
 // ServiceAccount is an account that belongs to your project instead
