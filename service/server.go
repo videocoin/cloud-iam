@@ -121,7 +121,11 @@ func (srv *Server) DeleteServiceAccount(ctx context.Context, req *iam.DeleteServ
 	if err != nil {
 		return nil, status.Error(codes.InvalidArgument, err.Error())
 	}
-	return new(types.Empty), srv.ds.DeleteServiceAccount(name.Email())
+	if err := srv.ds.DeleteServiceAccount(name.Email()); err != nil {
+		return nil, status.Error(codes.Unknown, err.Error())
+	}
+
+	return new(types.Empty), nil
 }
 
 // CreateServiceAccountKey creates a service account key.
