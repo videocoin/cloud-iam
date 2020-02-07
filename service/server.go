@@ -81,7 +81,7 @@ func (srv *Server) GetServiceAccount(ctx context.Context, req *iam.GetServiceAcc
 		}
 		return nil, status.Error(codes.Unknown, err.Error())
 	}
-	srv.logger.Error(acc)
+
 	return &iam.ServiceAccount{
 		Name:      string(account.NewName(acc.ProjectID, acc.Email)),
 		ProjectId: acc.ProjectID,
