@@ -20,33 +20,33 @@ func (db *database) Close() error {
 }
 
 // CreateServiceAccount creates a service account.
-func (db *database) CreateServiceAccount(sa *ServiceAccount) (*ServiceAccount, error) {
-	if err := db.Create(sa).Error; err != nil {
+func (db *database) CreateServiceAccount(acc *ServiceAccount) (*ServiceAccount, error) {
+	if err := db.Create(acc).Error; err != nil {
 		return nil, err
 	}
-	return sa, nil
+	return acc, nil
 }
 
 // GetServiceAccount gets a service account.
-func (db *database) GetServiceAccount(email string) (*ServiceAccount, error) {
-	return getServiceAccount(db.DB, email)
+func (db *database) GetServiceAccountByEmail(email string) (*ServiceAccount, error) {
+	return getServiceAccountByEmail(db.DB, email)
 }
 
-func getServiceAccount(DB *gorm.DB, email string) (*ServiceAccount, error) {
-	var sa ServiceAccount
-	if err := DB.Where("email = ?", email).First(&sa).Error; err != nil {
+func getServiceAccountByEmail(DB *gorm.DB, email string) (*ServiceAccount, error) {
+	acc := &ServiceAccount{}
+	if err := DB.Find(acc, "email = ?", email).Error; err != nil {
 		return nil, err
 	}
-	return &sa, nil
+	return acc, nil
 }
 
 // ListServiceAccounts lists service accounts for a project.
 func (db *database) ListServiceAccounts(projID string) ([]*ServiceAccount, error) {
-	var accounts []*ServiceAccount
-	if err := db.Where(&ServiceAccount{ProjectID: projID}).Find(&accounts).Error; err != nil {
+	accs := []*ServiceAccount{}
+	if err := db.Find(&accs, "project_id = ?", projID).Error; err != nil {
 		return nil, err
 	}
-	return accounts, nil
+	return accs, nil
 }
 
 // DeleteServiceAccount deletes a service account.
@@ -57,60 +57,61 @@ func (db *database) DeleteServiceAccount(email string) error {
 // CreateServiceAccountKey creates a service account key.
 func (db *database) CreateServiceAccountKey(accEmail string, passphrase string) (*ServiceAccountKey, string, error) {
 	var (
-		keyDB  ServiceAccountKey
+		key    *ServiceAccountKey
 		projID string
 	)
 
-	if err := db.Transaction(func(tx *gorm.DB) error {
-		acc, err := getServiceAccount(tx, accEmail)
+	err := db.Transaction(func(tx *gorm.DB) error {
+		acc, err := getServiceAccountByEmail(tx, accEmail)
 		if err != nil {
 			return err
 		}
-		key, err := generateKey(rand.Reader, passphrase, acc.ID)
+		key, err = generateKey(rand.Reader, passphrase, acc.ID)
 		if err != nil {
 			return err
 		}
-		if err := tx.Create(&key).Error; err != nil {
+		if err := tx.Create(key).Error; err != nil {
 			return err
 		}
 
 		projID = acc.ProjectID
 
 		return nil
-	}); err != nil {
+	})
+	if err != nil {
 		return nil, "", err
 	}
 
-	return &keyDB, projID, nil
+	return key, projID, nil
 }
 
 // GetServiceAccountKey gets a service account key.
-func (db *database) GetServiceAccountKey(id string) (*ServiceAccountKey, error) {
-	var key ServiceAccountKey
-	if err := db.Where("id = ?", id).First(&key).Error; err != nil {
+func (db *database) GetServiceAccountKey(ID string) (*ServiceAccountKey, error) {
+	key := &ServiceAccountKey{}
+	if err := db.Find(key, "id = ?", ID).Error; err != nil {
 		return nil, err
 	}
-	return &key, nil
+	return key, nil
 }
 
 func listServiceAccountKeys(DB *gorm.DB, accID string) ([]*ServiceAccountKey, error) {
-	var keys []*ServiceAccountKey
-	if err := DB.Where("account_id = ?", accID).Find(&keys).Error; err != nil {
+	keys := []*ServiceAccountKey{}
+	if err := DB.Find(&keys, "account_id = ?", accID).Error; err != nil {
 		return nil, err
 	}
 	return keys, nil
 }
 
 // ListServiceAccountKeys lists the service account keys.
-func (db *database) ListServiceAccountKeys(email string) ([]*ServiceAccountKey, string, error) {
+func (db *database) ListServiceAccountKeysByEmail(accEmail string) ([]*ServiceAccountKey, string, error) {
 	var (
 		keys   []*ServiceAccountKey
 		projID string
 	)
 
-	if err := db.Transaction(func(tx *gorm.DB) error {
+	err := db.Transaction(func(tx *gorm.DB) error {
 		// replace with join?
-		acc, err := getServiceAccount(tx, email)
+		acc, err := getServiceAccountByEmail(tx, accEmail)
 		if err != nil {
 			return err
 		}
@@ -122,7 +123,8 @@ func (db *database) ListServiceAccountKeys(email string) ([]*ServiceAccountKey, 
 		projID = acc.ProjectID
 
 		return nil
-	}); err != nil {
+	})
+	if err != nil {
 		return nil, "", err
 	}
 

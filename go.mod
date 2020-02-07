@@ -9,10 +9,13 @@ require (
 	github.com/jinzhu/gorm v1.9.12
 	github.com/kelseyhightower/envconfig v1.4.0
 	github.com/sirupsen/logrus v1.4.2
+	github.com/stretchr/testify v1.4.0
 	github.com/videocoin/cloud-api v0.3.1-0.20200206041936-260732c1cfb1
-	github.com/videocoin/cloud-pkg v0.0.8-0.20200206170900-9a2dd9ec690b
-	github.com/videocoin/common v0.4.0
+	github.com/videocoin/cloud-pkg v0.0.8-0.20200207052840-495efec72284
+	github.com/videocoin/oauth2 v0.0.0-20200129165645-551506ee10d6
 	golang.org/x/sync v0.0.0-20190911185100-cd5d95a43a6e
 	golang.org/x/text v0.3.2 // indirect
+	google.golang.org/appengine v1.5.0 // indirect
 	google.golang.org/grpc v1.27.1
+	honnef.co/go/tools v0.0.0-20190523083050-ea95bdfd59fc // indirect
 )
