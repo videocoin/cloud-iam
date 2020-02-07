@@ -16,30 +16,30 @@ all: build
 
 .PHONY: version
 version:
-		@echo ${VERSION}
+	@echo ${VERSION}
 
 .PHONY: build
 build:
-		go build $(BUILD_FLAGS) -o $(OUTPUT) ./cmd/${BIN}
+	go build $(BUILD_FLAGS) -o $(OUTPUT) ./cmd/${BIN}
 
 .PHONY: deps		
 deps:
-		GO111MODULE=on go mod vendor
+	GO111MODULE=on go mod vendor
 
 .PHONY: docker-build
 docker-build:
-		docker build -t ${DOCKER_REGISTRY}/${NAME}:${VERSION} .
+	docker build -t ${DOCKER_REGISTRY}/${NAME}:${VERSION} .
 
 .PHONY: docker-push
 docker-push:
-		docker push gcr.io/${GCP_PROJECT}/${NAME}:${VERSION}
+	docker push gcr.io/${GCP_PROJECT}/${NAME}:${VERSION}
 
 .PHONY: release
 release: docker-build docker-push
 
 .PHONY: deploy
 deploy:
-		ENV=${ENV} deployments/deploy.sh
+	ENV=${ENV} deployments/deploy.sh
 
 .PHONY: e2e
 e2e:
