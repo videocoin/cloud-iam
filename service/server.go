@@ -21,6 +21,7 @@ type Server struct {
 	logger     *logrus.Entry
 	ds         datastore.DataStore
 	passphrase string
+	roleDs     datastore.RoleDatastore
 }
 
 // NewServer creates an IAM server.
@@ -197,12 +198,29 @@ func (srv *Server) SetIamPolicy(ctx context.Context, req *iam.SetIamPolicyReques
 	return nil, nil
 }
 
-// GetRole gets a role.
+// GetRole gets a predefined role.
 func (srv *Server) GetRole(ctx context.Context, req *iam.GetRoleRequest) (*iam.Role, error) {
-	return nil, nil
+	// TODO validate role name
+
+	role, err := srv.roleDs.GetRole(req.Name)
+	if err != nil {
+		return nil, err
+	}
+
+	return role.Proto(), nil
 }
 
-// ListRoles lists roles.
+// ListRoles lists the predefined roles.
 func (srv *Server) ListRoles(ctx context.Context, req *iam.ListRolesRequest) (*iam.ListRolesResponse, error) {
-	return nil, nil
+	roles, err := srv.roleDs.ListRoles()
+	if err != nil {
+		return nil, err
+	}
+
+	rolesPB := make([]*iam.Role, 0, len(roles))
+	for _, role := range roles {
+		rolesPB = append(rolesPB, role.Proto())
+	}
+
+	return &iam.ListRolesResponse{Roles: rolesPB}, nil
 }

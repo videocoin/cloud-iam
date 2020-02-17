@@ -3,6 +3,8 @@ package datastore
 import (
 	"io"
 
+	iam "github.com/videocoin/cloud-api/iam/v1"
+
 	"github.com/jinzhu/gorm"
 	"github.com/videocoin/cloud-pkg/dbutil/models"
 )
@@ -10,11 +12,10 @@ import (
 // Role is a collection of permissions.
 type Role struct {
 	models.Base
-	ID          string `gorm:"primary_key"`
-	Name        string
+	Name        string `gorm:"primary_key"`
 	Title       string
 	Description string
-	Permissions []Permission `gorm:"many2many:roles_permissions"`
+	Permissions []string `gorm:"many2many:roles_permissions"`
 }
 
 // TableName set Role's table name to be `roles`.
@@ -22,11 +23,21 @@ func (r *Role) TableName() string {
 	return "roles"
 }
 
+// Proto ...
+func (r *Role) Proto() *iam.Role {
+	// TODO
+	return &iam.Role{}
+}
+
 // RoleDatastore ...
 type RoleDatastore interface {
 	GetRole(name string) (*Role, error)
 	ListRoles() ([]*Role, error)
 	io.Closer
+}
+
+// RoleCache ...
+type RoleCache struct {
 }
 
 // RoleMySQL ...
@@ -50,4 +61,17 @@ func (db *RoleMySQL) ListRoles() ([]*Role, error) {
 		return nil, err
 	}
 	return roles, nil
+}
+
+// Permission provides access to specific resources.
+type Permission struct {
+	models.Base
+	Name        string `gorm:"primary_key"`
+	Description string
+	Roles       []Role `gorm:"many2many:roles_permissions"`
+}
+
+// TableName set Permission's table name to be `permissions`.
+func (p *Permission) TableName() string {
+	return "permissions"
 }
