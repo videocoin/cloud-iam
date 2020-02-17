@@ -1,39 +1,47 @@
 package datastore
 
 import (
-	"time"
-
 	"github.com/videocoin/cloud-pkg/dbutil/models"
 )
 
-// ServiceAccount is an account that belongs to your project instead
-// of to an individual end user. It is used to authenticate calls
-// to a VideoCoin API.
-type ServiceAccount struct {
+// Permission provides access to specific resources.
+type Permission struct {
 	models.Base
-	ID        string `gorm:"primary_key"`
-	ProjectID string
-	Email     string
-	Keys      []ServiceAccountKey `gorm:"foreignkey:AccountID"`
+	ID          string `gorm:"primary_key"`
+	Name        string
+	Title       string
+	Description string
+	Roles       []Role `gorm:"many2many:roles_permissions"`
 }
 
-// TableName set ServiceAccount's table name to be `accounts`.
-func (sa *ServiceAccount) TableName() string {
-	return "accounts"
+// TableName set Permission's table name to be `permissions`.
+func (p *Permission) TableName() string {
+	return "permissions"
 }
 
-// ServiceAccountKey represents a service account key.
-type ServiceAccountKey struct {
+// Policy is a collection of bindings.
+type Policy struct {
 	models.Base
-	ID              string `gorm:"primary_key"`
-	AccountID       string
-	PrivateKeyData  []byte
-	PublicKeyData   []byte
-	ValidAfterTime  time.Time
-	ValidBeforeTime time.Time
+	ID       string `gorm:"primary_key"`
+	version  int
+	Bindings []Binding `gorm:"foreignkey:PolicyID"`
 }
 
-// TableName set ServiceAccountKey's table name to be `account_keys`.
-func (key *ServiceAccountKey) TableName() string {
-	return "account_keys" // note: 'keys' is a reserved word in mysql
+// TableName set Policy's table name to be `policies`.
+func (p *Policy) TableName() string {
+	return "policies"
+}
+
+// Binding binds one member to a single role.
+type Binding struct {
+	models.Base
+	ID       string `gorm:"primary_key"`
+	PolicyID string
+	Role     string
+	Member   string
+}
+
+// TableName set Binding's table name to be `bindings`.
+func (b *Binding) TableName() string {
+	return "bindings"
 }

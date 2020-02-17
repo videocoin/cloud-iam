@@ -1,0 +1,93 @@
+// Copyright 2019 Google LLC.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+//
+
+syntax = "proto3";
+
+package cloud.api.iam.v1;
+
+import "github.com/gogo/protobuf/gogoproto/gogo.proto";
+
+option go_package = "v1";
+option (gogoproto.marshaler_all) = true;
+option (gogoproto.unmarshaler_all) = true;
+option (gogoproto.sizer_all) = true;
+option (gogoproto.goproto_registration) = true;
+option (gogoproto.messagename_all) = true;
+
+// Defines an Identity and Access Management (IAM) policy. It is used to
+// specify access control policies for Cloud Platform resources.
+//
+//
+// A `Policy` is a collection of `bindings`. A `binding` binds one or more
+// `members` to a single `role`. Members can be user accounts and service
+// accounts. A `role` is a named list of permissions (defined by IAM or
+// configured by users).
+//
+// **JSON Example**
+//
+//     {
+//       "bindings": [
+//         {
+//           "role": "roles/resourcemanager.organizationViewer",
+//           "members": ["user:eve@example.com"]
+//         }
+//       ]
+//     }
+//
+// **YAML Example**
+//
+//     bindings:
+//     - members:
+//       - user:eve@example.com
+//       role: roles/resourcemanager.organizationViewer
+//
+message Policy {
+  // Specifies the format of the policy.
+  //
+  // Valid values are 1. Requests specifying an invalid value will be
+  // rejected.
+  int32 version = 1;
+
+  // Associates a list of `members` to a `role`. Optionally may specify a
+  // `condition` that determines when binding is in effect.
+  // `bindings` with no members will result in an error.
+  repeated Binding bindings = 4;
+}
+
+// Associates `members` with a `role`.
+message Binding {
+  // Role that is assigned to `members`.
+  // For example, `roles/viewer`, `roles/editor`, or `roles/owner`.
+  string role = 1;
+
+  // Specifies the identities requesting access for a Cloud Platform resource.
+  // `members` can have the following values:
+  //
+  // * `allUsers`: A special identifier that represents anyone who is
+  //    on the internet; with or without a VideoCoin account.
+  //
+  // * `allAuthenticatedUsers`: A special identifier that represents anyone
+  //    who is authenticated with a VideoCoin account or a service account.
+  //
+  // * `user:{emailid}`: An email address that represents a specific VideoCoin
+  //    account. For example, `alice@example.com` .
+  //
+  //
+  // * `serviceAccount:{emailid}`: An email address that represents a service
+  //    account. For example, `my-other-app@appspot.gserviceaccount.com`.
+  //
+  //
+  string member = 2;
+}

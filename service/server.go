@@ -2,15 +2,11 @@ package service
 
 import (
 	"context"
-	"crypto/x509"
-	"encoding/pem"
-	"errors"
 
 	guuid "github.com/google/uuid"
 	iam "github.com/videocoin/cloud-api/iam/v1"
-	key "github.com/videocoin/cloud-pkg/api/resources/key"
-	project "github.com/videocoin/cloud-pkg/api/resources/project"
-	account "github.com/videocoin/cloud-pkg/api/resources/serviceaccount"
+	keyspec "github.com/videocoin/cloud-pkg/api/resources/key"
+	accspec "github.com/videocoin/cloud-pkg/api/resources/serviceaccount"
 
 	"github.com/gogo/protobuf/types"
 	"github.com/jinzhu/gorm"
@@ -19,9 +15,6 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )
-
-// ErrPEMDataNotFound is returned when no PEM data is found.
-var ErrPEMDataNotFound = errors.New("pem: PEM data not found")
 
 // Server implements the IAMServer interface.
 type Server struct {
@@ -41,40 +34,34 @@ func NewServer(logger *logrus.Entry, ds datastore.DataStore, passphrase string) 
 
 // CreateServiceAccount creates a service account.
 func (srv *Server) CreateServiceAccount(ctx context.Context, req *iam.CreateServiceAccountRequest) (*iam.ServiceAccount, error) {
-	projName, err := project.ParseName(req.Name)
-	if err != nil {
-		return nil, status.Error(codes.InvalidArgument, err.Error())
-	}
-	if ok := account.IsValidID(req.AccountId); !ok {
-		return nil, status.Error(codes.InvalidArgument, account.ErrInvalidID.Error())
+	principal := ctx.Value("principal").(string)
+
+	if ok := accspec.IsValidID(req.AccountId); !ok {
+		return nil, status.Error(codes.InvalidArgument, accspec.ErrInvalidID.Error())
 	}
 
-	projID := projName.ID()
 	acc, err := srv.ds.CreateServiceAccount(&datastore.ServiceAccount{
-		ID:        guuid.New().String(),
-		ProjectID: projID,
-		Email:     account.NewEmail(projID, req.AccountId),
+		ID:     guuid.New().String(),
+		UserID: principal,
+		Email:  accspec.NewEmail(principal, req.AccountId),
 	})
 	if err != nil {
 		return nil, status.Error(codes.Unknown, err.Error())
 	}
 
-	return &iam.ServiceAccount{
-		Name:      string(account.NewName(acc.ProjectID, acc.Email)),
-		ProjectId: acc.ProjectID,
-		UniqueId:  acc.ID,
-		Email:     acc.Email,
-	}, nil
+	return acc.Proto(), nil
 }
 
 // GetServiceAccount gets a service account.
 func (srv *Server) GetServiceAccount(ctx context.Context, req *iam.GetServiceAccountRequest) (*iam.ServiceAccount, error) {
-	name, err := account.ParseName(req.Name)
-	if err != nil {
-		return nil, status.Error(codes.InvalidArgument, err.Error())
+	principal := ctx.Value("principal").(string)
+
+	ok := accspec.IsValidEmail(req.Email)
+	if !ok {
+		return nil, status.Error(codes.InvalidArgument, accspec.ErrInvalidEmail.Error())
 	}
 
-	acc, err := srv.ds.GetServiceAccountByEmail(name.Email())
+	acc, err := srv.ds.GetServiceAccountByEmail(principal, req.Email)
 	if err != nil {
 		if gorm.IsRecordNotFoundError(err) {
 			return nil, status.Error(codes.NotFound, err.Error())
@@ -82,34 +69,21 @@ func (srv *Server) GetServiceAccount(ctx context.Context, req *iam.GetServiceAcc
 		return nil, status.Error(codes.Unknown, err.Error())
 	}
 
-	return &iam.ServiceAccount{
-		Name:      string(account.NewName(acc.ProjectID, acc.Email)),
-		ProjectId: acc.ProjectID,
-		UniqueId:  acc.ID,
-		Email:     acc.Email,
-	}, nil
+	return acc.Proto(), nil
 }
 
 // ListServiceAccounts lists service accounts.
 func (srv *Server) ListServiceAccounts(ctx context.Context, req *iam.ListServiceAccountsRequest) (*iam.ListServiceAccountsResponse, error) {
-	name, err := project.ParseName(req.Name)
-	if err != nil {
-		return nil, status.Error(codes.InvalidArgument, err.Error())
-	}
+	principal := ctx.Value("principal").(string)
 
-	accs, err := srv.ds.ListServiceAccounts(name.ID())
+	accs, err := srv.ds.ListServiceAccounts(principal)
 	if err != nil {
 		return nil, status.Error(codes.Unknown, err.Error())
 	}
 
 	accsPB := make([]*iam.ServiceAccount, 0, len(accs))
 	for _, acc := range accs {
-		accsPB = append(accsPB, &iam.ServiceAccount{
-			Name:      string(account.NewName(acc.ProjectID, acc.Email)),
-			ProjectId: acc.ProjectID,
-			UniqueId:  acc.ID,
-			Email:     acc.Email,
-		})
+		accsPB = append(accsPB, acc.Proto())
 	}
 
 	return &iam.ListServiceAccountsResponse{Accounts: accsPB}, nil
@@ -117,11 +91,11 @@ func (srv *Server) ListServiceAccounts(ctx context.Context, req *iam.ListService
 
 // DeleteServiceAccount deletes a service account.
 func (srv *Server) DeleteServiceAccount(ctx context.Context, req *iam.DeleteServiceAccountRequest) (*types.Empty, error) {
-	name, err := account.ParseName(req.Name)
-	if err != nil {
-		return nil, status.Error(codes.InvalidArgument, err.Error())
+	ok := accspec.IsValidEmail(req.Email)
+	if !ok {
+		return nil, status.Error(codes.InvalidArgument, accspec.ErrInvalidEmail.Error())
 	}
-	if err := srv.ds.DeleteServiceAccount(name.Email()); err != nil {
+	if err := srv.ds.DeleteServiceAccount(req.Email); err != nil {
 		return nil, status.Error(codes.Unknown, err.Error())
 	}
 
@@ -130,13 +104,12 @@ func (srv *Server) DeleteServiceAccount(ctx context.Context, req *iam.DeleteServ
 
 // CreateServiceAccountKey creates a service account key.
 func (srv *Server) CreateServiceAccountKey(ctx context.Context, req *iam.CreateServiceAccountKeyRequest) (*iam.ServiceAccountKey, error) {
-	name, err := account.ParseName(req.Name)
-	if err != nil {
-		return nil, status.Error(codes.InvalidArgument, err.Error())
+	ok := accspec.IsValidEmail(req.ServiceAccountEmail)
+	if !ok {
+		return nil, status.Error(codes.InvalidArgument, accspec.ErrInvalidEmail.Error())
 	}
 
-	accEmail := name.Email()
-	accKey, projID, err := srv.ds.CreateServiceAccountKey(name.Email(), srv.passphrase)
+	key, err := srv.ds.CreateServiceAccountKey(req.ServiceAccountEmail, srv.passphrase)
 	if err != nil {
 		if gorm.IsRecordNotFoundError(err) {
 			return nil, status.Error(codes.NotFound, err.Error())
@@ -144,46 +117,22 @@ func (srv *Server) CreateServiceAccountKey(ctx context.Context, req *iam.CreateS
 		return nil, status.Error(codes.Unknown, err.Error())
 	}
 
-	validAfterTimePB, err := types.TimestampProto(accKey.ValidAfterTime)
+	keyPB, err := key.CreationProto(srv.passphrase)
 	if err != nil {
-		srv.logger.Error(accKey.ID, err)
-		return nil, status.Error(codes.Internal, err.Error())
-	}
-	validBeforeTimePB, err := types.TimestampProto(accKey.ValidBeforeTime)
-	if err != nil {
-		srv.logger.Error(accKey.ID, err)
 		return nil, status.Error(codes.Internal, err.Error())
 	}
 
-	block, _ := pem.Decode(accKey.PrivateKeyData)
-	if block == nil {
-		srv.logger.Error(accKey.ID, ErrPEMDataNotFound)
-		return nil, status.Error(codes.Internal, ErrPEMDataNotFound.Error())
-	}
-
-	decrypted, err := x509.DecryptPEMBlock(block, []byte(srv.passphrase))
-	if err != nil {
-		srv.logger.Error(accKey.ID, err)
-		return nil, status.Error(codes.Internal, err.Error())
-	}
-	block.Bytes = decrypted
-
-	return &iam.ServiceAccountKey{
-		Name:            string(key.NewName(projID, accEmail, accKey.ID)),
-		PrivateKeyData:  pem.EncodeToMemory(block),
-		ValidAfterTime:  validBeforeTimePB,
-		ValidBeforeTime: validAfterTimePB,
-	}, nil
+	return keyPB, nil
 }
 
 // GetServiceAccountKey gets a service account key.
 func (srv *Server) GetServiceAccountKey(ctx context.Context, req *iam.GetServiceAccountKeyRequest) (*iam.ServiceAccountKey, error) {
-	name, err := key.ParseName(req.Name)
-	if err != nil {
-		return nil, status.Error(codes.InvalidArgument, err.Error())
+	ok := keyspec.IsValidID(req.KeyId)
+	if !ok {
+		return nil, status.Error(codes.InvalidArgument, keyspec.ErrInvalidID.Error())
 	}
 
-	accKey, err := srv.ds.GetServiceAccountKey(name.ID())
+	key, err := srv.ds.GetServiceAccountKey(req.KeyId)
 	if err != nil {
 		if gorm.IsRecordNotFoundError(err) {
 			return nil, status.Error(codes.NotFound, err.Error())
@@ -191,47 +140,21 @@ func (srv *Server) GetServiceAccountKey(ctx context.Context, req *iam.GetService
 		return nil, status.Error(codes.Unknown, err.Error())
 	}
 
-	validAfterTimePB, err := types.TimestampProto(accKey.ValidAfterTime)
+	keyPB, err := key.Proto()
 	if err != nil {
-		srv.logger.Error(accKey.ID, err)
-		return nil, status.Error(codes.Internal, err.Error())
-	}
-	validBeforeTimePB, err := types.TimestampProto(accKey.ValidBeforeTime)
-	if err != nil {
-		srv.logger.Error(accKey.ID, err)
 		return nil, status.Error(codes.Internal, err.Error())
 	}
 
-	block, _ := pem.Decode(accKey.PrivateKeyData)
-	if block == nil {
-		srv.logger.Error(accKey.ID, ErrPEMDataNotFound)
-		return nil, status.Error(codes.Internal, ErrPEMDataNotFound.Error())
-	}
-
-	decrypted, err := x509.DecryptPEMBlock(block, []byte(srv.passphrase))
-	if err != nil {
-		srv.logger.Error(accKey.ID, err)
-		return nil, status.Error(codes.Internal, err.Error())
-	}
-	block.Bytes = decrypted
-
-	return &iam.ServiceAccountKey{
-		Name:            req.Name,
-		PrivateKeyData:  pem.EncodeToMemory(block),
-		ValidAfterTime:  validAfterTimePB,
-		ValidBeforeTime: validBeforeTimePB,
-	}, nil
+	return keyPB, nil
 }
 
 // ListServiceAccountKeys lists service account keys.
 func (srv *Server) ListServiceAccountKeys(ctx context.Context, req *iam.ListServiceAccountKeysRequest) (*iam.ListServiceAccountKeysResponse, error) {
-	accName, err := account.ParseName(req.Name)
-	if err != nil {
-		return nil, status.Error(codes.InvalidArgument, err.Error())
+	if ok := accspec.IsValidEmail(req.ServiceAccountEmail); !ok {
+		return nil, status.Error(codes.InvalidArgument, accspec.ErrInvalidEmail.Error())
 	}
 
-	accEmail := accName.Email()
-	accKeys, projID, err := srv.ds.ListServiceAccountKeysByEmail(accEmail)
+	keys, err := srv.ds.ListServiceAccountKeysByEmail(req.ServiceAccountEmail)
 	if err != nil {
 		if gorm.IsRecordNotFoundError(err) {
 			return nil, status.Error(codes.NotFound, err.Error())
@@ -239,51 +162,47 @@ func (srv *Server) ListServiceAccountKeys(ctx context.Context, req *iam.ListServ
 		return nil, status.Error(codes.Unknown, err.Error())
 	}
 
-	accKeysPB := make([]*iam.ServiceAccountKey, 0, len(accKeys))
-	for _, accKey := range accKeys {
-		validAfterTimePB, err := types.TimestampProto(accKey.ValidAfterTime)
+	keysPB := make([]*iam.ServiceAccountKey, 0, len(keys))
+	for _, key := range keys {
+		keyPB, err := key.Proto()
 		if err != nil {
-			srv.logger.Error(accKey.ID, err)
 			return nil, status.Error(codes.Internal, err.Error())
 		}
-		validBeforeTimePB, err := types.TimestampProto(accKey.ValidBeforeTime)
-		if err != nil {
-			srv.logger.Error(accKey.ID, err)
-			return nil, status.Error(codes.Internal, err.Error())
-		}
-
-		block, _ := pem.Decode(accKey.PrivateKeyData)
-		if block == nil {
-			srv.logger.Error(accKey.ID, ErrPEMDataNotFound)
-			return nil, status.Error(codes.Internal, ErrPEMDataNotFound.Error())
-		}
-
-		decrypted, err := x509.DecryptPEMBlock(block, []byte(srv.passphrase))
-		if err != nil {
-			srv.logger.Error(accKey.ID, err)
-			return nil, status.Error(codes.Internal, err.Error())
-		}
-		block.Bytes = decrypted
-
-		accKeysPB = append(accKeysPB, &iam.ServiceAccountKey{
-			Name:            string(key.NewName(projID, accEmail, accKey.ID)),
-			PrivateKeyData:  pem.EncodeToMemory(block),
-			ValidAfterTime:  validBeforeTimePB,
-			ValidBeforeTime: validAfterTimePB,
-		})
+		keysPB = append(keysPB, keyPB)
 	}
 
-	return &iam.ListServiceAccountKeysResponse{Keys: accKeysPB}, nil
+	return &iam.ListServiceAccountKeysResponse{Keys: keysPB}, nil
 }
 
 // DeleteServiceAccountKey deletes a service account key.
 func (srv *Server) DeleteServiceAccountKey(ctx context.Context, req *iam.DeleteServiceAccountKeyRequest) (*types.Empty, error) {
-	name, err := key.ParseName(req.Name)
-	if err != nil {
-		return nil, status.Error(codes.InvalidArgument, err.Error())
+	ok := keyspec.IsValidID(req.KeyId)
+	if !ok {
+		return nil, status.Error(codes.InvalidArgument, keyspec.ErrInvalidID.Error())
 	}
-	if err := srv.ds.DeleteServiceAccountKey(name.ID()); err != nil {
+
+	if err := srv.ds.DeleteServiceAccountKey(req.KeyId); err != nil {
 		return nil, status.Error(codes.Unknown, err.Error())
 	}
 	return new(types.Empty), nil
+}
+
+// GetIamPolicy gets an IAM policy.
+func (srv *Server) GetIamPolicy(ctx context.Context, req *iam.GetIamPolicyRequest) (*iam.Policy, error) {
+	return nil, nil
+}
+
+// SetIamPolicy sets an IAM policy.
+func (srv *Server) SetIamPolicy(ctx context.Context, req *iam.SetIamPolicyRequest) (*iam.Policy, error) {
+	return nil, nil
+}
+
+// GetRole gets a role.
+func (srv *Server) GetRole(ctx context.Context, req *iam.GetRoleRequest) (*iam.Role, error) {
+	return nil, nil
+}
+
+// ListRoles lists roles.
+func (srv *Server) ListRoles(ctx context.Context, req *iam.ListRolesRequest) (*iam.ListRolesResponse, error) {
+	return nil, nil
 }

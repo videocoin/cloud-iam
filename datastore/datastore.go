@@ -11,12 +11,12 @@ import (
 // unique id of the service account.
 type DataStore interface {
 	CreateServiceAccount(acc *ServiceAccount) (*ServiceAccount, error)
-	GetServiceAccountByEmail(email string) (*ServiceAccount, error)
+	GetServiceAccountByEmail(userID string, email string) (*ServiceAccount, error)
 	ListServiceAccounts(projID string) ([]*ServiceAccount, error)
 	DeleteServiceAccount(email string) error
-	CreateServiceAccountKey(accEmail string, passphrase string) (*ServiceAccountKey, string, error)
+	CreateServiceAccountKey(accEmail string, passphrase string) (*ServiceAccountKey, error)
 	GetServiceAccountKey(id string) (*ServiceAccountKey, error)
-	ListServiceAccountKeysByEmail(accEmail string) ([]*ServiceAccountKey, string, error)
+	ListServiceAccountKeysByEmail(accEmail string) ([]*ServiceAccountKey, error)
 	DeleteServiceAccountKey(id string) error
 	io.Closer
 }

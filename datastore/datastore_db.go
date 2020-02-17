@@ -28,7 +28,7 @@ func (db *database) CreateServiceAccount(acc *ServiceAccount) (*ServiceAccount, 
 }
 
 // GetServiceAccount gets a service account.
-func (db *database) GetServiceAccountByEmail(email string) (*ServiceAccount, error) {
+func (db *database) GetServiceAccountByEmail(userID string, email string) (*ServiceAccount, error) {
 	return getServiceAccountByEmail(db.DB, email)
 }
 
@@ -55,11 +55,8 @@ func (db *database) DeleteServiceAccount(email string) error {
 }
 
 // CreateServiceAccountKey creates a service account key.
-func (db *database) CreateServiceAccountKey(accEmail string, passphrase string) (*ServiceAccountKey, string, error) {
-	var (
-		key    *ServiceAccountKey
-		projID string
-	)
+func (db *database) CreateServiceAccountKey(accEmail string, passphrase string) (*ServiceAccountKey, error) {
+	var key *ServiceAccountKey
 
 	err := db.Transaction(func(tx *gorm.DB) error {
 		acc, err := getServiceAccountByEmail(tx, accEmail)
@@ -74,15 +71,13 @@ func (db *database) CreateServiceAccountKey(accEmail string, passphrase string) 
 			return err
 		}
 
-		projID = acc.ProjectID
-
 		return nil
 	})
 	if err != nil {
-		return nil, "", err
+		return nil, err
 	}
 
-	return key, projID, nil
+	return key, nil
 }
 
 // GetServiceAccountKey gets a service account key.
@@ -103,11 +98,8 @@ func listServiceAccountKeys(DB *gorm.DB, accID string) ([]*ServiceAccountKey, er
 }
 
 // ListServiceAccountKeys lists the service account keys.
-func (db *database) ListServiceAccountKeysByEmail(accEmail string) ([]*ServiceAccountKey, string, error) {
-	var (
-		keys   []*ServiceAccountKey
-		projID string
-	)
+func (db *database) ListServiceAccountKeysByEmail(accEmail string) ([]*ServiceAccountKey, error) {
+	var keys []*ServiceAccountKey
 
 	err := db.Transaction(func(tx *gorm.DB) error {
 		// replace with join?
@@ -120,15 +112,13 @@ func (db *database) ListServiceAccountKeysByEmail(accEmail string) ([]*ServiceAc
 			return nil
 		}
 
-		projID = acc.ProjectID
-
 		return nil
 	})
 	if err != nil {
-		return nil, "", err
+		return nil, err
 	}
 
-	return keys, projID, nil
+	return keys, nil
 }
 
 // DeleteServiceAccountKey deletes a service account key.

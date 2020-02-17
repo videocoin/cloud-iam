@@ -59,6 +59,7 @@ github.com/go-sql-driver/mysql v1.4.1 h1:g24URVg0OFbNUTx9qqY1IRZ9D9z3iPyi5zKhQZp
 github.com/go-sql-driver/mysql v1.4.1/go.mod h1:zAC/RDZ24gD3HViQzih4MyKcchzm+sOG5ZlKdlhCg5w=
 github.com/go-stack/stack v1.8.0/go.mod h1:v0f6uXyyMGvRgIKkXu+yp6POWl0qKG85gN/melR3HDY=
 github.com/gogo/googleapis v1.2.0/go.mod h1:Njal3psf3qN6dwBtQfUmBZh2ybovJ0tlu3o/AC7HYjU=
+github.com/gogo/googleapis v1.3.0 h1:M695OaDJ5ipWvDPcoAg/YL9c3uORAegkEfBqTQF/fTQ=
 github.com/gogo/googleapis v1.3.0/go.mod h1:d+q1s/xVJxZGKWwC/6UfPIF33J+G1Tq4GYv9Y+Tg/EU=
 github.com/gogo/protobuf v1.1.1/go.mod h1:r8qH/GZQm5c6nD/R0oafs1akxWv10x8SbQlK7atdtwQ=
 github.com/gogo/protobuf v1.2.1/go.mod h1:hp+jE20tsWTFYpLwKvXlhS1hjn+gTNwPg2I6zVXpSg4=
@@ -217,8 +218,8 @@ github.com/valyala/bytebufferpool v1.0.0/go.mod h1:6bBcMArwyJ5K/AmCkWv1jt77kVWyC
 github.com/valyala/fasttemplate v1.0.1/go.mod h1:UQGH1tvbgY+Nz5t2n7tXsz52dQxojPUpymEIMZ47gx8=
 github.com/videocoin/cloud-api v0.0.17 h1:zPFd2jQ3etXxQdFPbPsVYSKWKx5M9ttTA8x1f2BSxdE=
 github.com/videocoin/cloud-api v0.0.17/go.mod h1:6HhpNaw1C8VsYtRpaF2gNZCKJmZjWjeQwXHn4lvm1QQ=
-github.com/videocoin/cloud-api v0.3.1-0.20200206041936-260732c1cfb1 h1:FFyig1f+gaOL0w9huVRVfnMSynccEJafyQEJNLOG4ug=
-github.com/videocoin/cloud-api v0.3.1-0.20200206041936-260732c1cfb1/go.mod h1:Dfgrr9VyNJspyJh/vzOewf5Mu2uKyQLzP79/IEOBLng=
+github.com/videocoin/cloud-api v0.3.1-0.20200217183934-b31bfac29a54 h1:rvAE/nqNxBq7DlPErmqI+hqNUa1mrc1nLKNvKuOB6DE=
+github.com/videocoin/cloud-api v0.3.1-0.20200217183934-b31bfac29a54/go.mod h1:Dfgrr9VyNJspyJh/vzOewf5Mu2uKyQLzP79/IEOBLng=
 github.com/videocoin/cloud-pkg v0.0.5/go.mod h1:zB1t/OI+YAP5dVshydrqkaPQs8ug1/mA77xjiELgaSs=
 github.com/videocoin/cloud-pkg v0.0.8-0.20200207052840-495efec72284 h1:SqsVKeqnhPSwkCzJVla3PmxJiPZJc+R4MGg7AaLNZMo=
 github.com/videocoin/cloud-pkg v0.0.8-0.20200207052840-495efec72284/go.mod h1:reC7JdY0mdVAriZvJnWZOy8MiJpTBU0MpUuAas0fXkg=
