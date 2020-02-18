@@ -25,9 +25,8 @@ type Server struct {
 }
 
 // NewServer creates an IAM server.
-func NewServer(logger *logrus.Entry, ds datastore.DataStore, passphrase string) *Server {
+func NewServer(ds datastore.DataStore, passphrase string) *Server {
 	return &Server{
-		logger:     logger,
 		ds:         ds,
 		passphrase: passphrase,
 	}
@@ -188,13 +187,18 @@ func (srv *Server) DeleteServiceAccountKey(ctx context.Context, req *iam.DeleteS
 	return new(types.Empty), nil
 }
 
-// GetIamPolicy gets an IAM policy.
-func (srv *Server) GetIamPolicy(ctx context.Context, req *iam.GetIamPolicyRequest) (*iam.Policy, error) {
+// CreateRoleBinding creates a role binding.
+func (srv *Server) CreateRoleBinding(ctx context.Context, req *iam.RoleBinding) (*types.Empty, error) {
 	return nil, nil
 }
 
-// SetIamPolicy sets an IAM policy.
-func (srv *Server) SetIamPolicy(ctx context.Context, req *iam.SetIamPolicyRequest) (*iam.Policy, error) {
+// DeleteRoleBinding deletes a role binding.
+func (srv *Server) DeleteRoleBinding(ctx context.Context, req *iam.RoleBinding) (*types.Empty, error) {
+	return nil, nil
+}
+
+// ListRoleBindings lists role bindings.
+func (srv *Server) ListRoleBindings(context.Context, *iam.ListRoleBindingsRequest) (*iam.ListRoleBindingsResponse, error) {
 	return nil, nil
 }
 

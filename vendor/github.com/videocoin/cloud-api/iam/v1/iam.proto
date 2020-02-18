@@ -9,7 +9,6 @@ import "google/api/field_behavior.proto";
 import "google/api/resource.proto";
 import "google/api/annotations.proto";
 import "google/api/client.proto";
-import "iam/v1/policy.proto";
 
 option go_package = "v1";
 option (gogoproto.marshaler_all) = true;
@@ -47,7 +46,7 @@ service IAM {
       post : "/v1/serviceAccounts"
       body : "*"
     };
-    option (google.api.method_signature) = "account_id,service_account";
+    option (google.api.method_signature) = "account_id";
   }
 
   // Deletes a [ServiceAccount][cloud.api.iam.v1.ServiceAccount].
@@ -98,23 +97,29 @@ service IAM {
     option (google.api.method_signature) = "service_account_email,key_id";
   }
 
-  // Returns the Cloud IAM access control policy for a
-  // [ServiceAccount][cloud.api.iam.v1.ServiceAccount].
-  rpc GetIamPolicy(GetIamPolicyRequest) returns (Policy) {
+  rpc CreateRoleBinding(RoleBinding) returns (google.protobuf.Empty) {
     option (google.api.http) = {
-      post : "/v1/{resource=projects/*/serviceAccounts/*}:getIamPolicy"
-    };
-    option (google.api.method_signature) = "resource";
-  }
-
-  // Sets the Cloud IAM access control policy for a
-  // [ServiceAccount][cloud.api.iam.v1.ServiceAccount].
-  rpc SetIamPolicy(SetIamPolicyRequest) returns (Policy) {
-    option (google.api.http) = {
-      post : "/v1/{resource=projects/*/serviceAccounts/*}:setIamPolicy"
+      post : "/rolebindings"
       body : "*"
     };
-    option (google.api.method_signature) = "resource,policy";
+    option (google.api.method_signature) = "role_name,user_id";
+  }
+
+  rpc DeleteRoleBinding(RoleBinding) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      delete : "/rolebindings"
+      body : "*"
+    };
+    option (google.api.method_signature) = "role_name,user_id";
+  }
+
+  rpc ListRoleBindings(ListRoleBindingsRequest)
+      returns (ListRoleBindingsResponse) {
+    option (google.api.http) = {
+      get : "/rolebindings"
+      body : "*"
+    };
+    option (google.api.method_signature) = "user_id";
   }
 
   // Lists the Roles defined on a resource.
@@ -127,7 +132,7 @@ service IAM {
   // Gets a Role definition.
   rpc GetRole(GetRoleRequest) returns (Role) {
     option (google.api.http) = {
-      get : "/v1/{name=roles/*}"
+      get : "/v1/roles/{name=*}"
     };
   }
 }
@@ -270,31 +275,6 @@ message DeleteServiceAccountKeyRequest {
   string key_id = 2 [ (google.api.field_behavior) = REQUIRED ];
 }
 
-message SetIamPolicyRequest {
-  // REQUIRED: The resource for which the policy is being specified.
-  // See the operation documentation for the appropriate value for this field.
-  string resource = 1 [
-    (google.api.field_behavior) = REQUIRED,
-    (google.api.resource_reference).type = "*"
-  ];
-
-  // REQUIRED: The complete policy to be applied to the `resource`. The size of
-  // the policy is limited to a few 10s of KB. An empty policy is a
-  // valid policy but certain Cloud Platform services (such as Projects)
-  // might reject them.
-  Policy policy = 2 [ (google.api.field_behavior) = REQUIRED ];
-}
-
-// Request message for `GetIamPolicy` method.
-message GetIamPolicyRequest {
-  // REQUIRED: The resource for which the policy is being requested.
-  // See the operation documentation for the appropriate value for this field.
-  string resource = 1 [
-    (google.api.field_behavior) = REQUIRED,
-    (google.api.resource_reference).type = "*"
-  ];
-}
-
 // A role in the Identity and Access Management API.
 message Role {
   // The name of the role.
@@ -364,4 +344,25 @@ message Permission {
 
   // A brief description of what this Permission is used for.
   string description = 3;
+}
+
+message RoleBinding {
+  // The name of the role.
+  string role_name = 1 [ (google.api.field_behavior) = REQUIRED ];
+
+  // The user id.
+  string user_id = 2 [ (google.api.field_behavior) = REQUIRED ];
+}
+
+message ListRoleBindingsRequest {
+  // Optional
+  string user_id = 1;
+
+  // Optional pagination token returned in an earlier ListRoleBindingsRequest.
+  string page_token = 2;
+}
+
+message ListRoleBindingsResponse {
+  // The list of role bindings.
+  repeated RoleBinding bindings = 1;
 }

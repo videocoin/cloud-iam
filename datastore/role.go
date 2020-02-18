@@ -29,10 +29,21 @@ func (r *Role) Proto() *iam.Role {
 	return &iam.Role{}
 }
 
+// RoleBinding ...
+type RoleBinding struct {
+	models.Base
+	UserID   string
+	RoleName string
+}
+
 // RoleDatastore ...
 type RoleDatastore interface {
 	GetRole(name string) (*Role, error)
 	ListRoles() ([]*Role, error)
+	CreateRoleBinding(roleName string, userID string) error
+	DeleteRoleBinding(roleName string, userID string) error
+	ListRoleBindings() []*RoleBinding
+	ListRoleBindingsByUser(userID string) []*RoleBinding
 	io.Closer
 }
 

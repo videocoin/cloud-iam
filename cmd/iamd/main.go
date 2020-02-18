@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"fmt"
+	"log"
 	"net"
 	"os"
 	"os/signal"
@@ -12,12 +13,8 @@ import (
 	healthpb "google.golang.org/grpc/health/grpc_health_v1"
 
 	"github.com/kelseyhightower/envconfig"
-	"github.com/sirupsen/logrus"
 	"github.com/videocoin/cloud-iam/datastore"
 	"github.com/videocoin/cloud-iam/service"
-	"github.com/videocoin/cloud-pkg/grpcutil"
-	"github.com/videocoin/cloud-pkg/logger"
-	"github.com/videocoin/cloud-pkg/tracer"
 	"golang.org/x/sync/errgroup"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/health"
@@ -39,21 +36,6 @@ type Config struct {
 }
 
 func main() {
-	logger.Init(ServiceName, Version)
-	log := logrus.NewEntry(logrus.New())
-	log.Logger.SetReportCaller(true)
-	log = logrus.WithFields(logrus.Fields{
-		"service": ServiceName,
-		"version": Version,
-	})
-
-	closer, err := tracer.NewTracer(ServiceName)
-	if err != nil {
-		log.Info(err.Error())
-	} else {
-		defer closer.Close()
-	}
-
 	cfg := new(Config)
 	if err := envconfig.Process(ServiceName, cfg); err != nil {
 		log.Fatal(err)
@@ -78,8 +60,8 @@ func main() {
 		}
 		defer DB.Close()
 
-		grpcSrv = grpc.NewServer(grpcutil.DefaultServerOpts(log)...)
-		iam.RegisterIAMServer(grpcSrv, service.NewServer(log, DB, cfg.EncryptionPassphrase))
+		grpcSrv = grpc.NewServer()
+		iam.RegisterIAMServer(grpcSrv, service.NewServer(DB, cfg.EncryptionPassphrase))
 		healthpb.RegisterHealthServer(grpcSrv, healthSrv)
 
 		healthSrv.SetServingStatus(fmt.Sprintf("grpc.health.v1.%s", ServiceName), healthpb.HealthCheckResponse_SERVING)
@@ -106,7 +88,7 @@ func main() {
 		grpcSrv.GracefulStop()
 	}
 
-	if err = errgrp.Wait(); err != nil {
+	if err := errgrp.Wait(); err != nil {
 		log.Fatal(err)
 	}
 }
