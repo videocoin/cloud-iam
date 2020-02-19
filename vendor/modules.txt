@@ -35,7 +35,7 @@ github.com/sirupsen/logrus
 # github.com/stretchr/testify v1.4.0
 github.com/stretchr/testify/assert
 github.com/stretchr/testify/require
-# github.com/videocoin/cloud-api v0.3.1-0.20200218030542-7ef345316aba
+# github.com/videocoin/cloud-api v0.3.1-0.20200219032638-bed8bfa055f2
 github.com/videocoin/cloud-api/iam/v1
 # github.com/videocoin/cloud-pkg v0.0.8-0.20200207052840-495efec72284
 github.com/videocoin/cloud-pkg/api/resources

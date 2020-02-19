@@ -32,38 +32,6 @@ var _ = math.Inf
 // proto package needs to be updated.
 const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
-// Supported public key output formats.
-type ServiceAccountPublicKeyType int32
-
-const (
-	// Unspecified. Returns nothing here.
-	ServiceAccountPublicKeyType_TYPE_NONE ServiceAccountPublicKeyType = 0
-	// X509 PEM format.
-	ServiceAccountPublicKeyType_TYPE_X509_PEM_FILE ServiceAccountPublicKeyType = 1
-	// Raw public key.
-	ServiceAccountPublicKeyType_TYPE_RAW_PUBLIC_KEY ServiceAccountPublicKeyType = 2
-)
-
-var ServiceAccountPublicKeyType_name = map[int32]string{
-	0: "TYPE_NONE",
-	1: "TYPE_X509_PEM_FILE",
-	2: "TYPE_RAW_PUBLIC_KEY",
-}
-
-var ServiceAccountPublicKeyType_value = map[string]int32{
-	"TYPE_NONE":           0,
-	"TYPE_X509_PEM_FILE":  1,
-	"TYPE_RAW_PUBLIC_KEY": 2,
-}
-
-func (x ServiceAccountPublicKeyType) String() string {
-	return proto.EnumName(ServiceAccountPublicKeyType_name, int32(x))
-}
-
-func (ServiceAccountPublicKeyType) EnumDescriptor() ([]byte, []int) {
-	return fileDescriptor_ed3c59bdfb5e29f0, []int{0}
-}
-
 // A view for Role objects.
 type RoleView int32
 
@@ -90,377 +58,13 @@ func (x RoleView) String() string {
 }
 
 func (RoleView) EnumDescriptor() ([]byte, []int) {
-	return fileDescriptor_ed3c59bdfb5e29f0, []int{1}
-}
-
-// A service account in the Identity and Access Management API.
-type ServiceAccount struct {
-	// @OutputOnly The email address of the service account.
-	Email string `protobuf:"bytes,1,opt,name=email,proto3" json:"email,omitempty"`
-	// @OutputOnly The unique and stable id of the service account.
-	UniqueId string `protobuf:"bytes,2,opt,name=unique_id,json=uniqueId,proto3" json:"unique_id,omitempty"`
-	// Optional. A user-specified name for the service account.
-	// Must be less than or equal to 100 UTF-8 bytes.
-	DisplayName          string   `protobuf:"bytes,3,opt,name=display_name,json=displayName,proto3" json:"display_name,omitempty"`
-	XXX_NoUnkeyedLiteral struct{} `json:"-"`
-	XXX_unrecognized     []byte   `json:"-"`
-	XXX_sizecache        int32    `json:"-"`
-}
-
-func (m *ServiceAccount) Reset()         { *m = ServiceAccount{} }
-func (m *ServiceAccount) String() string { return proto.CompactTextString(m) }
-func (*ServiceAccount) ProtoMessage()    {}
-func (*ServiceAccount) Descriptor() ([]byte, []int) {
 	return fileDescriptor_ed3c59bdfb5e29f0, []int{0}
 }
-func (m *ServiceAccount) XXX_Unmarshal(b []byte) error {
-	return m.Unmarshal(b)
-}
-func (m *ServiceAccount) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	if deterministic {
-		return xxx_messageInfo_ServiceAccount.Marshal(b, m, deterministic)
-	} else {
-		b = b[:cap(b)]
-		n, err := m.MarshalToSizedBuffer(b)
-		if err != nil {
-			return nil, err
-		}
-		return b[:n], nil
-	}
-}
-func (m *ServiceAccount) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_ServiceAccount.Merge(m, src)
-}
-func (m *ServiceAccount) XXX_Size() int {
-	return m.Size()
-}
-func (m *ServiceAccount) XXX_DiscardUnknown() {
-	xxx_messageInfo_ServiceAccount.DiscardUnknown(m)
-}
 
-var xxx_messageInfo_ServiceAccount proto.InternalMessageInfo
-
-func (m *ServiceAccount) GetEmail() string {
-	if m != nil {
-		return m.Email
-	}
-	return ""
-}
-
-func (m *ServiceAccount) GetUniqueId() string {
-	if m != nil {
-		return m.UniqueId
-	}
-	return ""
-}
-
-func (m *ServiceAccount) GetDisplayName() string {
-	if m != nil {
-		return m.DisplayName
-	}
-	return ""
-}
-
-func (*ServiceAccount) XXX_MessageName() string {
-	return "cloud.api.iam.v1.ServiceAccount"
-}
-
-// The service account list request.
-type ListServiceAccountsRequest struct {
-	// Optional limit on the number of service accounts to include in the
-	// response. Further accounts can subsequently be obtained by including the
-	// [ListServiceAccountsResponse.next_page_token][cloud.api.iam.v1.ListServiceAccountsResponse.next_page_token]
-	// in a subsequent request.
-	PageSize int32 `protobuf:"varint,2,opt,name=page_size,json=pageSize,proto3" json:"page_size,omitempty"`
-	// Optional pagination token returned in an earlier
-	// [ListServiceAccountsResponse.next_page_token][cloud.api.iam.v1.ListServiceAccountsResponse.next_page_token].
-	PageToken            string   `protobuf:"bytes,3,opt,name=page_token,json=pageToken,proto3" json:"page_token,omitempty"`
-	XXX_NoUnkeyedLiteral struct{} `json:"-"`
-	XXX_unrecognized     []byte   `json:"-"`
-	XXX_sizecache        int32    `json:"-"`
-}
-
-func (m *ListServiceAccountsRequest) Reset()         { *m = ListServiceAccountsRequest{} }
-func (m *ListServiceAccountsRequest) String() string { return proto.CompactTextString(m) }
-func (*ListServiceAccountsRequest) ProtoMessage()    {}
-func (*ListServiceAccountsRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_ed3c59bdfb5e29f0, []int{1}
-}
-func (m *ListServiceAccountsRequest) XXX_Unmarshal(b []byte) error {
-	return m.Unmarshal(b)
-}
-func (m *ListServiceAccountsRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	if deterministic {
-		return xxx_messageInfo_ListServiceAccountsRequest.Marshal(b, m, deterministic)
-	} else {
-		b = b[:cap(b)]
-		n, err := m.MarshalToSizedBuffer(b)
-		if err != nil {
-			return nil, err
-		}
-		return b[:n], nil
-	}
-}
-func (m *ListServiceAccountsRequest) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_ListServiceAccountsRequest.Merge(m, src)
-}
-func (m *ListServiceAccountsRequest) XXX_Size() int {
-	return m.Size()
-}
-func (m *ListServiceAccountsRequest) XXX_DiscardUnknown() {
-	xxx_messageInfo_ListServiceAccountsRequest.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_ListServiceAccountsRequest proto.InternalMessageInfo
-
-func (m *ListServiceAccountsRequest) GetPageSize() int32 {
-	if m != nil {
-		return m.PageSize
-	}
-	return 0
-}
-
-func (m *ListServiceAccountsRequest) GetPageToken() string {
-	if m != nil {
-		return m.PageToken
-	}
-	return ""
-}
-
-func (*ListServiceAccountsRequest) XXX_MessageName() string {
-	return "cloud.api.iam.v1.ListServiceAccountsRequest"
-}
-
-// The service account list response.
-type ListServiceAccountsResponse struct {
-	// The list of matching service accounts.
-	Accounts []*ServiceAccount `protobuf:"bytes,1,rep,name=accounts,proto3" json:"accounts,omitempty"`
-	// To retrieve the next page of results, set
-	// [ListServiceAccountsRequest.page_token][cloud.api.iam.v1.ListServiceAccountsRequest.page_token]
-	// to this value.
-	NextPageToken        string   `protobuf:"bytes,2,opt,name=next_page_token,json=nextPageToken,proto3" json:"next_page_token,omitempty"`
-	XXX_NoUnkeyedLiteral struct{} `json:"-"`
-	XXX_unrecognized     []byte   `json:"-"`
-	XXX_sizecache        int32    `json:"-"`
-}
-
-func (m *ListServiceAccountsResponse) Reset()         { *m = ListServiceAccountsResponse{} }
-func (m *ListServiceAccountsResponse) String() string { return proto.CompactTextString(m) }
-func (*ListServiceAccountsResponse) ProtoMessage()    {}
-func (*ListServiceAccountsResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_ed3c59bdfb5e29f0, []int{2}
-}
-func (m *ListServiceAccountsResponse) XXX_Unmarshal(b []byte) error {
-	return m.Unmarshal(b)
-}
-func (m *ListServiceAccountsResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	if deterministic {
-		return xxx_messageInfo_ListServiceAccountsResponse.Marshal(b, m, deterministic)
-	} else {
-		b = b[:cap(b)]
-		n, err := m.MarshalToSizedBuffer(b)
-		if err != nil {
-			return nil, err
-		}
-		return b[:n], nil
-	}
-}
-func (m *ListServiceAccountsResponse) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_ListServiceAccountsResponse.Merge(m, src)
-}
-func (m *ListServiceAccountsResponse) XXX_Size() int {
-	return m.Size()
-}
-func (m *ListServiceAccountsResponse) XXX_DiscardUnknown() {
-	xxx_messageInfo_ListServiceAccountsResponse.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_ListServiceAccountsResponse proto.InternalMessageInfo
-
-func (m *ListServiceAccountsResponse) GetAccounts() []*ServiceAccount {
-	if m != nil {
-		return m.Accounts
-	}
-	return nil
-}
-
-func (m *ListServiceAccountsResponse) GetNextPageToken() string {
-	if m != nil {
-		return m.NextPageToken
-	}
-	return ""
-}
-
-func (*ListServiceAccountsResponse) XXX_MessageName() string {
-	return "cloud.api.iam.v1.ListServiceAccountsResponse"
-}
-
-// The service account get request.
-type GetServiceAccountRequest struct {
-	// Required. The service account email.
-	Email                string   `protobuf:"bytes,1,opt,name=email,proto3" json:"email,omitempty"`
-	XXX_NoUnkeyedLiteral struct{} `json:"-"`
-	XXX_unrecognized     []byte   `json:"-"`
-	XXX_sizecache        int32    `json:"-"`
-}
-
-func (m *GetServiceAccountRequest) Reset()         { *m = GetServiceAccountRequest{} }
-func (m *GetServiceAccountRequest) String() string { return proto.CompactTextString(m) }
-func (*GetServiceAccountRequest) ProtoMessage()    {}
-func (*GetServiceAccountRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_ed3c59bdfb5e29f0, []int{3}
-}
-func (m *GetServiceAccountRequest) XXX_Unmarshal(b []byte) error {
-	return m.Unmarshal(b)
-}
-func (m *GetServiceAccountRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	if deterministic {
-		return xxx_messageInfo_GetServiceAccountRequest.Marshal(b, m, deterministic)
-	} else {
-		b = b[:cap(b)]
-		n, err := m.MarshalToSizedBuffer(b)
-		if err != nil {
-			return nil, err
-		}
-		return b[:n], nil
-	}
-}
-func (m *GetServiceAccountRequest) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_GetServiceAccountRequest.Merge(m, src)
-}
-func (m *GetServiceAccountRequest) XXX_Size() int {
-	return m.Size()
-}
-func (m *GetServiceAccountRequest) XXX_DiscardUnknown() {
-	xxx_messageInfo_GetServiceAccountRequest.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_GetServiceAccountRequest proto.InternalMessageInfo
-
-func (m *GetServiceAccountRequest) GetEmail() string {
-	if m != nil {
-		return m.Email
-	}
-	return ""
-}
-
-func (*GetServiceAccountRequest) XXX_MessageName() string {
-	return "cloud.api.iam.v1.GetServiceAccountRequest"
-}
-
-// The service account create request.
-type CreateServiceAccountRequest struct {
-	// Required. The account id that is used to generate the service account
-	// email address and a stable unique id. It is unique within a project,
-	// must be 6-30 characters long, and match the regular expression
-	// `[a-z]([-a-z0-9]*[a-z0-9])` to comply with RFC1035.
-	AccountId            string   `protobuf:"bytes,1,opt,name=account_id,json=accountId,proto3" json:"account_id,omitempty"`
-	XXX_NoUnkeyedLiteral struct{} `json:"-"`
-	XXX_unrecognized     []byte   `json:"-"`
-	XXX_sizecache        int32    `json:"-"`
-}
-
-func (m *CreateServiceAccountRequest) Reset()         { *m = CreateServiceAccountRequest{} }
-func (m *CreateServiceAccountRequest) String() string { return proto.CompactTextString(m) }
-func (*CreateServiceAccountRequest) ProtoMessage()    {}
-func (*CreateServiceAccountRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_ed3c59bdfb5e29f0, []int{4}
-}
-func (m *CreateServiceAccountRequest) XXX_Unmarshal(b []byte) error {
-	return m.Unmarshal(b)
-}
-func (m *CreateServiceAccountRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	if deterministic {
-		return xxx_messageInfo_CreateServiceAccountRequest.Marshal(b, m, deterministic)
-	} else {
-		b = b[:cap(b)]
-		n, err := m.MarshalToSizedBuffer(b)
-		if err != nil {
-			return nil, err
-		}
-		return b[:n], nil
-	}
-}
-func (m *CreateServiceAccountRequest) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_CreateServiceAccountRequest.Merge(m, src)
-}
-func (m *CreateServiceAccountRequest) XXX_Size() int {
-	return m.Size()
-}
-func (m *CreateServiceAccountRequest) XXX_DiscardUnknown() {
-	xxx_messageInfo_CreateServiceAccountRequest.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_CreateServiceAccountRequest proto.InternalMessageInfo
-
-func (m *CreateServiceAccountRequest) GetAccountId() string {
-	if m != nil {
-		return m.AccountId
-	}
-	return ""
-}
-
-func (*CreateServiceAccountRequest) XXX_MessageName() string {
-	return "cloud.api.iam.v1.CreateServiceAccountRequest"
-}
-
-// The service account delete request.
-type DeleteServiceAccountRequest struct {
-	// Required. The service account email.
-	Email                string   `protobuf:"bytes,1,opt,name=email,proto3" json:"email,omitempty"`
-	XXX_NoUnkeyedLiteral struct{} `json:"-"`
-	XXX_unrecognized     []byte   `json:"-"`
-	XXX_sizecache        int32    `json:"-"`
-}
-
-func (m *DeleteServiceAccountRequest) Reset()         { *m = DeleteServiceAccountRequest{} }
-func (m *DeleteServiceAccountRequest) String() string { return proto.CompactTextString(m) }
-func (*DeleteServiceAccountRequest) ProtoMessage()    {}
-func (*DeleteServiceAccountRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_ed3c59bdfb5e29f0, []int{5}
-}
-func (m *DeleteServiceAccountRequest) XXX_Unmarshal(b []byte) error {
-	return m.Unmarshal(b)
-}
-func (m *DeleteServiceAccountRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	if deterministic {
-		return xxx_messageInfo_DeleteServiceAccountRequest.Marshal(b, m, deterministic)
-	} else {
-		b = b[:cap(b)]
-		n, err := m.MarshalToSizedBuffer(b)
-		if err != nil {
-			return nil, err
-		}
-		return b[:n], nil
-	}
-}
-func (m *DeleteServiceAccountRequest) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_DeleteServiceAccountRequest.Merge(m, src)
-}
-func (m *DeleteServiceAccountRequest) XXX_Size() int {
-	return m.Size()
-}
-func (m *DeleteServiceAccountRequest) XXX_DiscardUnknown() {
-	xxx_messageInfo_DeleteServiceAccountRequest.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_DeleteServiceAccountRequest proto.InternalMessageInfo
-
-func (m *DeleteServiceAccountRequest) GetEmail() string {
-	if m != nil {
-		return m.Email
-	}
-	return ""
-}
-
-func (*DeleteServiceAccountRequest) XXX_MessageName() string {
-	return "cloud.api.iam.v1.DeleteServiceAccountRequest"
-}
-
-type ServiceAccountKey struct {
+type Key struct {
 	// The resource id.
 	Id string `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
-	// The private key data. Only provided in `GetServiceAccountKey`
+	// The private key data. Only provided in `CreateServiceAccountKey`
 	// responses. Make sure to keep the private key data secure because it
 	// allows for the assertion of the service account identity.
 	PrivateKeyData []byte `protobuf:"bytes,2,opt,name=private_key_data,json=privateKeyData,proto3" json:"private_key_data,omitempty"`
@@ -469,27 +73,24 @@ type ServiceAccountKey struct {
 	// The key can be used after this timestamp.
 	ValidAfterTime *types.Timestamp `protobuf:"bytes,4,opt,name=valid_after_time,json=validAfterTime,proto3" json:"valid_after_time,omitempty"`
 	// The key can be used before this timestamp.
-	// For system-managed key pairs, this timestamp is the end time for the
-	// private key signing operation. The public key could still be used
-	// for verification for a few hours after this time.
 	ValidBeforeTime      *types.Timestamp `protobuf:"bytes,5,opt,name=valid_before_time,json=validBeforeTime,proto3" json:"valid_before_time,omitempty"`
 	XXX_NoUnkeyedLiteral struct{}         `json:"-"`
 	XXX_unrecognized     []byte           `json:"-"`
 	XXX_sizecache        int32            `json:"-"`
 }
 
-func (m *ServiceAccountKey) Reset()         { *m = ServiceAccountKey{} }
-func (m *ServiceAccountKey) String() string { return proto.CompactTextString(m) }
-func (*ServiceAccountKey) ProtoMessage()    {}
-func (*ServiceAccountKey) Descriptor() ([]byte, []int) {
-	return fileDescriptor_ed3c59bdfb5e29f0, []int{6}
+func (m *Key) Reset()         { *m = Key{} }
+func (m *Key) String() string { return proto.CompactTextString(m) }
+func (*Key) ProtoMessage()    {}
+func (*Key) Descriptor() ([]byte, []int) {
+	return fileDescriptor_ed3c59bdfb5e29f0, []int{0}
 }
-func (m *ServiceAccountKey) XXX_Unmarshal(b []byte) error {
+func (m *Key) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-func (m *ServiceAccountKey) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+func (m *Key) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
-		return xxx_messageInfo_ServiceAccountKey.Marshal(b, m, deterministic)
+		return xxx_messageInfo_Key.Marshal(b, m, deterministic)
 	} else {
 		b = b[:cap(b)]
 		n, err := m.MarshalToSizedBuffer(b)
@@ -499,78 +100,80 @@ func (m *ServiceAccountKey) XXX_Marshal(b []byte, deterministic bool) ([]byte, e
 		return b[:n], nil
 	}
 }
-func (m *ServiceAccountKey) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_ServiceAccountKey.Merge(m, src)
+func (m *Key) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_Key.Merge(m, src)
 }
-func (m *ServiceAccountKey) XXX_Size() int {
+func (m *Key) XXX_Size() int {
 	return m.Size()
 }
-func (m *ServiceAccountKey) XXX_DiscardUnknown() {
-	xxx_messageInfo_ServiceAccountKey.DiscardUnknown(m)
+func (m *Key) XXX_DiscardUnknown() {
+	xxx_messageInfo_Key.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_ServiceAccountKey proto.InternalMessageInfo
+var xxx_messageInfo_Key proto.InternalMessageInfo
 
-func (m *ServiceAccountKey) GetId() string {
+func (m *Key) GetId() string {
 	if m != nil {
 		return m.Id
 	}
 	return ""
 }
 
-func (m *ServiceAccountKey) GetPrivateKeyData() []byte {
+func (m *Key) GetPrivateKeyData() []byte {
 	if m != nil {
 		return m.PrivateKeyData
 	}
 	return nil
 }
 
-func (m *ServiceAccountKey) GetPublicKeyData() []byte {
+func (m *Key) GetPublicKeyData() []byte {
 	if m != nil {
 		return m.PublicKeyData
 	}
 	return nil
 }
 
-func (m *ServiceAccountKey) GetValidAfterTime() *types.Timestamp {
+func (m *Key) GetValidAfterTime() *types.Timestamp {
 	if m != nil {
 		return m.ValidAfterTime
 	}
 	return nil
 }
 
-func (m *ServiceAccountKey) GetValidBeforeTime() *types.Timestamp {
+func (m *Key) GetValidBeforeTime() *types.Timestamp {
 	if m != nil {
 		return m.ValidBeforeTime
 	}
 	return nil
 }
 
-func (*ServiceAccountKey) XXX_MessageName() string {
-	return "cloud.api.iam.v1.ServiceAccountKey"
+func (*Key) XXX_MessageName() string {
+	return "cloud.api.iam.v1.Key"
 }
 
-// The service account keys list request.
-type ListServiceAccountKeysRequest struct {
-	// Required. The service account email.
-	ServiceAccountEmail  string   `protobuf:"bytes,1,opt,name=service_account_email,json=serviceAccountEmail,proto3" json:"service_account_email,omitempty"`
+// The keys list response.
+type ListKeysRequest struct {
+	// Optional limit on the number of roles to include in the response.
+	PageSize int32 `protobuf:"varint,1,opt,name=page_size,json=pageSize,proto3" json:"page_size,omitempty"`
+	// Optional pagination token returned in an earlier ListRolesResponse.
+	PageToken            string   `protobuf:"bytes,2,opt,name=page_token,json=pageToken,proto3" json:"page_token,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
 	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *ListServiceAccountKeysRequest) Reset()         { *m = ListServiceAccountKeysRequest{} }
-func (m *ListServiceAccountKeysRequest) String() string { return proto.CompactTextString(m) }
-func (*ListServiceAccountKeysRequest) ProtoMessage()    {}
-func (*ListServiceAccountKeysRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_ed3c59bdfb5e29f0, []int{7}
+func (m *ListKeysRequest) Reset()         { *m = ListKeysRequest{} }
+func (m *ListKeysRequest) String() string { return proto.CompactTextString(m) }
+func (*ListKeysRequest) ProtoMessage()    {}
+func (*ListKeysRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_ed3c59bdfb5e29f0, []int{1}
 }
-func (m *ListServiceAccountKeysRequest) XXX_Unmarshal(b []byte) error {
+func (m *ListKeysRequest) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-func (m *ListServiceAccountKeysRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+func (m *ListKeysRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
-		return xxx_messageInfo_ListServiceAccountKeysRequest.Marshal(b, m, deterministic)
+		return xxx_messageInfo_ListKeysRequest.Marshal(b, m, deterministic)
 	} else {
 		b = b[:cap(b)]
 		n, err := m.MarshalToSizedBuffer(b)
@@ -580,50 +183,56 @@ func (m *ListServiceAccountKeysRequest) XXX_Marshal(b []byte, deterministic bool
 		return b[:n], nil
 	}
 }
-func (m *ListServiceAccountKeysRequest) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_ListServiceAccountKeysRequest.Merge(m, src)
+func (m *ListKeysRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_ListKeysRequest.Merge(m, src)
 }
-func (m *ListServiceAccountKeysRequest) XXX_Size() int {
+func (m *ListKeysRequest) XXX_Size() int {
 	return m.Size()
 }
-func (m *ListServiceAccountKeysRequest) XXX_DiscardUnknown() {
-	xxx_messageInfo_ListServiceAccountKeysRequest.DiscardUnknown(m)
+func (m *ListKeysRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_ListKeysRequest.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_ListServiceAccountKeysRequest proto.InternalMessageInfo
+var xxx_messageInfo_ListKeysRequest proto.InternalMessageInfo
 
-func (m *ListServiceAccountKeysRequest) GetServiceAccountEmail() string {
+func (m *ListKeysRequest) GetPageSize() int32 {
 	if m != nil {
-		return m.ServiceAccountEmail
+		return m.PageSize
+	}
+	return 0
+}
+
+func (m *ListKeysRequest) GetPageToken() string {
+	if m != nil {
+		return m.PageToken
 	}
 	return ""
 }
 
-func (*ListServiceAccountKeysRequest) XXX_MessageName() string {
-	return "cloud.api.iam.v1.ListServiceAccountKeysRequest"
+func (*ListKeysRequest) XXX_MessageName() string {
+	return "cloud.api.iam.v1.ListKeysRequest"
 }
 
-// The service account keys list response.
-type ListServiceAccountKeysResponse struct {
-	// The public keys for the service account.
-	Keys                 []*ServiceAccountKey `protobuf:"bytes,1,rep,name=keys,proto3" json:"keys,omitempty"`
-	XXX_NoUnkeyedLiteral struct{}             `json:"-"`
-	XXX_unrecognized     []byte               `json:"-"`
-	XXX_sizecache        int32                `json:"-"`
+// The keys list response.
+type ListKeysResponse struct {
+	Keys                 []*Key   `protobuf:"bytes,1,rep,name=keys,proto3" json:"keys,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *ListServiceAccountKeysResponse) Reset()         { *m = ListServiceAccountKeysResponse{} }
-func (m *ListServiceAccountKeysResponse) String() string { return proto.CompactTextString(m) }
-func (*ListServiceAccountKeysResponse) ProtoMessage()    {}
-func (*ListServiceAccountKeysResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_ed3c59bdfb5e29f0, []int{8}
+func (m *ListKeysResponse) Reset()         { *m = ListKeysResponse{} }
+func (m *ListKeysResponse) String() string { return proto.CompactTextString(m) }
+func (*ListKeysResponse) ProtoMessage()    {}
+func (*ListKeysResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_ed3c59bdfb5e29f0, []int{2}
 }
-func (m *ListServiceAccountKeysResponse) XXX_Unmarshal(b []byte) error {
+func (m *ListKeysResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-func (m *ListServiceAccountKeysResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+func (m *ListKeysResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
-		return xxx_messageInfo_ListServiceAccountKeysResponse.Marshal(b, m, deterministic)
+		return xxx_messageInfo_ListKeysResponse.Marshal(b, m, deterministic)
 	} else {
 		b = b[:cap(b)]
 		n, err := m.MarshalToSizedBuffer(b)
@@ -633,52 +242,49 @@ func (m *ListServiceAccountKeysResponse) XXX_Marshal(b []byte, deterministic boo
 		return b[:n], nil
 	}
 }
-func (m *ListServiceAccountKeysResponse) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_ListServiceAccountKeysResponse.Merge(m, src)
+func (m *ListKeysResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_ListKeysResponse.Merge(m, src)
 }
-func (m *ListServiceAccountKeysResponse) XXX_Size() int {
+func (m *ListKeysResponse) XXX_Size() int {
 	return m.Size()
 }
-func (m *ListServiceAccountKeysResponse) XXX_DiscardUnknown() {
-	xxx_messageInfo_ListServiceAccountKeysResponse.DiscardUnknown(m)
+func (m *ListKeysResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_ListKeysResponse.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_ListServiceAccountKeysResponse proto.InternalMessageInfo
+var xxx_messageInfo_ListKeysResponse proto.InternalMessageInfo
 
-func (m *ListServiceAccountKeysResponse) GetKeys() []*ServiceAccountKey {
+func (m *ListKeysResponse) GetKeys() []*Key {
 	if m != nil {
 		return m.Keys
 	}
 	return nil
 }
 
-func (*ListServiceAccountKeysResponse) XXX_MessageName() string {
-	return "cloud.api.iam.v1.ListServiceAccountKeysResponse"
+func (*ListKeysResponse) XXX_MessageName() string {
+	return "cloud.api.iam.v1.ListKeysResponse"
 }
 
-// The service account key get by id request.
-type GetServiceAccountKeyRequest struct {
-	// The service account email
-	ServiceAccountEmail string `protobuf:"bytes,1,opt,name=service_account_email,json=serviceAccountEmail,proto3" json:"service_account_email,omitempty"`
-	// Required. The key id.
+// The key get by id request.
+type GetKeyRequest struct {
 	KeyId                string   `protobuf:"bytes,2,opt,name=key_id,json=keyId,proto3" json:"key_id,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
 	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *GetServiceAccountKeyRequest) Reset()         { *m = GetServiceAccountKeyRequest{} }
-func (m *GetServiceAccountKeyRequest) String() string { return proto.CompactTextString(m) }
-func (*GetServiceAccountKeyRequest) ProtoMessage()    {}
-func (*GetServiceAccountKeyRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_ed3c59bdfb5e29f0, []int{9}
+func (m *GetKeyRequest) Reset()         { *m = GetKeyRequest{} }
+func (m *GetKeyRequest) String() string { return proto.CompactTextString(m) }
+func (*GetKeyRequest) ProtoMessage()    {}
+func (*GetKeyRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_ed3c59bdfb5e29f0, []int{3}
 }
-func (m *GetServiceAccountKeyRequest) XXX_Unmarshal(b []byte) error {
+func (m *GetKeyRequest) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-func (m *GetServiceAccountKeyRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+func (m *GetKeyRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
-		return xxx_messageInfo_GetServiceAccountKeyRequest.Marshal(b, m, deterministic)
+		return xxx_messageInfo_GetKeyRequest.Marshal(b, m, deterministic)
 	} else {
 		b = b[:cap(b)]
 		n, err := m.MarshalToSizedBuffer(b)
@@ -688,57 +294,49 @@ func (m *GetServiceAccountKeyRequest) XXX_Marshal(b []byte, deterministic bool) 
 		return b[:n], nil
 	}
 }
-func (m *GetServiceAccountKeyRequest) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_GetServiceAccountKeyRequest.Merge(m, src)
+func (m *GetKeyRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_GetKeyRequest.Merge(m, src)
 }
-func (m *GetServiceAccountKeyRequest) XXX_Size() int {
+func (m *GetKeyRequest) XXX_Size() int {
 	return m.Size()
 }
-func (m *GetServiceAccountKeyRequest) XXX_DiscardUnknown() {
-	xxx_messageInfo_GetServiceAccountKeyRequest.DiscardUnknown(m)
+func (m *GetKeyRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_GetKeyRequest.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_GetServiceAccountKeyRequest proto.InternalMessageInfo
+var xxx_messageInfo_GetKeyRequest proto.InternalMessageInfo
 
-func (m *GetServiceAccountKeyRequest) GetServiceAccountEmail() string {
-	if m != nil {
-		return m.ServiceAccountEmail
-	}
-	return ""
-}
-
-func (m *GetServiceAccountKeyRequest) GetKeyId() string {
+func (m *GetKeyRequest) GetKeyId() string {
 	if m != nil {
 		return m.KeyId
 	}
 	return ""
 }
 
-func (*GetServiceAccountKeyRequest) XXX_MessageName() string {
-	return "cloud.api.iam.v1.GetServiceAccountKeyRequest"
+func (*GetKeyRequest) XXX_MessageName() string {
+	return "cloud.api.iam.v1.GetKeyRequest"
 }
 
-// The service account key create request.
-type CreateServiceAccountKeyRequest struct {
-	// Required. The service account name.
-	ServiceAccountEmail  string   `protobuf:"bytes,1,opt,name=service_account_email,json=serviceAccountEmail,proto3" json:"service_account_email,omitempty"`
+// The key delete request.
+type DeleteKeyRequest struct {
+	KeyId                string   `protobuf:"bytes,1,opt,name=key_id,json=keyId,proto3" json:"key_id,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
 	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *CreateServiceAccountKeyRequest) Reset()         { *m = CreateServiceAccountKeyRequest{} }
-func (m *CreateServiceAccountKeyRequest) String() string { return proto.CompactTextString(m) }
-func (*CreateServiceAccountKeyRequest) ProtoMessage()    {}
-func (*CreateServiceAccountKeyRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_ed3c59bdfb5e29f0, []int{10}
+func (m *DeleteKeyRequest) Reset()         { *m = DeleteKeyRequest{} }
+func (m *DeleteKeyRequest) String() string { return proto.CompactTextString(m) }
+func (*DeleteKeyRequest) ProtoMessage()    {}
+func (*DeleteKeyRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_ed3c59bdfb5e29f0, []int{4}
 }
-func (m *CreateServiceAccountKeyRequest) XXX_Unmarshal(b []byte) error {
+func (m *DeleteKeyRequest) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-func (m *CreateServiceAccountKeyRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+func (m *DeleteKeyRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
-		return xxx_messageInfo_CreateServiceAccountKeyRequest.Marshal(b, m, deterministic)
+		return xxx_messageInfo_DeleteKeyRequest.Marshal(b, m, deterministic)
 	} else {
 		b = b[:cap(b)]
 		n, err := m.MarshalToSizedBuffer(b)
@@ -748,99 +346,37 @@ func (m *CreateServiceAccountKeyRequest) XXX_Marshal(b []byte, deterministic boo
 		return b[:n], nil
 	}
 }
-func (m *CreateServiceAccountKeyRequest) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_CreateServiceAccountKeyRequest.Merge(m, src)
+func (m *DeleteKeyRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_DeleteKeyRequest.Merge(m, src)
 }
-func (m *CreateServiceAccountKeyRequest) XXX_Size() int {
+func (m *DeleteKeyRequest) XXX_Size() int {
 	return m.Size()
 }
-func (m *CreateServiceAccountKeyRequest) XXX_DiscardUnknown() {
-	xxx_messageInfo_CreateServiceAccountKeyRequest.DiscardUnknown(m)
+func (m *DeleteKeyRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_DeleteKeyRequest.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_CreateServiceAccountKeyRequest proto.InternalMessageInfo
+var xxx_messageInfo_DeleteKeyRequest proto.InternalMessageInfo
 
-func (m *CreateServiceAccountKeyRequest) GetServiceAccountEmail() string {
-	if m != nil {
-		return m.ServiceAccountEmail
-	}
-	return ""
-}
-
-func (*CreateServiceAccountKeyRequest) XXX_MessageName() string {
-	return "cloud.api.iam.v1.CreateServiceAccountKeyRequest"
-}
-
-// The service account key delete request.
-type DeleteServiceAccountKeyRequest struct {
-	// The service account email.
-	ServiceAccountEmail string `protobuf:"bytes,1,opt,name=service_account_email,json=serviceAccountEmail,proto3" json:"service_account_email,omitempty"`
-	// Required. The service account email.
-	KeyId                string   `protobuf:"bytes,2,opt,name=key_id,json=keyId,proto3" json:"key_id,omitempty"`
-	XXX_NoUnkeyedLiteral struct{} `json:"-"`
-	XXX_unrecognized     []byte   `json:"-"`
-	XXX_sizecache        int32    `json:"-"`
-}
-
-func (m *DeleteServiceAccountKeyRequest) Reset()         { *m = DeleteServiceAccountKeyRequest{} }
-func (m *DeleteServiceAccountKeyRequest) String() string { return proto.CompactTextString(m) }
-func (*DeleteServiceAccountKeyRequest) ProtoMessage()    {}
-func (*DeleteServiceAccountKeyRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_ed3c59bdfb5e29f0, []int{11}
-}
-func (m *DeleteServiceAccountKeyRequest) XXX_Unmarshal(b []byte) error {
-	return m.Unmarshal(b)
-}
-func (m *DeleteServiceAccountKeyRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	if deterministic {
-		return xxx_messageInfo_DeleteServiceAccountKeyRequest.Marshal(b, m, deterministic)
-	} else {
-		b = b[:cap(b)]
-		n, err := m.MarshalToSizedBuffer(b)
-		if err != nil {
-			return nil, err
-		}
-		return b[:n], nil
-	}
-}
-func (m *DeleteServiceAccountKeyRequest) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_DeleteServiceAccountKeyRequest.Merge(m, src)
-}
-func (m *DeleteServiceAccountKeyRequest) XXX_Size() int {
-	return m.Size()
-}
-func (m *DeleteServiceAccountKeyRequest) XXX_DiscardUnknown() {
-	xxx_messageInfo_DeleteServiceAccountKeyRequest.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_DeleteServiceAccountKeyRequest proto.InternalMessageInfo
-
-func (m *DeleteServiceAccountKeyRequest) GetServiceAccountEmail() string {
-	if m != nil {
-		return m.ServiceAccountEmail
-	}
-	return ""
-}
-
-func (m *DeleteServiceAccountKeyRequest) GetKeyId() string {
+func (m *DeleteKeyRequest) GetKeyId() string {
 	if m != nil {
 		return m.KeyId
 	}
 	return ""
 }
 
-func (*DeleteServiceAccountKeyRequest) XXX_MessageName() string {
-	return "cloud.api.iam.v1.DeleteServiceAccountKeyRequest"
+func (*DeleteKeyRequest) XXX_MessageName() string {
+	return "cloud.api.iam.v1.DeleteKeyRequest"
 }
 
 // A role in the Identity and Access Management API.
 type Role struct {
 	// The name of the role.
 	Name string `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
-	// Optional. A human-readable title for the role.  Typically this
+	// Optional A human-readable title for the role.  Typically this
 	// is limited to 100 UTF-8 bytes.
 	Title string `protobuf:"bytes,2,opt,name=title,proto3" json:"title,omitempty"`
-	// Optional. A human-readable description for the role.
+	// Optional A human-readable description for the role.
 	Description string `protobuf:"bytes,3,opt,name=description,proto3" json:"description,omitempty"`
 	// The names of the permissions this role grants when bound in an IAM policy.
 	IncludedPermissions  []string `protobuf:"bytes,4,rep,name=included_permissions,json=includedPermissions,proto3" json:"included_permissions,omitempty"`
@@ -853,7 +389,7 @@ func (m *Role) Reset()         { *m = Role{} }
 func (m *Role) String() string { return proto.CompactTextString(m) }
 func (*Role) ProtoMessage()    {}
 func (*Role) Descriptor() ([]byte, []int) {
-	return fileDescriptor_ed3c59bdfb5e29f0, []int{12}
+	return fileDescriptor_ed3c59bdfb5e29f0, []int{5}
 }
 func (m *Role) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -934,7 +470,7 @@ func (m *ListRolesRequest) Reset()         { *m = ListRolesRequest{} }
 func (m *ListRolesRequest) String() string { return proto.CompactTextString(m) }
 func (*ListRolesRequest) ProtoMessage()    {}
 func (*ListRolesRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_ed3c59bdfb5e29f0, []int{13}
+	return fileDescriptor_ed3c59bdfb5e29f0, []int{6}
 }
 func (m *ListRolesRequest) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -1004,7 +540,7 @@ func (m *ListRolesResponse) Reset()         { *m = ListRolesResponse{} }
 func (m *ListRolesResponse) String() string { return proto.CompactTextString(m) }
 func (*ListRolesResponse) ProtoMessage()    {}
 func (*ListRolesResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_ed3c59bdfb5e29f0, []int{14}
+	return fileDescriptor_ed3c59bdfb5e29f0, []int{7}
 }
 func (m *ListRolesResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -1063,7 +599,7 @@ func (m *GetRoleRequest) Reset()         { *m = GetRoleRequest{} }
 func (m *GetRoleRequest) String() string { return proto.CompactTextString(m) }
 func (*GetRoleRequest) ProtoMessage()    {}
 func (*GetRoleRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_ed3c59bdfb5e29f0, []int{15}
+	return fileDescriptor_ed3c59bdfb5e29f0, []int{8}
 }
 func (m *GetRoleRequest) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -1103,7 +639,7 @@ func (*GetRoleRequest) XXX_MessageName() string {
 	return "cloud.api.iam.v1.GetRoleRequest"
 }
 
-// A permission which can be included by a role.
+// A permission belongs to one or more roles.
 type Permission struct {
 	// The name of this Permission.
 	Name string `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
@@ -1120,7 +656,7 @@ func (m *Permission) Reset()         { *m = Permission{} }
 func (m *Permission) String() string { return proto.CompactTextString(m) }
 func (*Permission) ProtoMessage()    {}
 func (*Permission) Descriptor() ([]byte, []int) {
-	return fileDescriptor_ed3c59bdfb5e29f0, []int{16}
+	return fileDescriptor_ed3c59bdfb5e29f0, []int{9}
 }
 func (m *Permission) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -1188,7 +724,7 @@ func (m *RoleBinding) Reset()         { *m = RoleBinding{} }
 func (m *RoleBinding) String() string { return proto.CompactTextString(m) }
 func (*RoleBinding) ProtoMessage()    {}
 func (*RoleBinding) Descriptor() ([]byte, []int) {
-	return fileDescriptor_ed3c59bdfb5e29f0, []int{17}
+	return fileDescriptor_ed3c59bdfb5e29f0, []int{10}
 }
 func (m *RoleBinding) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -1249,7 +785,7 @@ func (m *ListRoleBindingsRequest) Reset()         { *m = ListRoleBindingsRequest
 func (m *ListRoleBindingsRequest) String() string { return proto.CompactTextString(m) }
 func (*ListRoleBindingsRequest) ProtoMessage()    {}
 func (*ListRoleBindingsRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_ed3c59bdfb5e29f0, []int{18}
+	return fileDescriptor_ed3c59bdfb5e29f0, []int{11}
 }
 func (m *ListRoleBindingsRequest) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -1297,7 +833,6 @@ func (*ListRoleBindingsRequest) XXX_MessageName() string {
 }
 
 type ListRoleBindingsResponse struct {
-	// The list of role bindings.
 	Bindings             []*RoleBinding `protobuf:"bytes,1,rep,name=bindings,proto3" json:"bindings,omitempty"`
 	XXX_NoUnkeyedLiteral struct{}       `json:"-"`
 	XXX_unrecognized     []byte         `json:"-"`
@@ -1308,7 +843,7 @@ func (m *ListRoleBindingsResponse) Reset()         { *m = ListRoleBindingsRespon
 func (m *ListRoleBindingsResponse) String() string { return proto.CompactTextString(m) }
 func (*ListRoleBindingsResponse) ProtoMessage()    {}
 func (*ListRoleBindingsResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_ed3c59bdfb5e29f0, []int{19}
+	return fileDescriptor_ed3c59bdfb5e29f0, []int{12}
 }
 func (m *ListRoleBindingsResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -1348,34 +883,18 @@ func (*ListRoleBindingsResponse) XXX_MessageName() string {
 	return "cloud.api.iam.v1.ListRoleBindingsResponse"
 }
 func init() {
-	proto.RegisterEnum("cloud.api.iam.v1.ServiceAccountPublicKeyType", ServiceAccountPublicKeyType_name, ServiceAccountPublicKeyType_value)
-	golang_proto.RegisterEnum("cloud.api.iam.v1.ServiceAccountPublicKeyType", ServiceAccountPublicKeyType_name, ServiceAccountPublicKeyType_value)
 	proto.RegisterEnum("cloud.api.iam.v1.RoleView", RoleView_name, RoleView_value)
 	golang_proto.RegisterEnum("cloud.api.iam.v1.RoleView", RoleView_name, RoleView_value)
-	proto.RegisterType((*ServiceAccount)(nil), "cloud.api.iam.v1.ServiceAccount")
-	golang_proto.RegisterType((*ServiceAccount)(nil), "cloud.api.iam.v1.ServiceAccount")
-	proto.RegisterType((*ListServiceAccountsRequest)(nil), "cloud.api.iam.v1.ListServiceAccountsRequest")
-	golang_proto.RegisterType((*ListServiceAccountsRequest)(nil), "cloud.api.iam.v1.ListServiceAccountsRequest")
-	proto.RegisterType((*ListServiceAccountsResponse)(nil), "cloud.api.iam.v1.ListServiceAccountsResponse")
-	golang_proto.RegisterType((*ListServiceAccountsResponse)(nil), "cloud.api.iam.v1.ListServiceAccountsResponse")
-	proto.RegisterType((*GetServiceAccountRequest)(nil), "cloud.api.iam.v1.GetServiceAccountRequest")
-	golang_proto.RegisterType((*GetServiceAccountRequest)(nil), "cloud.api.iam.v1.GetServiceAccountRequest")
-	proto.RegisterType((*CreateServiceAccountRequest)(nil), "cloud.api.iam.v1.CreateServiceAccountRequest")
-	golang_proto.RegisterType((*CreateServiceAccountRequest)(nil), "cloud.api.iam.v1.CreateServiceAccountRequest")
-	proto.RegisterType((*DeleteServiceAccountRequest)(nil), "cloud.api.iam.v1.DeleteServiceAccountRequest")
-	golang_proto.RegisterType((*DeleteServiceAccountRequest)(nil), "cloud.api.iam.v1.DeleteServiceAccountRequest")
-	proto.RegisterType((*ServiceAccountKey)(nil), "cloud.api.iam.v1.ServiceAccountKey")
-	golang_proto.RegisterType((*ServiceAccountKey)(nil), "cloud.api.iam.v1.ServiceAccountKey")
-	proto.RegisterType((*ListServiceAccountKeysRequest)(nil), "cloud.api.iam.v1.ListServiceAccountKeysRequest")
-	golang_proto.RegisterType((*ListServiceAccountKeysRequest)(nil), "cloud.api.iam.v1.ListServiceAccountKeysRequest")
-	proto.RegisterType((*ListServiceAccountKeysResponse)(nil), "cloud.api.iam.v1.ListServiceAccountKeysResponse")
-	golang_proto.RegisterType((*ListServiceAccountKeysResponse)(nil), "cloud.api.iam.v1.ListServiceAccountKeysResponse")
-	proto.RegisterType((*GetServiceAccountKeyRequest)(nil), "cloud.api.iam.v1.GetServiceAccountKeyRequest")
-	golang_proto.RegisterType((*GetServiceAccountKeyRequest)(nil), "cloud.api.iam.v1.GetServiceAccountKeyRequest")
-	proto.RegisterType((*CreateServiceAccountKeyRequest)(nil), "cloud.api.iam.v1.CreateServiceAccountKeyRequest")
-	golang_proto.RegisterType((*CreateServiceAccountKeyRequest)(nil), "cloud.api.iam.v1.CreateServiceAccountKeyRequest")
-	proto.RegisterType((*DeleteServiceAccountKeyRequest)(nil), "cloud.api.iam.v1.DeleteServiceAccountKeyRequest")
-	golang_proto.RegisterType((*DeleteServiceAccountKeyRequest)(nil), "cloud.api.iam.v1.DeleteServiceAccountKeyRequest")
+	proto.RegisterType((*Key)(nil), "cloud.api.iam.v1.Key")
+	golang_proto.RegisterType((*Key)(nil), "cloud.api.iam.v1.Key")
+	proto.RegisterType((*ListKeysRequest)(nil), "cloud.api.iam.v1.ListKeysRequest")
+	golang_proto.RegisterType((*ListKeysRequest)(nil), "cloud.api.iam.v1.ListKeysRequest")
+	proto.RegisterType((*ListKeysResponse)(nil), "cloud.api.iam.v1.ListKeysResponse")
+	golang_proto.RegisterType((*ListKeysResponse)(nil), "cloud.api.iam.v1.ListKeysResponse")
+	proto.RegisterType((*GetKeyRequest)(nil), "cloud.api.iam.v1.GetKeyRequest")
+	golang_proto.RegisterType((*GetKeyRequest)(nil), "cloud.api.iam.v1.GetKeyRequest")
+	proto.RegisterType((*DeleteKeyRequest)(nil), "cloud.api.iam.v1.DeleteKeyRequest")
+	golang_proto.RegisterType((*DeleteKeyRequest)(nil), "cloud.api.iam.v1.DeleteKeyRequest")
 	proto.RegisterType((*Role)(nil), "cloud.api.iam.v1.Role")
 	golang_proto.RegisterType((*Role)(nil), "cloud.api.iam.v1.Role")
 	proto.RegisterType((*ListRolesRequest)(nil), "cloud.api.iam.v1.ListRolesRequest")
@@ -1398,102 +917,74 @@ func init() { proto.RegisterFile("iam/v1/iam.proto", fileDescriptor_ed3c59bdfb5e
 func init() { golang_proto.RegisterFile("iam/v1/iam.proto", fileDescriptor_ed3c59bdfb5e29f0) }
 
 var fileDescriptor_ed3c59bdfb5e29f0 = []byte{
-	// 1507 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xb4, 0x57, 0xcf, 0x6f, 0x1b, 0xc5,
-	0x17, 0xef, 0x3a, 0x49, 0x1b, 0xbf, 0x34, 0xa9, 0x3d, 0x49, 0x13, 0x77, 0xdd, 0xa4, 0xfe, 0xee,
-	0x17, 0xa1, 0x60, 0x12, 0x6f, 0x13, 0xa8, 0x4a, 0x23, 0xa2, 0x6a, 0xdd, 0xa6, 0x95, 0x15, 0xb7,
-	0x84, 0x6d, 0x02, 0x2d, 0x12, 0x5a, 0xad, 0xbd, 0x13, 0x67, 0x14, 0x7b, 0x77, 0xbb, 0xbb, 0x76,
-	0xea, 0x56, 0xe1, 0x00, 0xe2, 0x06, 0x02, 0x09, 0xfe, 0x07, 0x24, 0xfe, 0x0a, 0x6e, 0x14, 0x2e,
-	0x14, 0xb8, 0xe5, 0x54, 0xb5, 0x9c, 0xfa, 0x27, 0x70, 0x42, 0x33, 0x3b, 0xfe, 0x3d, 0x76, 0xdc,
-	0x42, 0x6f, 0xde, 0x37, 0xef, 0xc7, 0x67, 0xde, 0xfb, 0xcc, 0x7b, 0xcf, 0x10, 0x23, 0x66, 0x45,
-	0xad, 0xad, 0xa8, 0xc4, 0xac, 0x64, 0x5c, 0xcf, 0x09, 0x1c, 0x14, 0x2b, 0x96, 0x9d, 0xaa, 0x95,
-	0x31, 0x5d, 0x92, 0xa1, 0xc2, 0xda, 0x8a, 0xbc, 0x5c, 0x22, 0xc1, 0x5e, 0xb5, 0x90, 0x29, 0x3a,
-	0x15, 0xb5, 0xe4, 0x94, 0x1c, 0x95, 0x29, 0x16, 0xaa, 0xbb, 0xec, 0x8b, 0x7d, 0xb0, 0x5f, 0xa1,
-	0x03, 0xf9, 0x42, 0xc9, 0x71, 0x4a, 0x65, 0xdc, 0xd2, 0x0a, 0x48, 0x05, 0xfb, 0x81, 0x59, 0x71,
-	0xb9, 0x42, 0xb2, 0x5b, 0x01, 0x57, 0xdc, 0xa0, 0xde, 0x65, 0x6d, 0xba, 0x44, 0xdd, 0x25, 0xb8,
-	0x6c, 0x19, 0x05, 0xbc, 0x67, 0xd6, 0x88, 0xe3, 0x71, 0x85, 0x73, 0x6d, 0x0a, 0x1e, 0xf6, 0x9d,
-	0xaa, 0x57, 0xc4, 0xfc, 0xe8, 0x7c, 0xdb, 0x91, 0x69, 0xdb, 0x4e, 0x60, 0x06, 0xc4, 0xb1, 0x7d,
-	0x7e, 0x3a, 0xd7, 0x76, 0x5a, 0x2c, 0x13, 0x6c, 0x07, 0xe1, 0x81, 0xf2, 0xa3, 0x04, 0x53, 0x77,
-	0xb0, 0x57, 0x23, 0x45, 0xac, 0x15, 0x8b, 0x4e, 0xd5, 0x0e, 0xd0, 0x0c, 0x8c, 0xe1, 0x8a, 0x49,
-	0xca, 0x09, 0x29, 0x25, 0x2d, 0x46, 0xf5, 0xf0, 0x03, 0x25, 0x21, 0x5a, 0xb5, 0xc9, 0xfd, 0x2a,
-	0x36, 0x88, 0x95, 0x88, 0xb0, 0x93, 0xf1, 0x50, 0x90, 0xb3, 0xd0, 0xff, 0xe0, 0xb4, 0x45, 0x7c,
-	0xb7, 0x6c, 0xd6, 0x0d, 0xdb, 0xac, 0xe0, 0xc4, 0x08, 0x3b, 0x9f, 0xe0, 0xb2, 0xdb, 0x66, 0x05,
-	0xaf, 0x65, 0x5f, 0x68, 0x57, 0xe1, 0x0d, 0x96, 0x55, 0x62, 0x61, 0xa7, 0xe8, 0x10, 0x3b, 0x63,
-	0xe3, 0xe0, 0xc0, 0xf1, 0xf6, 0xd5, 0x2e, 0x00, 0x73, 0x7e, 0xc7, 0xb7, 0xaf, 0x3e, 0x62, 0x10,
-	0x0e, 0x95, 0xbb, 0x20, 0xe7, 0x89, 0x1f, 0x74, 0xaa, 0xfb, 0x3a, 0xbe, 0x5f, 0xc5, 0x7e, 0x40,
-	0x11, 0xba, 0x66, 0x09, 0x1b, 0x3e, 0x79, 0x88, 0x19, 0xc2, 0x31, 0x7d, 0x9c, 0x0a, 0xee, 0x90,
-	0x87, 0x18, 0xcd, 0x03, 0xb0, 0xc3, 0xc0, 0xd9, 0xc7, 0x36, 0xc7, 0xc7, 0xd4, 0xb7, 0xa9, 0x40,
-	0xf9, 0x42, 0x82, 0xa4, 0xd0, 0xb5, 0xef, 0x3a, 0xb6, 0x8f, 0xd1, 0xfb, 0x30, 0x6e, 0x72, 0x59,
-	0x42, 0x4a, 0x8d, 0x2c, 0x4e, 0xac, 0xa6, 0x32, 0xdd, 0x5c, 0xc9, 0x74, 0x1a, 0xeb, 0x4d, 0x0b,
-	0xf4, 0x26, 0x9c, 0xb1, 0xf1, 0x83, 0xc0, 0x68, 0x43, 0x10, 0x66, 0x70, 0x92, 0x8a, 0xb7, 0x9a,
-	0x28, 0x2e, 0x41, 0xe2, 0x26, 0xee, 0xc2, 0xd0, 0xb8, 0xdd, 0xb9, 0x8e, 0xaa, 0x64, 0x47, 0x9e,
-	0x6a, 0x11, 0x5e, 0x1a, 0x45, 0x83, 0xe4, 0x35, 0x0f, 0x9b, 0x01, 0x16, 0x5b, 0x2a, 0x00, 0x1c,
-	0x09, 0x2d, 0x5d, 0x9b, 0x79, 0x94, 0x8b, 0x73, 0x96, 0xf2, 0x1e, 0x24, 0xaf, 0xe3, 0x32, 0xee,
-	0xe7, 0x62, 0x40, 0xf0, 0xdf, 0x23, 0x10, 0xef, 0x34, 0xda, 0xc4, 0x75, 0x34, 0x05, 0x91, 0x46,
-	0x2c, 0x3d, 0x42, 0x2c, 0xb4, 0x08, 0x31, 0xd7, 0x23, 0x35, 0x33, 0xc0, 0xc6, 0x3e, 0xae, 0x1b,
-	0x96, 0x19, 0x98, 0x2c, 0x05, 0xa7, 0xf5, 0x29, 0x2e, 0xdf, 0xc4, 0xf5, 0xeb, 0x66, 0x60, 0xd2,
-	0x5c, 0xb9, 0xd5, 0x42, 0x99, 0x14, 0x5b, 0x8a, 0x23, 0x4c, 0x71, 0x32, 0x14, 0x37, 0xf4, 0xae,
-	0x43, 0xac, 0x66, 0x96, 0x89, 0x65, 0x98, 0xbb, 0x01, 0xf6, 0x0c, 0xfa, 0xce, 0x12, 0xa3, 0x29,
-	0x69, 0x71, 0x62, 0x55, 0xce, 0x84, 0x64, 0xcf, 0x34, 0xde, 0x58, 0x66, 0xbb, 0xf1, 0x08, 0xf5,
-	0x29, 0x66, 0xa3, 0x51, 0x13, 0x2a, 0x44, 0x37, 0x20, 0x1e, 0x7a, 0x29, 0xe0, 0x5d, 0xc7, 0xc3,
-	0xa1, 0x9b, 0xb1, 0x63, 0xdd, 0x9c, 0x61, 0x46, 0x59, 0x66, 0x43, 0xa5, 0x6b, 0xf9, 0x17, 0x5a,
-	0x0e, 0xce, 0x89, 0xd9, 0x4d, 0xf3, 0xb1, 0xd4, 0x43, 0x69, 0x2e, 0x30, 0x78, 0x0d, 0x0e, 0xd5,
-	0x7d, 0x5c, 0xf7, 0xd5, 0x47, 0xfb, 0xb8, 0x4e, 0x79, 0x3e, 0xdf, 0x4b, 0xc6, 0x4d, 0x5c, 0x6f,
-	0x52, 0xfd, 0x32, 0x9c, 0xed, 0xb2, 0x37, 0x7a, 0xea, 0x33, 0xdd, 0x19, 0x72, 0x83, 0x55, 0xeb,
-	0x1e, 0x2c, 0xf4, 0xf3, 0xcc, 0x99, 0x7e, 0x19, 0x46, 0x29, 0x12, 0xce, 0xf2, 0xff, 0x1f, 0xc7,
-	0xf2, 0x4d, 0x5c, 0xd7, 0x99, 0x81, 0x52, 0x81, 0x64, 0x0f, 0x79, 0xe9, 0x29, 0x87, 0xbc, 0x3a,
-	0x10, 0xb2, 0x10, 0x2d, 0x92, 0xe1, 0x24, 0x25, 0x41, 0xa3, 0xe1, 0x70, 0xde, 0xed, 0xe3, 0x7a,
-	0xce, 0xa2, 0x37, 0x11, 0x91, 0xbe, 0x2d, 0xe2, 0x2b, 0x27, 0xc9, 0x85, 0x05, 0xd1, 0x63, 0x78,
-	0x8d, 0x97, 0xf9, 0x52, 0x82, 0x51, 0xdd, 0x29, 0x63, 0x84, 0x60, 0x94, 0x35, 0xd0, 0xd0, 0x0f,
-	0xfb, 0x4d, 0xfb, 0x71, 0x40, 0x82, 0x32, 0xe6, 0x3d, 0x23, 0xfc, 0x40, 0x29, 0x98, 0xb0, 0xb0,
-	0x5f, 0xf4, 0x88, 0x4b, 0xfb, 0x7c, 0xb3, 0xe3, 0xb6, 0x44, 0x68, 0x05, 0x66, 0x88, 0x5d, 0x2c,
-	0x57, 0x2d, 0x6c, 0x19, 0x2e, 0xf6, 0x2a, 0xc4, 0xf7, 0xe9, 0x44, 0x48, 0x8c, 0xa6, 0x46, 0x28,
-	0xc6, 0xc6, 0xd9, 0x56, 0xeb, 0x48, 0xf9, 0x0c, 0x62, 0x94, 0x1e, 0x14, 0x8a, 0xb8, 0xad, 0x4a,
-	0x03, 0xdb, 0x6a, 0xa4, 0xab, 0xad, 0xa2, 0x0c, 0x8c, 0xd6, 0x08, 0x3e, 0x60, 0xe8, 0xa6, 0x56,
-	0xe5, 0x5e, 0x32, 0xd1, 0x48, 0x1f, 0x11, 0x7c, 0xa0, 0x33, 0x3d, 0x85, 0x40, 0xbc, 0x2d, 0x3e,
-	0x67, 0xe4, 0x12, 0x8c, 0x79, 0x54, 0xc0, 0x29, 0x39, 0x2b, 0xf6, 0xa2, 0x87, 0x4a, 0x43, 0xf7,
-	0x5a, 0x15, 0xa6, 0x6e, 0x62, 0x16, 0xa9, 0x71, 0xd1, 0xf9, 0xf6, 0xdc, 0x67, 0xa3, 0x4f, 0xb5,
-	0xc8, 0xdf, 0xda, 0x08, 0x48, 0xe9, 0xb0, 0x0c, 0xca, 0x5d, 0x80, 0x56, 0xaa, 0xfe, 0xcb, 0x42,
-	0x29, 0xb7, 0x60, 0x82, 0xe2, 0xc8, 0x12, 0xdb, 0x22, 0x76, 0x09, 0xa5, 0x20, 0x4a, 0xaf, 0x62,
-	0xb4, 0x81, 0x61, 0x5c, 0x19, 0xa7, 0x52, 0x3a, 0x4b, 0xd1, 0x79, 0x38, 0x55, 0xf5, 0xb1, 0xd7,
-	0xc5, 0xa5, 0x93, 0x54, 0x96, 0xb3, 0x94, 0x0f, 0x61, 0xae, 0x91, 0x44, 0xee, 0xb2, 0x59, 0xcb,
-	0xb9, 0x96, 0x61, 0x08, 0x9c, 0xdb, 0x1c, 0x53, 0x47, 0x65, 0x07, 0x12, 0xbd, 0x2e, 0x79, 0x79,
-	0xae, 0xc0, 0x78, 0x81, 0xcb, 0x78, 0x85, 0xe6, 0xc5, 0x15, 0xe2, 0x96, 0x7a, 0x53, 0x3d, 0xfd,
-	0x29, 0x24, 0x3b, 0x9f, 0xd8, 0x56, 0xa3, 0xc5, 0x6f, 0xd7, 0x5d, 0x8c, 0x26, 0x21, 0xba, 0x7d,
-	0x6f, 0x6b, 0xc3, 0xb8, 0xfd, 0xc1, 0xed, 0x8d, 0xd8, 0x09, 0x34, 0x0b, 0x88, 0x7d, 0xde, 0xbd,
-	0x74, 0xf1, 0x8a, 0xb1, 0xb5, 0x71, 0xcb, 0xb8, 0x91, 0xcb, 0x6f, 0xc4, 0x24, 0x34, 0x07, 0xd3,
-	0x4c, 0xae, 0x6b, 0x1f, 0x1b, 0x5b, 0x3b, 0xd9, 0x7c, 0xee, 0x9a, 0xb1, 0xb9, 0x71, 0x2f, 0x16,
-	0x49, 0x5f, 0x80, 0xf1, 0x06, 0xbf, 0x50, 0x14, 0xc6, 0xb2, 0xda, 0x9d, 0xdc, 0xb5, 0xd8, 0x09,
-	0x34, 0x0e, 0xa3, 0x37, 0x76, 0xf2, 0xf9, 0x98, 0xb4, 0xfa, 0x43, 0x0c, 0x46, 0x72, 0xda, 0x2d,
-	0xf4, 0x8d, 0x04, 0xd3, 0x82, 0xe9, 0x8f, 0x96, 0x7a, 0x2f, 0xd2, 0x7f, 0xff, 0x90, 0x97, 0x87,
-	0xd4, 0x0e, 0xf3, 0xa6, 0x24, 0x3f, 0xff, 0xf3, 0xaf, 0xef, 0x22, 0x67, 0xd1, 0x34, 0x5d, 0x41,
-	0xbb, 0xc6, 0x03, 0xfa, 0x56, 0x82, 0x78, 0x4f, 0x37, 0x45, 0xe9, 0xde, 0x08, 0xfd, 0xf6, 0x05,
-	0xf9, 0xd8, 0xfd, 0x44, 0x59, 0x3e, 0xd2, 0xc2, 0x19, 0xce, 0x80, 0x5c, 0x40, 0xf3, 0x02, 0x20,
-	0x7c, 0xf5, 0x5a, 0x4f, 0x1f, 0xa2, 0xef, 0x25, 0x98, 0x11, 0x75, 0x5c, 0x24, 0xb8, 0xf7, 0x80,
-	0x75, 0x64, 0x08, 0x60, 0x6f, 0x1f, 0x69, 0x6d, 0x1b, 0x0b, 0x43, 0x97, 0x50, 0x44, 0x69, 0x5a,
-	0x93, 0xd2, 0xe8, 0x2b, 0x09, 0x66, 0x44, 0xdd, 0x5a, 0x04, 0x6b, 0xc0, 0x8a, 0x23, 0xcf, 0xf6,
-	0x8c, 0xfb, 0x0d, 0xba, 0x99, 0x77, 0x67, 0x29, 0x7d, 0x4c, 0x96, 0x7e, 0x93, 0x60, 0x56, 0x3c,
-	0x61, 0x91, 0x3a, 0x0c, 0x3f, 0xda, 0xa6, 0xbc, 0x7c, 0x71, 0x78, 0x03, 0xce, 0x29, 0xfd, 0x48,
-	0x13, 0x0f, 0x26, 0x06, 0xfe, 0x5d, 0xb4, 0x2a, 0x04, 0x2f, 0xb4, 0x58, 0x4f, 0x87, 0x2b, 0x09,
-	0x7a, 0x22, 0xc1, 0x8c, 0x68, 0xb0, 0x8b, 0x12, 0x3c, 0x60, 0x01, 0x90, 0x87, 0x59, 0x25, 0x14,
-	0xeb, 0x48, 0x3b, 0x2f, 0x84, 0xb3, 0x14, 0xce, 0x4e, 0x76, 0x8f, 0xab, 0x68, 0xfd, 0xe5, 0xef,
-	0xc1, 0x56, 0x2b, 0x83, 0x58, 0xb4, 0x48, 0x3f, 0x4b, 0x30, 0xd7, 0x67, 0x79, 0x40, 0x17, 0x87,
-	0x63, 0xf3, 0xcb, 0x5e, 0x6c, 0x67, 0x60, 0x65, 0x2e, 0x2b, 0xaf, 0x50, 0x19, 0xca, 0xfe, 0x5f,
-	0x24, 0x98, 0xeb, 0xb3, 0xab, 0x88, 0x6e, 0x32, 0x78, 0xad, 0xe9, 0xfb, 0x06, 0x86, 0xab, 0x4a,
-	0xfa, 0x5f, 0x56, 0xe5, 0x01, 0xc4, 0xc3, 0x4c, 0xb7, 0x0f, 0xc3, 0xc1, 0xb3, 0xa4, 0x2f, 0xe2,
-	0xa5, 0x23, 0x2d, 0xde, 0x1c, 0xa2, 0x4b, 0x7c, 0xe6, 0x31, 0x98, 0x48, 0x99, 0x54, 0xe9, 0x49,
-	0x63, 0x08, 0xd1, 0x2c, 0x3e, 0x80, 0x78, 0x98, 0x99, 0xd7, 0x1b, 0x39, 0xdd, 0x1b, 0xf9, 0x6b,
-	0xa9, 0xb5, 0x71, 0x35, 0x26, 0x2b, 0x7a, 0x4b, 0xfc, 0xee, 0x05, 0x03, 0x5d, 0x4e, 0x0f, 0xa3,
-	0xca, 0x9b, 0x83, 0x72, 0xa4, 0x9d, 0xea, 0xc0, 0x83, 0x7a, 0xf1, 0x94, 0x20, 0xda, 0x5c, 0xc0,
-	0x90, 0xd2, 0xdf, 0xb9, 0x3f, 0x80, 0xfc, 0x3d, 0x1b, 0x9c, 0x12, 0x67, 0xf1, 0x26, 0x50, 0x94,
-	0x12, 0x24, 0x5c, 0xd3, 0x0c, 0x38, 0xc5, 0xd7, 0x2f, 0x94, 0x12, 0xf6, 0x91, 0xb6, 0xcd, 0x4c,
-	0xee, 0xb3, 0xf2, 0x29, 0x32, 0xf3, 0x3b, 0x83, 0x50, 0xd3, 0xaf, 0xfa, 0x88, 0xa6, 0x7d, 0x3d,
-	0x7d, 0x28, 0xe7, 0x7f, 0xd5, 0xce, 0x0a, 0xff, 0x8f, 0xfd, 0xa1, 0xad, 0xec, 0x05, 0x81, 0xeb,
-	0xaf, 0xa9, 0xea, 0xc1, 0xc1, 0x81, 0xe0, 0xff, 0x9a, 0x59, 0x0d, 0xf6, 0x54, 0x16, 0x70, 0xd9,
-	0x2d, 0x9b, 0xc1, 0xae, 0xe3, 0x55, 0xb2, 0x89, 0xc7, 0xcf, 0x16, 0xa4, 0x27, 0xcf, 0x16, 0xa4,
-	0xa7, 0xcf, 0x16, 0xa4, 0x9f, 0x9e, 0x2f, 0x48, 0x8f, 0x9f, 0x2f, 0x48, 0x9f, 0x44, 0x6a, 0x2b,
-	0x85, 0x93, 0xac, 0xfe, 0xef, 0xfc, 0x13, 0x00, 0x00, 0xff, 0xff, 0xb9, 0x93, 0xb7, 0xdd, 0x4d,
-	0x12, 0x00, 0x00,
+	// 1067 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xb4, 0x56, 0x4f, 0x73, 0xdb, 0x54,
+	0x10, 0x47, 0xfe, 0x93, 0xd8, 0x1b, 0x92, 0x38, 0xaf, 0x49, 0xe3, 0xaa, 0x34, 0x31, 0x82, 0x01,
+	0xc7, 0xa4, 0xd2, 0x24, 0x9c, 0xc8, 0x4c, 0x0e, 0x4e, 0x42, 0x3b, 0x99, 0xa4, 0x4c, 0x51, 0x5b,
+	0x86, 0xe1, 0xa2, 0x91, 0xad, 0xb5, 0xf3, 0xc6, 0xb2, 0x24, 0xa4, 0x67, 0xbb, 0x6e, 0x27, 0x1c,
+	0x38, 0x32, 0xc3, 0x89, 0x4f, 0xc0, 0x99, 0x2f, 0xc1, 0xb1, 0xc3, 0x89, 0x81, 0x5b, 0x4e, 0x9d,
+	0x94, 0x13, 0x9f, 0x82, 0x79, 0x4f, 0x92, 0xad, 0x46, 0x72, 0xca, 0x0c, 0xf4, 0xe6, 0xb7, 0xfb,
+	0xdb, 0xfd, 0xed, 0xdb, 0xdd, 0xf7, 0xb3, 0xa0, 0x42, 0xcd, 0xbe, 0x36, 0xdc, 0xd1, 0xa8, 0xd9,
+	0x57, 0x3d, 0xdf, 0x65, 0x2e, 0xa9, 0xb4, 0x6d, 0x77, 0x60, 0xa9, 0xa6, 0x47, 0x55, 0x6e, 0x1c,
+	0xee, 0xc8, 0x77, 0xbb, 0x94, 0x9d, 0x0d, 0x5a, 0x6a, 0xdb, 0xed, 0x6b, 0x5d, 0xb7, 0xeb, 0x6a,
+	0x02, 0xd8, 0x1a, 0x74, 0xc4, 0x49, 0x1c, 0xc4, 0xaf, 0x30, 0x81, 0xbc, 0xd9, 0x75, 0xdd, 0xae,
+	0x8d, 0x53, 0x14, 0xa3, 0x7d, 0x0c, 0x98, 0xd9, 0xf7, 0x22, 0xc0, 0xed, 0xab, 0x00, 0xec, 0x7b,
+	0x6c, 0x7c, 0x25, 0xda, 0xf4, 0xa8, 0xd6, 0xa1, 0x68, 0x5b, 0x46, 0x0b, 0xcf, 0xcc, 0x21, 0x75,
+	0xfd, 0x08, 0x70, 0x2b, 0x01, 0xf0, 0x31, 0x70, 0x07, 0x7e, 0x1b, 0x23, 0xd7, 0x7b, 0x09, 0x97,
+	0xe9, 0x38, 0x2e, 0x33, 0x19, 0x75, 0x9d, 0x20, 0xf2, 0xae, 0x27, 0xbc, 0x6d, 0x9b, 0xa2, 0xc3,
+	0x42, 0x87, 0xf2, 0x73, 0x0e, 0xf2, 0x27, 0x38, 0x26, 0x4b, 0x90, 0xa3, 0x56, 0x55, 0xaa, 0x49,
+	0xf5, 0xb2, 0x9e, 0xa3, 0x16, 0xa9, 0x43, 0xc5, 0xf3, 0xe9, 0xd0, 0x64, 0x68, 0xf4, 0x70, 0x6c,
+	0x58, 0x26, 0x33, 0xab, 0xb9, 0x9a, 0x54, 0x7f, 0x57, 0x5f, 0x8a, 0xec, 0x27, 0x38, 0x3e, 0x32,
+	0x99, 0x49, 0x3e, 0x82, 0x65, 0x6f, 0xd0, 0xb2, 0x69, 0x7b, 0x0a, 0xcc, 0x0b, 0xe0, 0x62, 0x68,
+	0x8e, 0x71, 0x47, 0x50, 0x19, 0x9a, 0x36, 0xb5, 0x0c, 0xb3, 0xc3, 0xd0, 0x37, 0x78, 0x63, 0xaa,
+	0x85, 0x9a, 0x54, 0x5f, 0xd8, 0x95, 0xd5, 0xb0, 0x3a, 0x35, 0x6e, 0x8a, 0xfa, 0x38, 0xee, 0x9a,
+	0xbe, 0x24, 0x62, 0x9a, 0x3c, 0x84, 0x1b, 0xc9, 0x3d, 0x58, 0x09, 0xb3, 0xb4, 0xb0, 0xe3, 0xfa,
+	0x18, 0xa6, 0x29, 0xbe, 0x31, 0xcd, 0xb2, 0x08, 0x3a, 0x10, 0x31, 0xdc, 0xba, 0xd7, 0xf8, 0xbb,
+	0xf9, 0x31, 0xdc, 0x12, 0x43, 0xa6, 0x16, 0xba, 0x6d, 0x97, 0x3a, 0xaa, 0x83, 0x6c, 0xe4, 0xfa,
+	0x3d, 0x8d, 0xf7, 0x03, 0x7a, 0x38, 0x0e, 0xb4, 0xe7, 0x3d, 0x1c, 0x9f, 0x2b, 0x0f, 0x60, 0xf9,
+	0x94, 0x06, 0xec, 0x04, 0xc7, 0x81, 0x8e, 0xdf, 0x0e, 0x30, 0x60, 0xe4, 0x36, 0x94, 0x3d, 0xb3,
+	0x8b, 0x46, 0x40, 0x9f, 0xa1, 0xe8, 0x5a, 0x51, 0x2f, 0x71, 0xc3, 0x23, 0xfa, 0x0c, 0xc9, 0x1d,
+	0x00, 0xe1, 0x64, 0x6e, 0x0f, 0x1d, 0xd1, 0xb5, 0xb2, 0x2e, 0xe0, 0x8f, 0xb9, 0x41, 0xd9, 0x87,
+	0xca, 0x34, 0x5d, 0xe0, 0xb9, 0x4e, 0x80, 0x64, 0x0b, 0x0a, 0x9c, 0xb0, 0x2a, 0xd5, 0xf2, 0xf5,
+	0x85, 0xdd, 0x35, 0xf5, 0xea, 0x1e, 0xaa, 0x27, 0x38, 0xd6, 0x05, 0x44, 0xf9, 0x04, 0x16, 0xef,
+	0x23, 0x8f, 0x8e, 0x6b, 0x91, 0x61, 0x8e, 0x77, 0x9e, 0x5a, 0x21, 0xd5, 0x41, 0xfe, 0x65, 0x33,
+	0xa7, 0x17, 0x7b, 0x38, 0x3e, 0xb6, 0x14, 0x15, 0x2a, 0x47, 0x68, 0xa3, 0x98, 0x56, 0x1a, 0x2f,
+	0xa5, 0xf0, 0x3f, 0x48, 0x50, 0xd0, 0x5d, 0x1b, 0xc9, 0x3a, 0x14, 0x1c, 0xb3, 0x8f, 0x49, 0x88,
+	0x30, 0x90, 0x55, 0x28, 0x32, 0xca, 0x6c, 0x8c, 0xee, 0x15, 0x1e, 0x48, 0x0d, 0x16, 0x2c, 0x0c,
+	0xda, 0x3e, 0xf5, 0xf8, 0xd6, 0x89, 0x05, 0x28, 0xeb, 0x49, 0x13, 0xd9, 0x81, 0x55, 0xea, 0xb4,
+	0xed, 0x81, 0x85, 0x96, 0xe1, 0xa1, 0xdf, 0xa7, 0x41, 0xc0, 0xf7, 0xb3, 0x5a, 0xa8, 0xe5, 0xeb,
+	0x65, 0xfd, 0x46, 0xec, 0x7b, 0x38, 0x75, 0x29, 0xdf, 0x85, 0x8d, 0xe2, 0xf5, 0xfc, 0x1f, 0x8d,
+	0x27, 0x2a, 0x14, 0x86, 0x14, 0x47, 0xa2, 0xba, 0xa5, 0x5d, 0x39, 0xdd, 0x64, 0xce, 0xf4, 0x15,
+	0xc5, 0x91, 0x2e, 0x70, 0x0a, 0x85, 0x95, 0x04, 0x7f, 0x34, 0xa9, 0x6d, 0x28, 0xfa, 0xdc, 0x10,
+	0x8d, 0xea, 0x66, 0x76, 0x16, 0x3d, 0x04, 0xf1, 0xc7, 0xe1, 0xe0, 0x53, 0x66, 0xa4, 0xca, 0x5a,
+	0xe4, 0xe6, 0x87, 0x93, 0x9d, 0xd8, 0x82, 0xa5, 0xfb, 0x28, 0x98, 0xe2, 0x8b, 0xce, 0x1a, 0x80,
+	0xf2, 0x35, 0xc0, 0xb4, 0x49, 0x84, 0x24, 0x61, 0xff, 0x6d, 0x44, 0xca, 0x21, 0x2c, 0xf0, 0x0a,
+	0x0e, 0xa8, 0x63, 0x51, 0xa7, 0xcb, 0x5b, 0xcd, 0x2f, 0x61, 0x24, 0xf2, 0x97, 0xb8, 0xe1, 0x0b,
+	0xce, 0xb1, 0x0e, 0xf3, 0x83, 0x00, 0xfd, 0xc9, 0xd6, 0xe9, 0x73, 0xfc, 0x78, 0x6c, 0x29, 0x5f,
+	0xc2, 0x7a, 0xdc, 0xb4, 0x28, 0x51, 0x30, 0xbd, 0xd2, 0x24, 0x46, 0x4a, 0xc6, 0xbc, 0xe9, 0xc1,
+	0x3c, 0x81, 0x6a, 0x3a, 0x65, 0x34, 0x8e, 0xcf, 0xa0, 0xd4, 0x8a, 0x6c, 0xd1, 0x44, 0xee, 0x64,
+	0x4f, 0x24, 0x8a, 0xd4, 0x27, 0xf0, 0xc6, 0x26, 0x94, 0xe2, 0x81, 0x93, 0x32, 0x14, 0x0f, 0x9a,
+	0x8f, 0x8e, 0x0f, 0x2b, 0xef, 0x90, 0x12, 0x14, 0xee, 0x3d, 0x39, 0x3d, 0xad, 0x48, 0xbb, 0xbf,
+	0x94, 0x20, 0x7f, 0xdc, 0x7c, 0x40, 0x4e, 0xa1, 0x7c, 0xe8, 0x63, 0x28, 0x79, 0xe4, 0x66, 0x4a,
+	0x65, 0x3e, 0xe7, 0x0a, 0x2e, 0x67, 0xbf, 0x59, 0xa5, 0xf2, 0xfd, 0x9f, 0x7f, 0xfd, 0x94, 0x03,
+	0xa5, 0xc4, 0xff, 0x68, 0xf8, 0xfb, 0x25, 0x6d, 0x28, 0xc5, 0xcf, 0x9f, 0xbc, 0x9f, 0x0e, 0xba,
+	0xa2, 0x34, 0xb2, 0x72, 0x1d, 0x24, 0x6c, 0x42, 0x4c, 0x42, 0xa6, 0x24, 0x1d, 0x98, 0x0b, 0x45,
+	0x82, 0x6c, 0xa6, 0xe3, 0x5f, 0x93, 0x8f, 0x59, 0x85, 0x7f, 0x78, 0xd1, 0x8c, 0x64, 0x42, 0x24,
+	0x5f, 0x23, 0x37, 0xe2, 0xe4, 0x42, 0x15, 0x0d, 0x6a, 0xed, 0x37, 0xce, 0x49, 0x1f, 0xca, 0x13,
+	0x7d, 0x21, 0x19, 0xa5, 0x5e, 0x15, 0x1f, 0x79, 0x46, 0xfb, 0x52, 0x74, 0x8d, 0x4c, 0xba, 0xa7,
+	0xb0, 0x12, 0x4e, 0x22, 0xb9, 0xa7, 0xd7, 0x0f, 0x7c, 0x26, 0xe3, 0xf6, 0x45, 0x73, 0x65, 0xb2,
+	0xdf, 0xdb, 0xd1, 0x62, 0x0a, 0x72, 0xa2, 0x2c, 0x6a, 0xdc, 0x13, 0x6f, 0xca, 0x9e, 0xd4, 0xe0,
+	0xcc, 0xe1, 0x5d, 0xde, 0x2e, 0x73, 0x23, 0xcd, 0xfc, 0xa3, 0x34, 0x95, 0xc1, 0x78, 0xfd, 0xc9,
+	0x56, 0xf6, 0x56, 0x64, 0xbc, 0x3a, 0xb9, 0xf1, 0x6f, 0xa0, 0xd1, 0x22, 0x29, 0x17, 0xcd, 0xf9,
+	0xd7, 0xea, 0x21, 0xe9, 0x7a, 0xba, 0x50, 0x9e, 0xa8, 0x22, 0x51, 0x66, 0x27, 0x9f, 0x14, 0xf0,
+	0xc1, 0xb5, 0x98, 0x88, 0x79, 0x45, 0xf0, 0x2d, 0x90, 0x32, 0x1f, 0x7b, 0xa8, 0x9d, 0x06, 0xcc,
+	0x47, 0x9a, 0x48, 0x6a, 0x99, 0x4b, 0x9c, 0x90, 0x4b, 0x79, 0x86, 0x0e, 0x2b, 0xb2, 0xc8, 0xbb,
+	0x4a, 0xc8, 0x24, 0xaf, 0xf6, 0x9c, 0xb7, 0x7d, 0xbf, 0x71, 0x2e, 0x9f, 0xfe, 0xd6, 0x5c, 0xcb,
+	0xfc, 0x02, 0xf8, 0xa3, 0xb9, 0x73, 0xc6, 0x98, 0x17, 0xec, 0x69, 0xda, 0x68, 0x34, 0xca, 0xf8,
+	0x42, 0x30, 0x07, 0xec, 0x4c, 0x13, 0x84, 0x77, 0x3d, 0xdb, 0x64, 0x1d, 0xd7, 0xef, 0x1f, 0x54,
+	0x5f, 0x5c, 0x6e, 0x48, 0xbf, 0x5f, 0x6e, 0x48, 0x2f, 0x2f, 0x37, 0xa4, 0x5f, 0x5f, 0x6d, 0x48,
+	0x2f, 0x5e, 0x6d, 0x48, 0xdf, 0xe4, 0x86, 0x3b, 0xad, 0x39, 0x31, 0xff, 0x4f, 0xff, 0x09, 0x00,
+	0x00, 0xff, 0xff, 0x37, 0x24, 0x14, 0xe7, 0x70, 0x0a, 0x00, 0x00,
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -1508,31 +999,23 @@ const _ = grpc.SupportPackageIsVersion4
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
 type IAMClient interface {
-	// Lists [ServiceAccounts][cloud.api.iam.v1.ServiceAccount] for a
-	// project.
-	ListServiceAccounts(ctx context.Context, in *ListServiceAccountsRequest, opts ...grpc.CallOption) (*ListServiceAccountsResponse, error)
-	// Gets a [ServiceAccount][cloud.api.iam.v1.ServiceAccount].
-	GetServiceAccount(ctx context.Context, in *GetServiceAccountRequest, opts ...grpc.CallOption) (*ServiceAccount, error)
-	// Creates a [ServiceAccount][cloud.api.iam.v1.ServiceAccount]
-	CreateServiceAccount(ctx context.Context, in *CreateServiceAccountRequest, opts ...grpc.CallOption) (*ServiceAccount, error)
-	// Deletes a [ServiceAccount][cloud.api.iam.v1.ServiceAccount].
-	DeleteServiceAccount(ctx context.Context, in *DeleteServiceAccountRequest, opts ...grpc.CallOption) (*types.Empty, error)
-	// Lists [ServiceAccountKeys][cloud.api.iam.v1.ServiceAccountKey].
-	ListServiceAccountKeys(ctx context.Context, in *ListServiceAccountKeysRequest, opts ...grpc.CallOption) (*ListServiceAccountKeysResponse, error)
-	// Gets the [ServiceAccountKey][cloud.api.iam.v1.ServiceAccountKey]
-	// by key id.
-	GetServiceAccountKey(ctx context.Context, in *GetServiceAccountKeyRequest, opts ...grpc.CallOption) (*ServiceAccountKey, error)
-	// Creates a [ServiceAccountKey][cloud.api.iam.v1.ServiceAccountKey]
-	// and returns it.
-	CreateServiceAccountKey(ctx context.Context, in *CreateServiceAccountKeyRequest, opts ...grpc.CallOption) (*ServiceAccountKey, error)
-	// Deletes a [ServiceAccountKey][cloud.api.iam.v1.ServiceAccountKey].
-	DeleteServiceAccountKey(ctx context.Context, in *DeleteServiceAccountKeyRequest, opts ...grpc.CallOption) (*types.Empty, error)
+	// Creates a [Key][cloud.api.iam.v1.Key] and returns it.
+	CreateKey(ctx context.Context, in *types.Empty, opts ...grpc.CallOption) (*Key, error)
+	// Lists [Keys][cloud.api.iam.v1.Key].
+	ListKeys(ctx context.Context, in *ListKeysRequest, opts ...grpc.CallOption) (*ListKeysResponse, error)
+	// Gets the [Key][cloud.api.iam.v1.Key] by key id.
+	GetKey(ctx context.Context, in *GetKeyRequest, opts ...grpc.CallOption) (*Key, error)
+	// Deletes a [Key][cloud.api.iam.v1.Key] by key id..
+	DeleteKey(ctx context.Context, in *DeleteKeyRequest, opts ...grpc.CallOption) (*types.Empty, error)
+	// Creates a [RoleBinding][cloud.api.iam.v1.RoleBinding].
 	CreateRoleBinding(ctx context.Context, in *RoleBinding, opts ...grpc.CallOption) (*types.Empty, error)
+	// Deletes a [RoleBinding][cloud.api.iam.v1.RoleBinding].
 	DeleteRoleBinding(ctx context.Context, in *RoleBinding, opts ...grpc.CallOption) (*types.Empty, error)
+	// Lists [RoleBindings][cloud.api.iam.v1.RoleBinding].
 	ListRoleBindings(ctx context.Context, in *ListRoleBindingsRequest, opts ...grpc.CallOption) (*ListRoleBindingsResponse, error)
-	// Lists the Roles defined on a resource.
+	// Lists [Roles][cloud.api.iam.v1.Roles].
 	ListRoles(ctx context.Context, in *ListRolesRequest, opts ...grpc.CallOption) (*ListRolesResponse, error)
-	// Gets a Role definition.
+	// Gets a [Role][cloud.api.iam.v1.Role].
 	GetRole(ctx context.Context, in *GetRoleRequest, opts ...grpc.CallOption) (*Role, error)
 }
 
@@ -1544,72 +1027,36 @@ func NewIAMClient(cc *grpc.ClientConn) IAMClient {
 	return &iAMClient{cc}
 }
 
-func (c *iAMClient) ListServiceAccounts(ctx context.Context, in *ListServiceAccountsRequest, opts ...grpc.CallOption) (*ListServiceAccountsResponse, error) {
-	out := new(ListServiceAccountsResponse)
-	err := c.cc.Invoke(ctx, "/cloud.api.iam.v1.IAM/ListServiceAccounts", in, out, opts...)
+func (c *iAMClient) CreateKey(ctx context.Context, in *types.Empty, opts ...grpc.CallOption) (*Key, error) {
+	out := new(Key)
+	err := c.cc.Invoke(ctx, "/cloud.api.iam.v1.IAM/CreateKey", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *iAMClient) GetServiceAccount(ctx context.Context, in *GetServiceAccountRequest, opts ...grpc.CallOption) (*ServiceAccount, error) {
-	out := new(ServiceAccount)
-	err := c.cc.Invoke(ctx, "/cloud.api.iam.v1.IAM/GetServiceAccount", in, out, opts...)
+func (c *iAMClient) ListKeys(ctx context.Context, in *ListKeysRequest, opts ...grpc.CallOption) (*ListKeysResponse, error) {
+	out := new(ListKeysResponse)
+	err := c.cc.Invoke(ctx, "/cloud.api.iam.v1.IAM/ListKeys", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *iAMClient) CreateServiceAccount(ctx context.Context, in *CreateServiceAccountRequest, opts ...grpc.CallOption) (*ServiceAccount, error) {
-	out := new(ServiceAccount)
-	err := c.cc.Invoke(ctx, "/cloud.api.iam.v1.IAM/CreateServiceAccount", in, out, opts...)
+func (c *iAMClient) GetKey(ctx context.Context, in *GetKeyRequest, opts ...grpc.CallOption) (*Key, error) {
+	out := new(Key)
+	err := c.cc.Invoke(ctx, "/cloud.api.iam.v1.IAM/GetKey", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *iAMClient) DeleteServiceAccount(ctx context.Context, in *DeleteServiceAccountRequest, opts ...grpc.CallOption) (*types.Empty, error) {
+func (c *iAMClient) DeleteKey(ctx context.Context, in *DeleteKeyRequest, opts ...grpc.CallOption) (*types.Empty, error) {
 	out := new(types.Empty)
-	err := c.cc.Invoke(ctx, "/cloud.api.iam.v1.IAM/DeleteServiceAccount", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *iAMClient) ListServiceAccountKeys(ctx context.Context, in *ListServiceAccountKeysRequest, opts ...grpc.CallOption) (*ListServiceAccountKeysResponse, error) {
-	out := new(ListServiceAccountKeysResponse)
-	err := c.cc.Invoke(ctx, "/cloud.api.iam.v1.IAM/ListServiceAccountKeys", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *iAMClient) GetServiceAccountKey(ctx context.Context, in *GetServiceAccountKeyRequest, opts ...grpc.CallOption) (*ServiceAccountKey, error) {
-	out := new(ServiceAccountKey)
-	err := c.cc.Invoke(ctx, "/cloud.api.iam.v1.IAM/GetServiceAccountKey", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *iAMClient) CreateServiceAccountKey(ctx context.Context, in *CreateServiceAccountKeyRequest, opts ...grpc.CallOption) (*ServiceAccountKey, error) {
-	out := new(ServiceAccountKey)
-	err := c.cc.Invoke(ctx, "/cloud.api.iam.v1.IAM/CreateServiceAccountKey", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *iAMClient) DeleteServiceAccountKey(ctx context.Context, in *DeleteServiceAccountKeyRequest, opts ...grpc.CallOption) (*types.Empty, error) {
-	out := new(types.Empty)
-	err := c.cc.Invoke(ctx, "/cloud.api.iam.v1.IAM/DeleteServiceAccountKey", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/cloud.api.iam.v1.IAM/DeleteKey", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -1663,31 +1110,23 @@ func (c *iAMClient) GetRole(ctx context.Context, in *GetRoleRequest, opts ...grp
 
 // IAMServer is the server API for IAM service.
 type IAMServer interface {
-	// Lists [ServiceAccounts][cloud.api.iam.v1.ServiceAccount] for a
-	// project.
-	ListServiceAccounts(context.Context, *ListServiceAccountsRequest) (*ListServiceAccountsResponse, error)
-	// Gets a [ServiceAccount][cloud.api.iam.v1.ServiceAccount].
-	GetServiceAccount(context.Context, *GetServiceAccountRequest) (*ServiceAccount, error)
-	// Creates a [ServiceAccount][cloud.api.iam.v1.ServiceAccount]
-	CreateServiceAccount(context.Context, *CreateServiceAccountRequest) (*ServiceAccount, error)
-	// Deletes a [ServiceAccount][cloud.api.iam.v1.ServiceAccount].
-	DeleteServiceAccount(context.Context, *DeleteServiceAccountRequest) (*types.Empty, error)
-	// Lists [ServiceAccountKeys][cloud.api.iam.v1.ServiceAccountKey].
-	ListServiceAccountKeys(context.Context, *ListServiceAccountKeysRequest) (*ListServiceAccountKeysResponse, error)
-	// Gets the [ServiceAccountKey][cloud.api.iam.v1.ServiceAccountKey]
-	// by key id.
-	GetServiceAccountKey(context.Context, *GetServiceAccountKeyRequest) (*ServiceAccountKey, error)
-	// Creates a [ServiceAccountKey][cloud.api.iam.v1.ServiceAccountKey]
-	// and returns it.
-	CreateServiceAccountKey(context.Context, *CreateServiceAccountKeyRequest) (*ServiceAccountKey, error)
-	// Deletes a [ServiceAccountKey][cloud.api.iam.v1.ServiceAccountKey].
-	DeleteServiceAccountKey(context.Context, *DeleteServiceAccountKeyRequest) (*types.Empty, error)
+	// Creates a [Key][cloud.api.iam.v1.Key] and returns it.
+	CreateKey(context.Context, *types.Empty) (*Key, error)
+	// Lists [Keys][cloud.api.iam.v1.Key].
+	ListKeys(context.Context, *ListKeysRequest) (*ListKeysResponse, error)
+	// Gets the [Key][cloud.api.iam.v1.Key] by key id.
+	GetKey(context.Context, *GetKeyRequest) (*Key, error)
+	// Deletes a [Key][cloud.api.iam.v1.Key] by key id..
+	DeleteKey(context.Context, *DeleteKeyRequest) (*types.Empty, error)
+	// Creates a [RoleBinding][cloud.api.iam.v1.RoleBinding].
 	CreateRoleBinding(context.Context, *RoleBinding) (*types.Empty, error)
+	// Deletes a [RoleBinding][cloud.api.iam.v1.RoleBinding].
 	DeleteRoleBinding(context.Context, *RoleBinding) (*types.Empty, error)
+	// Lists [RoleBindings][cloud.api.iam.v1.RoleBinding].
 	ListRoleBindings(context.Context, *ListRoleBindingsRequest) (*ListRoleBindingsResponse, error)
-	// Lists the Roles defined on a resource.
+	// Lists [Roles][cloud.api.iam.v1.Roles].
 	ListRoles(context.Context, *ListRolesRequest) (*ListRolesResponse, error)
-	// Gets a Role definition.
+	// Gets a [Role][cloud.api.iam.v1.Role].
 	GetRole(context.Context, *GetRoleRequest) (*Role, error)
 }
 
@@ -1695,29 +1134,17 @@ type IAMServer interface {
 type UnimplementedIAMServer struct {
 }
 
-func (*UnimplementedIAMServer) ListServiceAccounts(ctx context.Context, req *ListServiceAccountsRequest) (*ListServiceAccountsResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method ListServiceAccounts not implemented")
+func (*UnimplementedIAMServer) CreateKey(ctx context.Context, req *types.Empty) (*Key, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateKey not implemented")
 }
-func (*UnimplementedIAMServer) GetServiceAccount(ctx context.Context, req *GetServiceAccountRequest) (*ServiceAccount, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetServiceAccount not implemented")
+func (*UnimplementedIAMServer) ListKeys(ctx context.Context, req *ListKeysRequest) (*ListKeysResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListKeys not implemented")
 }
-func (*UnimplementedIAMServer) CreateServiceAccount(ctx context.Context, req *CreateServiceAccountRequest) (*ServiceAccount, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method CreateServiceAccount not implemented")
+func (*UnimplementedIAMServer) GetKey(ctx context.Context, req *GetKeyRequest) (*Key, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetKey not implemented")
 }
-func (*UnimplementedIAMServer) DeleteServiceAccount(ctx context.Context, req *DeleteServiceAccountRequest) (*types.Empty, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method DeleteServiceAccount not implemented")
-}
-func (*UnimplementedIAMServer) ListServiceAccountKeys(ctx context.Context, req *ListServiceAccountKeysRequest) (*ListServiceAccountKeysResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method ListServiceAccountKeys not implemented")
-}
-func (*UnimplementedIAMServer) GetServiceAccountKey(ctx context.Context, req *GetServiceAccountKeyRequest) (*ServiceAccountKey, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetServiceAccountKey not implemented")
-}
-func (*UnimplementedIAMServer) CreateServiceAccountKey(ctx context.Context, req *CreateServiceAccountKeyRequest) (*ServiceAccountKey, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method CreateServiceAccountKey not implemented")
-}
-func (*UnimplementedIAMServer) DeleteServiceAccountKey(ctx context.Context, req *DeleteServiceAccountKeyRequest) (*types.Empty, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method DeleteServiceAccountKey not implemented")
+func (*UnimplementedIAMServer) DeleteKey(ctx context.Context, req *DeleteKeyRequest) (*types.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteKey not implemented")
 }
 func (*UnimplementedIAMServer) CreateRoleBinding(ctx context.Context, req *RoleBinding) (*types.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateRoleBinding not implemented")
@@ -1739,146 +1166,74 @@ func RegisterIAMServer(s *grpc.Server, srv IAMServer) {
 	s.RegisterService(&_IAM_serviceDesc, srv)
 }
 
-func _IAM_ListServiceAccounts_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ListServiceAccountsRequest)
+func _IAM_CreateKey_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(types.Empty)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(IAMServer).ListServiceAccounts(ctx, in)
+		return srv.(IAMServer).CreateKey(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/cloud.api.iam.v1.IAM/ListServiceAccounts",
+		FullMethod: "/cloud.api.iam.v1.IAM/CreateKey",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(IAMServer).ListServiceAccounts(ctx, req.(*ListServiceAccountsRequest))
+		return srv.(IAMServer).CreateKey(ctx, req.(*types.Empty))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _IAM_GetServiceAccount_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetServiceAccountRequest)
+func _IAM_ListKeys_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListKeysRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(IAMServer).GetServiceAccount(ctx, in)
+		return srv.(IAMServer).ListKeys(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/cloud.api.iam.v1.IAM/GetServiceAccount",
+		FullMethod: "/cloud.api.iam.v1.IAM/ListKeys",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(IAMServer).GetServiceAccount(ctx, req.(*GetServiceAccountRequest))
+		return srv.(IAMServer).ListKeys(ctx, req.(*ListKeysRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _IAM_CreateServiceAccount_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(CreateServiceAccountRequest)
+func _IAM_GetKey_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetKeyRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(IAMServer).CreateServiceAccount(ctx, in)
+		return srv.(IAMServer).GetKey(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/cloud.api.iam.v1.IAM/CreateServiceAccount",
+		FullMethod: "/cloud.api.iam.v1.IAM/GetKey",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(IAMServer).CreateServiceAccount(ctx, req.(*CreateServiceAccountRequest))
+		return srv.(IAMServer).GetKey(ctx, req.(*GetKeyRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _IAM_DeleteServiceAccount_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(DeleteServiceAccountRequest)
+func _IAM_DeleteKey_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteKeyRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(IAMServer).DeleteServiceAccount(ctx, in)
+		return srv.(IAMServer).DeleteKey(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/cloud.api.iam.v1.IAM/DeleteServiceAccount",
+		FullMethod: "/cloud.api.iam.v1.IAM/DeleteKey",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(IAMServer).DeleteServiceAccount(ctx, req.(*DeleteServiceAccountRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _IAM_ListServiceAccountKeys_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ListServiceAccountKeysRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(IAMServer).ListServiceAccountKeys(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/cloud.api.iam.v1.IAM/ListServiceAccountKeys",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(IAMServer).ListServiceAccountKeys(ctx, req.(*ListServiceAccountKeysRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _IAM_GetServiceAccountKey_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetServiceAccountKeyRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(IAMServer).GetServiceAccountKey(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/cloud.api.iam.v1.IAM/GetServiceAccountKey",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(IAMServer).GetServiceAccountKey(ctx, req.(*GetServiceAccountKeyRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _IAM_CreateServiceAccountKey_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(CreateServiceAccountKeyRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(IAMServer).CreateServiceAccountKey(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/cloud.api.iam.v1.IAM/CreateServiceAccountKey",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(IAMServer).CreateServiceAccountKey(ctx, req.(*CreateServiceAccountKeyRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _IAM_DeleteServiceAccountKey_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(DeleteServiceAccountKeyRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(IAMServer).DeleteServiceAccountKey(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/cloud.api.iam.v1.IAM/DeleteServiceAccountKey",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(IAMServer).DeleteServiceAccountKey(ctx, req.(*DeleteServiceAccountKeyRequest))
+		return srv.(IAMServer).DeleteKey(ctx, req.(*DeleteKeyRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -1978,36 +1333,20 @@ var _IAM_serviceDesc = grpc.ServiceDesc{
 	HandlerType: (*IAMServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "ListServiceAccounts",
-			Handler:    _IAM_ListServiceAccounts_Handler,
+			MethodName: "CreateKey",
+			Handler:    _IAM_CreateKey_Handler,
 		},
 		{
-			MethodName: "GetServiceAccount",
-			Handler:    _IAM_GetServiceAccount_Handler,
+			MethodName: "ListKeys",
+			Handler:    _IAM_ListKeys_Handler,
 		},
 		{
-			MethodName: "CreateServiceAccount",
-			Handler:    _IAM_CreateServiceAccount_Handler,
+			MethodName: "GetKey",
+			Handler:    _IAM_GetKey_Handler,
 		},
 		{
-			MethodName: "DeleteServiceAccount",
-			Handler:    _IAM_DeleteServiceAccount_Handler,
-		},
-		{
-			MethodName: "ListServiceAccountKeys",
-			Handler:    _IAM_ListServiceAccountKeys_Handler,
-		},
-		{
-			MethodName: "GetServiceAccountKey",
-			Handler:    _IAM_GetServiceAccountKey_Handler,
-		},
-		{
-			MethodName: "CreateServiceAccountKey",
-			Handler:    _IAM_CreateServiceAccountKey_Handler,
-		},
-		{
-			MethodName: "DeleteServiceAccountKey",
-			Handler:    _IAM_DeleteServiceAccountKey_Handler,
+			MethodName: "DeleteKey",
+			Handler:    _IAM_DeleteKey_Handler,
 		},
 		{
 			MethodName: "CreateRoleBinding",
@@ -2034,7 +1373,7 @@ var _IAM_serviceDesc = grpc.ServiceDesc{
 	Metadata: "iam/v1/iam.proto",
 }
 
-func (m *ServiceAccount) Marshal() (dAtA []byte, err error) {
+func (m *Key) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalToSizedBuffer(dAtA[:size])
@@ -2044,249 +1383,12 @@ func (m *ServiceAccount) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *ServiceAccount) MarshalTo(dAtA []byte) (int, error) {
+func (m *Key) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *ServiceAccount) MarshalToSizedBuffer(dAtA []byte) (int, error) {
-	i := len(dAtA)
-	_ = i
-	var l int
-	_ = l
-	if m.XXX_unrecognized != nil {
-		i -= len(m.XXX_unrecognized)
-		copy(dAtA[i:], m.XXX_unrecognized)
-	}
-	if len(m.DisplayName) > 0 {
-		i -= len(m.DisplayName)
-		copy(dAtA[i:], m.DisplayName)
-		i = encodeVarintIam(dAtA, i, uint64(len(m.DisplayName)))
-		i--
-		dAtA[i] = 0x1a
-	}
-	if len(m.UniqueId) > 0 {
-		i -= len(m.UniqueId)
-		copy(dAtA[i:], m.UniqueId)
-		i = encodeVarintIam(dAtA, i, uint64(len(m.UniqueId)))
-		i--
-		dAtA[i] = 0x12
-	}
-	if len(m.Email) > 0 {
-		i -= len(m.Email)
-		copy(dAtA[i:], m.Email)
-		i = encodeVarintIam(dAtA, i, uint64(len(m.Email)))
-		i--
-		dAtA[i] = 0xa
-	}
-	return len(dAtA) - i, nil
-}
-
-func (m *ListServiceAccountsRequest) Marshal() (dAtA []byte, err error) {
-	size := m.Size()
-	dAtA = make([]byte, size)
-	n, err := m.MarshalToSizedBuffer(dAtA[:size])
-	if err != nil {
-		return nil, err
-	}
-	return dAtA[:n], nil
-}
-
-func (m *ListServiceAccountsRequest) MarshalTo(dAtA []byte) (int, error) {
-	size := m.Size()
-	return m.MarshalToSizedBuffer(dAtA[:size])
-}
-
-func (m *ListServiceAccountsRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
-	i := len(dAtA)
-	_ = i
-	var l int
-	_ = l
-	if m.XXX_unrecognized != nil {
-		i -= len(m.XXX_unrecognized)
-		copy(dAtA[i:], m.XXX_unrecognized)
-	}
-	if len(m.PageToken) > 0 {
-		i -= len(m.PageToken)
-		copy(dAtA[i:], m.PageToken)
-		i = encodeVarintIam(dAtA, i, uint64(len(m.PageToken)))
-		i--
-		dAtA[i] = 0x1a
-	}
-	if m.PageSize != 0 {
-		i = encodeVarintIam(dAtA, i, uint64(m.PageSize))
-		i--
-		dAtA[i] = 0x10
-	}
-	return len(dAtA) - i, nil
-}
-
-func (m *ListServiceAccountsResponse) Marshal() (dAtA []byte, err error) {
-	size := m.Size()
-	dAtA = make([]byte, size)
-	n, err := m.MarshalToSizedBuffer(dAtA[:size])
-	if err != nil {
-		return nil, err
-	}
-	return dAtA[:n], nil
-}
-
-func (m *ListServiceAccountsResponse) MarshalTo(dAtA []byte) (int, error) {
-	size := m.Size()
-	return m.MarshalToSizedBuffer(dAtA[:size])
-}
-
-func (m *ListServiceAccountsResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
-	i := len(dAtA)
-	_ = i
-	var l int
-	_ = l
-	if m.XXX_unrecognized != nil {
-		i -= len(m.XXX_unrecognized)
-		copy(dAtA[i:], m.XXX_unrecognized)
-	}
-	if len(m.NextPageToken) > 0 {
-		i -= len(m.NextPageToken)
-		copy(dAtA[i:], m.NextPageToken)
-		i = encodeVarintIam(dAtA, i, uint64(len(m.NextPageToken)))
-		i--
-		dAtA[i] = 0x12
-	}
-	if len(m.Accounts) > 0 {
-		for iNdEx := len(m.Accounts) - 1; iNdEx >= 0; iNdEx-- {
-			{
-				size, err := m.Accounts[iNdEx].MarshalToSizedBuffer(dAtA[:i])
-				if err != nil {
-					return 0, err
-				}
-				i -= size
-				i = encodeVarintIam(dAtA, i, uint64(size))
-			}
-			i--
-			dAtA[i] = 0xa
-		}
-	}
-	return len(dAtA) - i, nil
-}
-
-func (m *GetServiceAccountRequest) Marshal() (dAtA []byte, err error) {
-	size := m.Size()
-	dAtA = make([]byte, size)
-	n, err := m.MarshalToSizedBuffer(dAtA[:size])
-	if err != nil {
-		return nil, err
-	}
-	return dAtA[:n], nil
-}
-
-func (m *GetServiceAccountRequest) MarshalTo(dAtA []byte) (int, error) {
-	size := m.Size()
-	return m.MarshalToSizedBuffer(dAtA[:size])
-}
-
-func (m *GetServiceAccountRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
-	i := len(dAtA)
-	_ = i
-	var l int
-	_ = l
-	if m.XXX_unrecognized != nil {
-		i -= len(m.XXX_unrecognized)
-		copy(dAtA[i:], m.XXX_unrecognized)
-	}
-	if len(m.Email) > 0 {
-		i -= len(m.Email)
-		copy(dAtA[i:], m.Email)
-		i = encodeVarintIam(dAtA, i, uint64(len(m.Email)))
-		i--
-		dAtA[i] = 0xa
-	}
-	return len(dAtA) - i, nil
-}
-
-func (m *CreateServiceAccountRequest) Marshal() (dAtA []byte, err error) {
-	size := m.Size()
-	dAtA = make([]byte, size)
-	n, err := m.MarshalToSizedBuffer(dAtA[:size])
-	if err != nil {
-		return nil, err
-	}
-	return dAtA[:n], nil
-}
-
-func (m *CreateServiceAccountRequest) MarshalTo(dAtA []byte) (int, error) {
-	size := m.Size()
-	return m.MarshalToSizedBuffer(dAtA[:size])
-}
-
-func (m *CreateServiceAccountRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
-	i := len(dAtA)
-	_ = i
-	var l int
-	_ = l
-	if m.XXX_unrecognized != nil {
-		i -= len(m.XXX_unrecognized)
-		copy(dAtA[i:], m.XXX_unrecognized)
-	}
-	if len(m.AccountId) > 0 {
-		i -= len(m.AccountId)
-		copy(dAtA[i:], m.AccountId)
-		i = encodeVarintIam(dAtA, i, uint64(len(m.AccountId)))
-		i--
-		dAtA[i] = 0xa
-	}
-	return len(dAtA) - i, nil
-}
-
-func (m *DeleteServiceAccountRequest) Marshal() (dAtA []byte, err error) {
-	size := m.Size()
-	dAtA = make([]byte, size)
-	n, err := m.MarshalToSizedBuffer(dAtA[:size])
-	if err != nil {
-		return nil, err
-	}
-	return dAtA[:n], nil
-}
-
-func (m *DeleteServiceAccountRequest) MarshalTo(dAtA []byte) (int, error) {
-	size := m.Size()
-	return m.MarshalToSizedBuffer(dAtA[:size])
-}
-
-func (m *DeleteServiceAccountRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
-	i := len(dAtA)
-	_ = i
-	var l int
-	_ = l
-	if m.XXX_unrecognized != nil {
-		i -= len(m.XXX_unrecognized)
-		copy(dAtA[i:], m.XXX_unrecognized)
-	}
-	if len(m.Email) > 0 {
-		i -= len(m.Email)
-		copy(dAtA[i:], m.Email)
-		i = encodeVarintIam(dAtA, i, uint64(len(m.Email)))
-		i--
-		dAtA[i] = 0xa
-	}
-	return len(dAtA) - i, nil
-}
-
-func (m *ServiceAccountKey) Marshal() (dAtA []byte, err error) {
-	size := m.Size()
-	dAtA = make([]byte, size)
-	n, err := m.MarshalToSizedBuffer(dAtA[:size])
-	if err != nil {
-		return nil, err
-	}
-	return dAtA[:n], nil
-}
-
-func (m *ServiceAccountKey) MarshalTo(dAtA []byte) (int, error) {
-	size := m.Size()
-	return m.MarshalToSizedBuffer(dAtA[:size])
-}
-
-func (m *ServiceAccountKey) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *Key) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int
@@ -2343,7 +1445,7 @@ func (m *ServiceAccountKey) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	return len(dAtA) - i, nil
 }
 
-func (m *ListServiceAccountKeysRequest) Marshal() (dAtA []byte, err error) {
+func (m *ListKeysRequest) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalToSizedBuffer(dAtA[:size])
@@ -2353,12 +1455,12 @@ func (m *ListServiceAccountKeysRequest) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *ListServiceAccountKeysRequest) MarshalTo(dAtA []byte) (int, error) {
+func (m *ListKeysRequest) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *ListServiceAccountKeysRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *ListKeysRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int
@@ -2367,17 +1469,22 @@ func (m *ListServiceAccountKeysRequest) MarshalToSizedBuffer(dAtA []byte) (int, 
 		i -= len(m.XXX_unrecognized)
 		copy(dAtA[i:], m.XXX_unrecognized)
 	}
-	if len(m.ServiceAccountEmail) > 0 {
-		i -= len(m.ServiceAccountEmail)
-		copy(dAtA[i:], m.ServiceAccountEmail)
-		i = encodeVarintIam(dAtA, i, uint64(len(m.ServiceAccountEmail)))
+	if len(m.PageToken) > 0 {
+		i -= len(m.PageToken)
+		copy(dAtA[i:], m.PageToken)
+		i = encodeVarintIam(dAtA, i, uint64(len(m.PageToken)))
 		i--
-		dAtA[i] = 0xa
+		dAtA[i] = 0x12
+	}
+	if m.PageSize != 0 {
+		i = encodeVarintIam(dAtA, i, uint64(m.PageSize))
+		i--
+		dAtA[i] = 0x8
 	}
 	return len(dAtA) - i, nil
 }
 
-func (m *ListServiceAccountKeysResponse) Marshal() (dAtA []byte, err error) {
+func (m *ListKeysResponse) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalToSizedBuffer(dAtA[:size])
@@ -2387,12 +1494,12 @@ func (m *ListServiceAccountKeysResponse) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *ListServiceAccountKeysResponse) MarshalTo(dAtA []byte) (int, error) {
+func (m *ListKeysResponse) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *ListServiceAccountKeysResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *ListKeysResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int
@@ -2418,7 +1525,7 @@ func (m *ListServiceAccountKeysResponse) MarshalToSizedBuffer(dAtA []byte) (int,
 	return len(dAtA) - i, nil
 }
 
-func (m *GetServiceAccountKeyRequest) Marshal() (dAtA []byte, err error) {
+func (m *GetKeyRequest) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalToSizedBuffer(dAtA[:size])
@@ -2428,12 +1535,12 @@ func (m *GetServiceAccountKeyRequest) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *GetServiceAccountKeyRequest) MarshalTo(dAtA []byte) (int, error) {
+func (m *GetKeyRequest) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *GetServiceAccountKeyRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *GetKeyRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int
@@ -2449,17 +1556,10 @@ func (m *GetServiceAccountKeyRequest) MarshalToSizedBuffer(dAtA []byte) (int, er
 		i--
 		dAtA[i] = 0x12
 	}
-	if len(m.ServiceAccountEmail) > 0 {
-		i -= len(m.ServiceAccountEmail)
-		copy(dAtA[i:], m.ServiceAccountEmail)
-		i = encodeVarintIam(dAtA, i, uint64(len(m.ServiceAccountEmail)))
-		i--
-		dAtA[i] = 0xa
-	}
 	return len(dAtA) - i, nil
 }
 
-func (m *CreateServiceAccountKeyRequest) Marshal() (dAtA []byte, err error) {
+func (m *DeleteKeyRequest) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalToSizedBuffer(dAtA[:size])
@@ -2469,46 +1569,12 @@ func (m *CreateServiceAccountKeyRequest) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *CreateServiceAccountKeyRequest) MarshalTo(dAtA []byte) (int, error) {
+func (m *DeleteKeyRequest) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *CreateServiceAccountKeyRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
-	i := len(dAtA)
-	_ = i
-	var l int
-	_ = l
-	if m.XXX_unrecognized != nil {
-		i -= len(m.XXX_unrecognized)
-		copy(dAtA[i:], m.XXX_unrecognized)
-	}
-	if len(m.ServiceAccountEmail) > 0 {
-		i -= len(m.ServiceAccountEmail)
-		copy(dAtA[i:], m.ServiceAccountEmail)
-		i = encodeVarintIam(dAtA, i, uint64(len(m.ServiceAccountEmail)))
-		i--
-		dAtA[i] = 0xa
-	}
-	return len(dAtA) - i, nil
-}
-
-func (m *DeleteServiceAccountKeyRequest) Marshal() (dAtA []byte, err error) {
-	size := m.Size()
-	dAtA = make([]byte, size)
-	n, err := m.MarshalToSizedBuffer(dAtA[:size])
-	if err != nil {
-		return nil, err
-	}
-	return dAtA[:n], nil
-}
-
-func (m *DeleteServiceAccountKeyRequest) MarshalTo(dAtA []byte) (int, error) {
-	size := m.Size()
-	return m.MarshalToSizedBuffer(dAtA[:size])
-}
-
-func (m *DeleteServiceAccountKeyRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *DeleteKeyRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int
@@ -2521,13 +1587,6 @@ func (m *DeleteServiceAccountKeyRequest) MarshalToSizedBuffer(dAtA []byte) (int,
 		i -= len(m.KeyId)
 		copy(dAtA[i:], m.KeyId)
 		i = encodeVarintIam(dAtA, i, uint64(len(m.KeyId)))
-		i--
-		dAtA[i] = 0x12
-	}
-	if len(m.ServiceAccountEmail) > 0 {
-		i -= len(m.ServiceAccountEmail)
-		copy(dAtA[i:], m.ServiceAccountEmail)
-		i = encodeVarintIam(dAtA, i, uint64(len(m.ServiceAccountEmail)))
 		i--
 		dAtA[i] = 0xa
 	}
@@ -2899,120 +1958,7 @@ func encodeVarintIam(dAtA []byte, offset int, v uint64) int {
 	dAtA[offset] = uint8(v)
 	return base
 }
-func (m *ServiceAccount) Size() (n int) {
-	if m == nil {
-		return 0
-	}
-	var l int
-	_ = l
-	l = len(m.Email)
-	if l > 0 {
-		n += 1 + l + sovIam(uint64(l))
-	}
-	l = len(m.UniqueId)
-	if l > 0 {
-		n += 1 + l + sovIam(uint64(l))
-	}
-	l = len(m.DisplayName)
-	if l > 0 {
-		n += 1 + l + sovIam(uint64(l))
-	}
-	if m.XXX_unrecognized != nil {
-		n += len(m.XXX_unrecognized)
-	}
-	return n
-}
-
-func (m *ListServiceAccountsRequest) Size() (n int) {
-	if m == nil {
-		return 0
-	}
-	var l int
-	_ = l
-	if m.PageSize != 0 {
-		n += 1 + sovIam(uint64(m.PageSize))
-	}
-	l = len(m.PageToken)
-	if l > 0 {
-		n += 1 + l + sovIam(uint64(l))
-	}
-	if m.XXX_unrecognized != nil {
-		n += len(m.XXX_unrecognized)
-	}
-	return n
-}
-
-func (m *ListServiceAccountsResponse) Size() (n int) {
-	if m == nil {
-		return 0
-	}
-	var l int
-	_ = l
-	if len(m.Accounts) > 0 {
-		for _, e := range m.Accounts {
-			l = e.Size()
-			n += 1 + l + sovIam(uint64(l))
-		}
-	}
-	l = len(m.NextPageToken)
-	if l > 0 {
-		n += 1 + l + sovIam(uint64(l))
-	}
-	if m.XXX_unrecognized != nil {
-		n += len(m.XXX_unrecognized)
-	}
-	return n
-}
-
-func (m *GetServiceAccountRequest) Size() (n int) {
-	if m == nil {
-		return 0
-	}
-	var l int
-	_ = l
-	l = len(m.Email)
-	if l > 0 {
-		n += 1 + l + sovIam(uint64(l))
-	}
-	if m.XXX_unrecognized != nil {
-		n += len(m.XXX_unrecognized)
-	}
-	return n
-}
-
-func (m *CreateServiceAccountRequest) Size() (n int) {
-	if m == nil {
-		return 0
-	}
-	var l int
-	_ = l
-	l = len(m.AccountId)
-	if l > 0 {
-		n += 1 + l + sovIam(uint64(l))
-	}
-	if m.XXX_unrecognized != nil {
-		n += len(m.XXX_unrecognized)
-	}
-	return n
-}
-
-func (m *DeleteServiceAccountRequest) Size() (n int) {
-	if m == nil {
-		return 0
-	}
-	var l int
-	_ = l
-	l = len(m.Email)
-	if l > 0 {
-		n += 1 + l + sovIam(uint64(l))
-	}
-	if m.XXX_unrecognized != nil {
-		n += len(m.XXX_unrecognized)
-	}
-	return n
-}
-
-func (m *ServiceAccountKey) Size() (n int) {
+func (m *Key) Size() (n int) {
 	if m == nil {
 		return 0
 	}
@@ -3044,13 +1990,16 @@ func (m *ServiceAccountKey) Size() (n int) {
 	return n
 }
 
-func (m *ListServiceAccountKeysRequest) Size() (n int) {
+func (m *ListKeysRequest) Size() (n int) {
 	if m == nil {
 		return 0
 	}
 	var l int
 	_ = l
-	l = len(m.ServiceAccountEmail)
+	if m.PageSize != 0 {
+		n += 1 + sovIam(uint64(m.PageSize))
+	}
+	l = len(m.PageToken)
 	if l > 0 {
 		n += 1 + l + sovIam(uint64(l))
 	}
@@ -3060,7 +2009,7 @@ func (m *ListServiceAccountKeysRequest) Size() (n int) {
 	return n
 }
 
-func (m *ListServiceAccountKeysResponse) Size() (n int) {
+func (m *ListKeysResponse) Size() (n int) {
 	if m == nil {
 		return 0
 	}
@@ -3078,16 +2027,12 @@ func (m *ListServiceAccountKeysResponse) Size() (n int) {
 	return n
 }
 
-func (m *GetServiceAccountKeyRequest) Size() (n int) {
+func (m *GetKeyRequest) Size() (n int) {
 	if m == nil {
 		return 0
 	}
 	var l int
 	_ = l
-	l = len(m.ServiceAccountEmail)
-	if l > 0 {
-		n += 1 + l + sovIam(uint64(l))
-	}
 	l = len(m.KeyId)
 	if l > 0 {
 		n += 1 + l + sovIam(uint64(l))
@@ -3098,32 +2043,12 @@ func (m *GetServiceAccountKeyRequest) Size() (n int) {
 	return n
 }
 
-func (m *CreateServiceAccountKeyRequest) Size() (n int) {
+func (m *DeleteKeyRequest) Size() (n int) {
 	if m == nil {
 		return 0
 	}
 	var l int
 	_ = l
-	l = len(m.ServiceAccountEmail)
-	if l > 0 {
-		n += 1 + l + sovIam(uint64(l))
-	}
-	if m.XXX_unrecognized != nil {
-		n += len(m.XXX_unrecognized)
-	}
-	return n
-}
-
-func (m *DeleteServiceAccountKeyRequest) Size() (n int) {
-	if m == nil {
-		return 0
-	}
-	var l int
-	_ = l
-	l = len(m.ServiceAccountEmail)
-	if l > 0 {
-		n += 1 + l + sovIam(uint64(l))
-	}
 	l = len(m.KeyId)
 	if l > 0 {
 		n += 1 + l + sovIam(uint64(l))
@@ -3312,7 +2237,7 @@ func sovIam(x uint64) (n int) {
 func sozIam(x uint64) (n int) {
 	return sovIam(uint64((x << 1) ^ uint64((int64(x) >> 63))))
 }
-func (m *ServiceAccount) Unmarshal(dAtA []byte) error {
+func (m *Key) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -3335,643 +2260,10 @@ func (m *ServiceAccount) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: ServiceAccount: wiretype end group for non-group")
+			return fmt.Errorf("proto: Key: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: ServiceAccount: illegal tag %d (wire type %d)", fieldNum, wire)
-		}
-		switch fieldNum {
-		case 1:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Email", wireType)
-			}
-			var stringLen uint64
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowIam
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				stringLen |= uint64(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			intStringLen := int(stringLen)
-			if intStringLen < 0 {
-				return ErrInvalidLengthIam
-			}
-			postIndex := iNdEx + intStringLen
-			if postIndex < 0 {
-				return ErrInvalidLengthIam
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			m.Email = string(dAtA[iNdEx:postIndex])
-			iNdEx = postIndex
-		case 2:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field UniqueId", wireType)
-			}
-			var stringLen uint64
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowIam
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				stringLen |= uint64(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			intStringLen := int(stringLen)
-			if intStringLen < 0 {
-				return ErrInvalidLengthIam
-			}
-			postIndex := iNdEx + intStringLen
-			if postIndex < 0 {
-				return ErrInvalidLengthIam
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			m.UniqueId = string(dAtA[iNdEx:postIndex])
-			iNdEx = postIndex
-		case 3:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field DisplayName", wireType)
-			}
-			var stringLen uint64
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowIam
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				stringLen |= uint64(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			intStringLen := int(stringLen)
-			if intStringLen < 0 {
-				return ErrInvalidLengthIam
-			}
-			postIndex := iNdEx + intStringLen
-			if postIndex < 0 {
-				return ErrInvalidLengthIam
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			m.DisplayName = string(dAtA[iNdEx:postIndex])
-			iNdEx = postIndex
-		default:
-			iNdEx = preIndex
-			skippy, err := skipIam(dAtA[iNdEx:])
-			if err != nil {
-				return err
-			}
-			if skippy < 0 {
-				return ErrInvalidLengthIam
-			}
-			if (iNdEx + skippy) < 0 {
-				return ErrInvalidLengthIam
-			}
-			if (iNdEx + skippy) > l {
-				return io.ErrUnexpectedEOF
-			}
-			m.XXX_unrecognized = append(m.XXX_unrecognized, dAtA[iNdEx:iNdEx+skippy]...)
-			iNdEx += skippy
-		}
-	}
-
-	if iNdEx > l {
-		return io.ErrUnexpectedEOF
-	}
-	return nil
-}
-func (m *ListServiceAccountsRequest) Unmarshal(dAtA []byte) error {
-	l := len(dAtA)
-	iNdEx := 0
-	for iNdEx < l {
-		preIndex := iNdEx
-		var wire uint64
-		for shift := uint(0); ; shift += 7 {
-			if shift >= 64 {
-				return ErrIntOverflowIam
-			}
-			if iNdEx >= l {
-				return io.ErrUnexpectedEOF
-			}
-			b := dAtA[iNdEx]
-			iNdEx++
-			wire |= uint64(b&0x7F) << shift
-			if b < 0x80 {
-				break
-			}
-		}
-		fieldNum := int32(wire >> 3)
-		wireType := int(wire & 0x7)
-		if wireType == 4 {
-			return fmt.Errorf("proto: ListServiceAccountsRequest: wiretype end group for non-group")
-		}
-		if fieldNum <= 0 {
-			return fmt.Errorf("proto: ListServiceAccountsRequest: illegal tag %d (wire type %d)", fieldNum, wire)
-		}
-		switch fieldNum {
-		case 2:
-			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field PageSize", wireType)
-			}
-			m.PageSize = 0
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowIam
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				m.PageSize |= int32(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-		case 3:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field PageToken", wireType)
-			}
-			var stringLen uint64
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowIam
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				stringLen |= uint64(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			intStringLen := int(stringLen)
-			if intStringLen < 0 {
-				return ErrInvalidLengthIam
-			}
-			postIndex := iNdEx + intStringLen
-			if postIndex < 0 {
-				return ErrInvalidLengthIam
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			m.PageToken = string(dAtA[iNdEx:postIndex])
-			iNdEx = postIndex
-		default:
-			iNdEx = preIndex
-			skippy, err := skipIam(dAtA[iNdEx:])
-			if err != nil {
-				return err
-			}
-			if skippy < 0 {
-				return ErrInvalidLengthIam
-			}
-			if (iNdEx + skippy) < 0 {
-				return ErrInvalidLengthIam
-			}
-			if (iNdEx + skippy) > l {
-				return io.ErrUnexpectedEOF
-			}
-			m.XXX_unrecognized = append(m.XXX_unrecognized, dAtA[iNdEx:iNdEx+skippy]...)
-			iNdEx += skippy
-		}
-	}
-
-	if iNdEx > l {
-		return io.ErrUnexpectedEOF
-	}
-	return nil
-}
-func (m *ListServiceAccountsResponse) Unmarshal(dAtA []byte) error {
-	l := len(dAtA)
-	iNdEx := 0
-	for iNdEx < l {
-		preIndex := iNdEx
-		var wire uint64
-		for shift := uint(0); ; shift += 7 {
-			if shift >= 64 {
-				return ErrIntOverflowIam
-			}
-			if iNdEx >= l {
-				return io.ErrUnexpectedEOF
-			}
-			b := dAtA[iNdEx]
-			iNdEx++
-			wire |= uint64(b&0x7F) << shift
-			if b < 0x80 {
-				break
-			}
-		}
-		fieldNum := int32(wire >> 3)
-		wireType := int(wire & 0x7)
-		if wireType == 4 {
-			return fmt.Errorf("proto: ListServiceAccountsResponse: wiretype end group for non-group")
-		}
-		if fieldNum <= 0 {
-			return fmt.Errorf("proto: ListServiceAccountsResponse: illegal tag %d (wire type %d)", fieldNum, wire)
-		}
-		switch fieldNum {
-		case 1:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Accounts", wireType)
-			}
-			var msglen int
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowIam
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				msglen |= int(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			if msglen < 0 {
-				return ErrInvalidLengthIam
-			}
-			postIndex := iNdEx + msglen
-			if postIndex < 0 {
-				return ErrInvalidLengthIam
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			m.Accounts = append(m.Accounts, &ServiceAccount{})
-			if err := m.Accounts[len(m.Accounts)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
-				return err
-			}
-			iNdEx = postIndex
-		case 2:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field NextPageToken", wireType)
-			}
-			var stringLen uint64
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowIam
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				stringLen |= uint64(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			intStringLen := int(stringLen)
-			if intStringLen < 0 {
-				return ErrInvalidLengthIam
-			}
-			postIndex := iNdEx + intStringLen
-			if postIndex < 0 {
-				return ErrInvalidLengthIam
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			m.NextPageToken = string(dAtA[iNdEx:postIndex])
-			iNdEx = postIndex
-		default:
-			iNdEx = preIndex
-			skippy, err := skipIam(dAtA[iNdEx:])
-			if err != nil {
-				return err
-			}
-			if skippy < 0 {
-				return ErrInvalidLengthIam
-			}
-			if (iNdEx + skippy) < 0 {
-				return ErrInvalidLengthIam
-			}
-			if (iNdEx + skippy) > l {
-				return io.ErrUnexpectedEOF
-			}
-			m.XXX_unrecognized = append(m.XXX_unrecognized, dAtA[iNdEx:iNdEx+skippy]...)
-			iNdEx += skippy
-		}
-	}
-
-	if iNdEx > l {
-		return io.ErrUnexpectedEOF
-	}
-	return nil
-}
-func (m *GetServiceAccountRequest) Unmarshal(dAtA []byte) error {
-	l := len(dAtA)
-	iNdEx := 0
-	for iNdEx < l {
-		preIndex := iNdEx
-		var wire uint64
-		for shift := uint(0); ; shift += 7 {
-			if shift >= 64 {
-				return ErrIntOverflowIam
-			}
-			if iNdEx >= l {
-				return io.ErrUnexpectedEOF
-			}
-			b := dAtA[iNdEx]
-			iNdEx++
-			wire |= uint64(b&0x7F) << shift
-			if b < 0x80 {
-				break
-			}
-		}
-		fieldNum := int32(wire >> 3)
-		wireType := int(wire & 0x7)
-		if wireType == 4 {
-			return fmt.Errorf("proto: GetServiceAccountRequest: wiretype end group for non-group")
-		}
-		if fieldNum <= 0 {
-			return fmt.Errorf("proto: GetServiceAccountRequest: illegal tag %d (wire type %d)", fieldNum, wire)
-		}
-		switch fieldNum {
-		case 1:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Email", wireType)
-			}
-			var stringLen uint64
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowIam
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				stringLen |= uint64(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			intStringLen := int(stringLen)
-			if intStringLen < 0 {
-				return ErrInvalidLengthIam
-			}
-			postIndex := iNdEx + intStringLen
-			if postIndex < 0 {
-				return ErrInvalidLengthIam
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			m.Email = string(dAtA[iNdEx:postIndex])
-			iNdEx = postIndex
-		default:
-			iNdEx = preIndex
-			skippy, err := skipIam(dAtA[iNdEx:])
-			if err != nil {
-				return err
-			}
-			if skippy < 0 {
-				return ErrInvalidLengthIam
-			}
-			if (iNdEx + skippy) < 0 {
-				return ErrInvalidLengthIam
-			}
-			if (iNdEx + skippy) > l {
-				return io.ErrUnexpectedEOF
-			}
-			m.XXX_unrecognized = append(m.XXX_unrecognized, dAtA[iNdEx:iNdEx+skippy]...)
-			iNdEx += skippy
-		}
-	}
-
-	if iNdEx > l {
-		return io.ErrUnexpectedEOF
-	}
-	return nil
-}
-func (m *CreateServiceAccountRequest) Unmarshal(dAtA []byte) error {
-	l := len(dAtA)
-	iNdEx := 0
-	for iNdEx < l {
-		preIndex := iNdEx
-		var wire uint64
-		for shift := uint(0); ; shift += 7 {
-			if shift >= 64 {
-				return ErrIntOverflowIam
-			}
-			if iNdEx >= l {
-				return io.ErrUnexpectedEOF
-			}
-			b := dAtA[iNdEx]
-			iNdEx++
-			wire |= uint64(b&0x7F) << shift
-			if b < 0x80 {
-				break
-			}
-		}
-		fieldNum := int32(wire >> 3)
-		wireType := int(wire & 0x7)
-		if wireType == 4 {
-			return fmt.Errorf("proto: CreateServiceAccountRequest: wiretype end group for non-group")
-		}
-		if fieldNum <= 0 {
-			return fmt.Errorf("proto: CreateServiceAccountRequest: illegal tag %d (wire type %d)", fieldNum, wire)
-		}
-		switch fieldNum {
-		case 1:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field AccountId", wireType)
-			}
-			var stringLen uint64
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowIam
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				stringLen |= uint64(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			intStringLen := int(stringLen)
-			if intStringLen < 0 {
-				return ErrInvalidLengthIam
-			}
-			postIndex := iNdEx + intStringLen
-			if postIndex < 0 {
-				return ErrInvalidLengthIam
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			m.AccountId = string(dAtA[iNdEx:postIndex])
-			iNdEx = postIndex
-		default:
-			iNdEx = preIndex
-			skippy, err := skipIam(dAtA[iNdEx:])
-			if err != nil {
-				return err
-			}
-			if skippy < 0 {
-				return ErrInvalidLengthIam
-			}
-			if (iNdEx + skippy) < 0 {
-				return ErrInvalidLengthIam
-			}
-			if (iNdEx + skippy) > l {
-				return io.ErrUnexpectedEOF
-			}
-			m.XXX_unrecognized = append(m.XXX_unrecognized, dAtA[iNdEx:iNdEx+skippy]...)
-			iNdEx += skippy
-		}
-	}
-
-	if iNdEx > l {
-		return io.ErrUnexpectedEOF
-	}
-	return nil
-}
-func (m *DeleteServiceAccountRequest) Unmarshal(dAtA []byte) error {
-	l := len(dAtA)
-	iNdEx := 0
-	for iNdEx < l {
-		preIndex := iNdEx
-		var wire uint64
-		for shift := uint(0); ; shift += 7 {
-			if shift >= 64 {
-				return ErrIntOverflowIam
-			}
-			if iNdEx >= l {
-				return io.ErrUnexpectedEOF
-			}
-			b := dAtA[iNdEx]
-			iNdEx++
-			wire |= uint64(b&0x7F) << shift
-			if b < 0x80 {
-				break
-			}
-		}
-		fieldNum := int32(wire >> 3)
-		wireType := int(wire & 0x7)
-		if wireType == 4 {
-			return fmt.Errorf("proto: DeleteServiceAccountRequest: wiretype end group for non-group")
-		}
-		if fieldNum <= 0 {
-			return fmt.Errorf("proto: DeleteServiceAccountRequest: illegal tag %d (wire type %d)", fieldNum, wire)
-		}
-		switch fieldNum {
-		case 1:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Email", wireType)
-			}
-			var stringLen uint64
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowIam
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				stringLen |= uint64(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			intStringLen := int(stringLen)
-			if intStringLen < 0 {
-				return ErrInvalidLengthIam
-			}
-			postIndex := iNdEx + intStringLen
-			if postIndex < 0 {
-				return ErrInvalidLengthIam
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			m.Email = string(dAtA[iNdEx:postIndex])
-			iNdEx = postIndex
-		default:
-			iNdEx = preIndex
-			skippy, err := skipIam(dAtA[iNdEx:])
-			if err != nil {
-				return err
-			}
-			if skippy < 0 {
-				return ErrInvalidLengthIam
-			}
-			if (iNdEx + skippy) < 0 {
-				return ErrInvalidLengthIam
-			}
-			if (iNdEx + skippy) > l {
-				return io.ErrUnexpectedEOF
-			}
-			m.XXX_unrecognized = append(m.XXX_unrecognized, dAtA[iNdEx:iNdEx+skippy]...)
-			iNdEx += skippy
-		}
-	}
-
-	if iNdEx > l {
-		return io.ErrUnexpectedEOF
-	}
-	return nil
-}
-func (m *ServiceAccountKey) Unmarshal(dAtA []byte) error {
-	l := len(dAtA)
-	iNdEx := 0
-	for iNdEx < l {
-		preIndex := iNdEx
-		var wire uint64
-		for shift := uint(0); ; shift += 7 {
-			if shift >= 64 {
-				return ErrIntOverflowIam
-			}
-			if iNdEx >= l {
-				return io.ErrUnexpectedEOF
-			}
-			b := dAtA[iNdEx]
-			iNdEx++
-			wire |= uint64(b&0x7F) << shift
-			if b < 0x80 {
-				break
-			}
-		}
-		fieldNum := int32(wire >> 3)
-		wireType := int(wire & 0x7)
-		if wireType == 4 {
-			return fmt.Errorf("proto: ServiceAccountKey: wiretype end group for non-group")
-		}
-		if fieldNum <= 0 {
-			return fmt.Errorf("proto: ServiceAccountKey: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: Key: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:
@@ -4171,7 +2463,7 @@ func (m *ServiceAccountKey) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *ListServiceAccountKeysRequest) Unmarshal(dAtA []byte) error {
+func (m *ListKeysRequest) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -4194,15 +2486,34 @@ func (m *ListServiceAccountKeysRequest) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: ListServiceAccountKeysRequest: wiretype end group for non-group")
+			return fmt.Errorf("proto: ListKeysRequest: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: ListServiceAccountKeysRequest: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: ListKeysRequest: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field PageSize", wireType)
+			}
+			m.PageSize = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowIam
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.PageSize |= int32(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 2:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field ServiceAccountEmail", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field PageToken", wireType)
 			}
 			var stringLen uint64
 			for shift := uint(0); ; shift += 7 {
@@ -4230,7 +2541,7 @@ func (m *ListServiceAccountKeysRequest) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.ServiceAccountEmail = string(dAtA[iNdEx:postIndex])
+			m.PageToken = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
 		default:
 			iNdEx = preIndex
@@ -4257,7 +2568,7 @@ func (m *ListServiceAccountKeysRequest) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *ListServiceAccountKeysResponse) Unmarshal(dAtA []byte) error {
+func (m *ListKeysResponse) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -4280,10 +2591,10 @@ func (m *ListServiceAccountKeysResponse) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: ListServiceAccountKeysResponse: wiretype end group for non-group")
+			return fmt.Errorf("proto: ListKeysResponse: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: ListServiceAccountKeysResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: ListKeysResponse: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:
@@ -4315,7 +2626,7 @@ func (m *ListServiceAccountKeysResponse) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.Keys = append(m.Keys, &ServiceAccountKey{})
+			m.Keys = append(m.Keys, &Key{})
 			if err := m.Keys[len(m.Keys)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
 				return err
 			}
@@ -4345,7 +2656,7 @@ func (m *ListServiceAccountKeysResponse) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *GetServiceAccountKeyRequest) Unmarshal(dAtA []byte) error {
+func (m *GetKeyRequest) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -4368,44 +2679,12 @@ func (m *GetServiceAccountKeyRequest) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: GetServiceAccountKeyRequest: wiretype end group for non-group")
+			return fmt.Errorf("proto: GetKeyRequest: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: GetServiceAccountKeyRequest: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: GetKeyRequest: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
-		case 1:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field ServiceAccountEmail", wireType)
-			}
-			var stringLen uint64
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowIam
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				stringLen |= uint64(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			intStringLen := int(stringLen)
-			if intStringLen < 0 {
-				return ErrInvalidLengthIam
-			}
-			postIndex := iNdEx + intStringLen
-			if postIndex < 0 {
-				return ErrInvalidLengthIam
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			m.ServiceAccountEmail = string(dAtA[iNdEx:postIndex])
-			iNdEx = postIndex
 		case 2:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field KeyId", wireType)
@@ -4463,7 +2742,7 @@ func (m *GetServiceAccountKeyRequest) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *CreateServiceAccountKeyRequest) Unmarshal(dAtA []byte) error {
+func (m *DeleteKeyRequest) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -4486,131 +2765,13 @@ func (m *CreateServiceAccountKeyRequest) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: CreateServiceAccountKeyRequest: wiretype end group for non-group")
+			return fmt.Errorf("proto: DeleteKeyRequest: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: CreateServiceAccountKeyRequest: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: DeleteKeyRequest: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field ServiceAccountEmail", wireType)
-			}
-			var stringLen uint64
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowIam
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				stringLen |= uint64(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			intStringLen := int(stringLen)
-			if intStringLen < 0 {
-				return ErrInvalidLengthIam
-			}
-			postIndex := iNdEx + intStringLen
-			if postIndex < 0 {
-				return ErrInvalidLengthIam
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			m.ServiceAccountEmail = string(dAtA[iNdEx:postIndex])
-			iNdEx = postIndex
-		default:
-			iNdEx = preIndex
-			skippy, err := skipIam(dAtA[iNdEx:])
-			if err != nil {
-				return err
-			}
-			if skippy < 0 {
-				return ErrInvalidLengthIam
-			}
-			if (iNdEx + skippy) < 0 {
-				return ErrInvalidLengthIam
-			}
-			if (iNdEx + skippy) > l {
-				return io.ErrUnexpectedEOF
-			}
-			m.XXX_unrecognized = append(m.XXX_unrecognized, dAtA[iNdEx:iNdEx+skippy]...)
-			iNdEx += skippy
-		}
-	}
-
-	if iNdEx > l {
-		return io.ErrUnexpectedEOF
-	}
-	return nil
-}
-func (m *DeleteServiceAccountKeyRequest) Unmarshal(dAtA []byte) error {
-	l := len(dAtA)
-	iNdEx := 0
-	for iNdEx < l {
-		preIndex := iNdEx
-		var wire uint64
-		for shift := uint(0); ; shift += 7 {
-			if shift >= 64 {
-				return ErrIntOverflowIam
-			}
-			if iNdEx >= l {
-				return io.ErrUnexpectedEOF
-			}
-			b := dAtA[iNdEx]
-			iNdEx++
-			wire |= uint64(b&0x7F) << shift
-			if b < 0x80 {
-				break
-			}
-		}
-		fieldNum := int32(wire >> 3)
-		wireType := int(wire & 0x7)
-		if wireType == 4 {
-			return fmt.Errorf("proto: DeleteServiceAccountKeyRequest: wiretype end group for non-group")
-		}
-		if fieldNum <= 0 {
-			return fmt.Errorf("proto: DeleteServiceAccountKeyRequest: illegal tag %d (wire type %d)", fieldNum, wire)
-		}
-		switch fieldNum {
-		case 1:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field ServiceAccountEmail", wireType)
-			}
-			var stringLen uint64
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowIam
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				stringLen |= uint64(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			intStringLen := int(stringLen)
-			if intStringLen < 0 {
-				return ErrInvalidLengthIam
-			}
-			postIndex := iNdEx + intStringLen
-			if postIndex < 0 {
-				return ErrInvalidLengthIam
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			m.ServiceAccountEmail = string(dAtA[iNdEx:postIndex])
-			iNdEx = postIndex
-		case 2:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field KeyId", wireType)
 			}

@@ -7,17 +7,20 @@ import (
 )
 
 // DataStore is a repository for persistently storing collections of data
-// related to service accounts. Account reference is the email address or the
-// unique id of the service account.
+// related to identity and access management.
 type DataStore interface {
-	CreateServiceAccount(acc *ServiceAccount) (*ServiceAccount, error)
-	GetServiceAccountByEmail(userID string, email string) (*ServiceAccount, error)
-	ListServiceAccounts(projID string) ([]*ServiceAccount, error)
-	DeleteServiceAccount(email string) error
-	CreateServiceAccountKey(accEmail string, passphrase string) (*ServiceAccountKey, error)
-	GetServiceAccountKey(id string) (*ServiceAccountKey, error)
-	ListServiceAccountKeysByEmail(accEmail string) ([]*ServiceAccountKey, error)
-	DeleteServiceAccountKey(id string) error
+	CreateUserKey(key *UserKey) error
+	GetUserKey(userID string, keyID string) (*UserKey, error)
+	ListUserKeys(userID string) ([]*UserKey, error)
+	DeleteUserKey(userID string, keyID string) error
+
+	GetRole(name string) (*Role, error)
+	ListRoles() ([]*Role, error)
+	ListUserRoles(userID string) ([]*Role, error)
+	CreateRoleBinding(binding *RoleBinding) error
+	DeleteRoleBinding(roleName string, userID string) error
+	ListRoleBindings() ([]*RoleBinding, error)
+
 	io.Closer
 }
 

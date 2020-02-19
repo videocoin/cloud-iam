@@ -15,8 +15,8 @@ const (
 	bitsRSA                = 2048
 )
 
-// generateKey generates an internal service account key.
-func generateKey(rand io.Reader, passphrase string, accID string) (*ServiceAccountKey, error) {
+// generateKey generates an internal user key.
+func generateKey(rand io.Reader, passphrase string, userID string) (*UserKey, error) {
 	key, err := rsa.GenerateKey(rand, bitsRSA)
 	if err != nil {
 		return nil, err
@@ -32,9 +32,9 @@ func generateKey(rand io.Reader, passphrase string, accID string) (*ServiceAccou
 		return nil, err
 	}
 
-	return &ServiceAccountKey{
+	return &UserKey{
 		ID:              guuid.New().String(),
-		AccountID:       accID,
+		UserID:          userID,
 		PrivateKeyData:  keyBytes,
 		PublicKeyData:   pubBytes,
 		ValidAfterTime:  time.Now(),

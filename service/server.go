@@ -3,10 +3,8 @@ package service
 import (
 	"context"
 
-	guuid "github.com/google/uuid"
 	iam "github.com/videocoin/cloud-api/iam/v1"
 	keyspec "github.com/videocoin/cloud-pkg/api/resources/key"
-	accspec "github.com/videocoin/cloud-pkg/api/resources/serviceaccount"
 
 	"github.com/gogo/protobuf/types"
 	"github.com/jinzhu/gorm"
@@ -25,91 +23,36 @@ type Server struct {
 }
 
 // NewServer creates an IAM server.
-func NewServer(ds datastore.DataStore, passphrase string) *Server {
+func NewServer(logger *logrus.Entry, ds datastore.DataStore, passphrase string) *Server {
 	return &Server{
+		logger:     logger,
 		ds:         ds,
 		passphrase: passphrase,
 	}
 }
 
-// CreateServiceAccount creates a service account.
-func (srv *Server) CreateServiceAccount(ctx context.Context, req *iam.CreateServiceAccountRequest) (*iam.ServiceAccount, error) {
-	principal := ctx.Value("principal").(string)
-
-	if ok := accspec.IsValidID(req.AccountId); !ok {
-		return nil, status.Error(codes.InvalidArgument, accspec.ErrInvalidID.Error())
-	}
-
-	acc, err := srv.ds.CreateServiceAccount(&datastore.ServiceAccount{
-		ID:     guuid.New().String(),
-		UserID: principal,
-		Email:  accspec.NewEmail(principal, req.AccountId),
-	})
-	if err != nil {
-		return nil, status.Error(codes.Unknown, err.Error())
-	}
-
-	return acc.Proto(), nil
-}
-
-// GetServiceAccount gets a service account.
-func (srv *Server) GetServiceAccount(ctx context.Context, req *iam.GetServiceAccountRequest) (*iam.ServiceAccount, error) {
-	principal := ctx.Value("principal").(string)
-
-	ok := accspec.IsValidEmail(req.Email)
+// CreateKey creates an user key.
+func (srv *Server) CreateKey(ctx context.Context, empty *types.Empty) (*iam.Key, error) {
+	value := ctx.Value("subject")
+	principal, ok := ctx.Value("subject").(string)
 	if !ok {
-		return nil, status.Error(codes.InvalidArgument, accspec.ErrInvalidEmail.Error())
+		return nil, status.Error(codes.FailedPrecondition, "principal required")
+	}
+	if !keyspec.IsValidID(principal) {
+		return nil, status.Error(codes.FailedPrecondition, "invalid principal")
 	}
 
-	acc, err := srv.ds.GetServiceAccountByEmail(principal, req.Email)
+	return srv.createKey(principal)
+}
+
+func (srv *Server) createKey(userID string) return (*iam.Key, error) {
+	key, err = generateKey(rand.Reader, srv.passphrase, userID)
 	if err != nil {
-		if gorm.IsRecordNotFoundError(err) {
-			return nil, status.Error(codes.NotFound, err.Error())
-		}
-		return nil, status.Error(codes.Unknown, err.Error())
+		// TODO
+		return nil, err
 	}
 
-	return acc.Proto(), nil
-}
-
-// ListServiceAccounts lists service accounts.
-func (srv *Server) ListServiceAccounts(ctx context.Context, req *iam.ListServiceAccountsRequest) (*iam.ListServiceAccountsResponse, error) {
-	principal := ctx.Value("principal").(string)
-
-	accs, err := srv.ds.ListServiceAccounts(principal)
-	if err != nil {
-		return nil, status.Error(codes.Unknown, err.Error())
-	}
-
-	accsPB := make([]*iam.ServiceAccount, 0, len(accs))
-	for _, acc := range accs {
-		accsPB = append(accsPB, acc.Proto())
-	}
-
-	return &iam.ListServiceAccountsResponse{Accounts: accsPB}, nil
-}
-
-// DeleteServiceAccount deletes a service account.
-func (srv *Server) DeleteServiceAccount(ctx context.Context, req *iam.DeleteServiceAccountRequest) (*types.Empty, error) {
-	ok := accspec.IsValidEmail(req.Email)
-	if !ok {
-		return nil, status.Error(codes.InvalidArgument, accspec.ErrInvalidEmail.Error())
-	}
-	if err := srv.ds.DeleteServiceAccount(req.Email); err != nil {
-		return nil, status.Error(codes.Unknown, err.Error())
-	}
-
-	return new(types.Empty), nil
-}
-
-// CreateServiceAccountKey creates a service account key.
-func (srv *Server) CreateServiceAccountKey(ctx context.Context, req *iam.CreateServiceAccountKeyRequest) (*iam.ServiceAccountKey, error) {
-	ok := accspec.IsValidEmail(req.ServiceAccountEmail)
-	if !ok {
-		return nil, status.Error(codes.InvalidArgument, accspec.ErrInvalidEmail.Error())
-	}
-
-	key, err := srv.ds.CreateServiceAccountKey(req.ServiceAccountEmail, srv.passphrase)
+	key, err := srv.ds.CreateKey(userID, srv.passphrase)
 	if err != nil {
 		if gorm.IsRecordNotFoundError(err) {
 			return nil, status.Error(codes.NotFound, err.Error())

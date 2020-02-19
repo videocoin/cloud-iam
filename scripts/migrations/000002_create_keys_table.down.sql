@@ -1,1 +1,1 @@
-DROP TABLE IF EXISTS keys;
+DROP TABLE IF EXISTS user_keys;

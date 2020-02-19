@@ -15,48 +15,24 @@ import (
 // ErrPEMDataNotFound is returned when no PEM data is found.
 var ErrPEMDataNotFound = errors.New("pem: data not found")
 
-// ServiceAccount is an account that belongs to your project instead
-// of to an individual end user. It is used to authenticate calls
-// to a VideoCoin API.
-type ServiceAccount struct {
-	models.Base
-	ID     string `gorm:"primary_key"`
-	UserID string
-	Email  string
-	Keys   []ServiceAccountKey `gorm:"foreignkey:AccountID"`
-}
-
-// TableName set ServiceAccount's table name to be `accounts`.
-func (sa *ServiceAccount) TableName() string {
-	return "accounts"
-}
-
-// Proto ...
-func (sa *ServiceAccount) Proto() *iam.ServiceAccount {
-	return &iam.ServiceAccount{
-		UniqueId: sa.ID,
-		Email:    sa.Email,
-	}
-}
-
-// ServiceAccountKey represents a service account key.
-type ServiceAccountKey struct {
+// UserKey represents an user key.
+type UserKey struct {
 	models.Base
 	ID              string `gorm:"primary_key"`
-	AccountID       string
+	UserID          string
 	PrivateKeyData  []byte
 	PublicKeyData   []byte
 	ValidAfterTime  time.Time
 	ValidBeforeTime time.Time
 }
 
-// TableName set ServiceAccountKey's table name to be `account_keys`.
-func (k *ServiceAccountKey) TableName() string {
-	return "account_keys" // note: 'keys' is a reserved word in mysql
+// TableName set Key's table name to be `user_keys`.
+func (k *UserKey) TableName() string {
+	return "user_keys" // note: 'keys' is a reserved word in mysql
 }
 
 // CreationProto ...
-func (k *ServiceAccountKey) CreationProto(passphrase string) (*iam.ServiceAccountKey, error) {
+func (k *UserKey) CreationProto(passphrase string) (*iam.UserKey, error) {
 	block, _ := pem.Decode(k.PrivateKeyData)
 	if block == nil {
 		return nil, ErrPEMDataNotFound
@@ -79,7 +55,7 @@ func (k *ServiceAccountKey) CreationProto(passphrase string) (*iam.ServiceAccoun
 }
 
 // Proto ...
-func (k *ServiceAccountKey) Proto() (*iam.ServiceAccountKey, error) {
+func (k *UserKey) Proto() (*iam.UserKey, error) {
 	validAfterTimePB, err := types.TimestampProto(k.ValidAfterTime)
 	if err != nil {
 		return nil, err

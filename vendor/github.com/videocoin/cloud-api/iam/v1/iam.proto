@@ -22,81 +22,37 @@ service IAM {
   option (google.api.oauth_scopes) =
       "https://www.videocoin.network/auth/cloud-platform";
 
-  // Lists [ServiceAccounts][cloud.api.iam.v1.ServiceAccount] for a
-  // project.
-  rpc ListServiceAccounts(ListServiceAccountsRequest)
-      returns (ListServiceAccountsResponse) {
+  // Creates a [Key][cloud.api.iam.v1.Key] and returns it.
+  rpc CreateKey(google.protobuf.Empty) returns (Key) {
     option (google.api.http) = {
-      get : "/v1/serviceAccounts"
+      post : "/v1/keys"
     };
   }
 
-  // Gets a [ServiceAccount][cloud.api.iam.v1.ServiceAccount].
-  rpc GetServiceAccount(GetServiceAccountRequest) returns (ServiceAccount) {
+  // Lists [Keys][cloud.api.iam.v1.Key].
+  rpc ListKeys(ListKeysRequest) returns (ListKeysResponse) {
     option (google.api.http) = {
-      get : "/v1/serviceAccounts/{email=*}"
+      get : "/v1/keys"
     };
-    option (google.api.method_signature) = "email";
   }
 
-  // Creates a [ServiceAccount][cloud.api.iam.v1.ServiceAccount]
-  rpc CreateServiceAccount(CreateServiceAccountRequest)
-      returns (ServiceAccount) {
+  // Gets the [Key][cloud.api.iam.v1.Key] by key id.
+  rpc GetKey(GetKeyRequest) returns (Key) {
     option (google.api.http) = {
-      post : "/v1/serviceAccounts"
-      body : "*"
+      get : "/v1/keys/{key_id=*}"
     };
-    option (google.api.method_signature) = "account_id";
+    option (google.api.method_signature) = "key_id";
   }
 
-  // Deletes a [ServiceAccount][cloud.api.iam.v1.ServiceAccount].
-  rpc DeleteServiceAccount(DeleteServiceAccountRequest)
-      returns (google.protobuf.Empty) {
+  // Deletes a [Key][cloud.api.iam.v1.Key] by key id..
+  rpc DeleteKey(DeleteKeyRequest) returns (google.protobuf.Empty) {
     option (google.api.http) = {
-      delete : "/v1/serviceAccounts/{email=*}"
+      delete : "/v1/keys/{key_id=*}"
     };
-    option (google.api.method_signature) = "email";
+    option (google.api.method_signature) = "key_id";
   }
 
-  // Lists [ServiceAccountKeys][cloud.api.iam.v1.ServiceAccountKey].
-  rpc ListServiceAccountKeys(ListServiceAccountKeysRequest)
-      returns (ListServiceAccountKeysResponse) {
-    option (google.api.http) = {
-      get : "/v1/serviceAccounts/{service_account_email=*}/keys"
-    };
-    option (google.api.method_signature) = "service_account_email";
-  }
-
-  // Gets the [ServiceAccountKey][cloud.api.iam.v1.ServiceAccountKey]
-  // by key id.
-  rpc GetServiceAccountKey(GetServiceAccountKeyRequest)
-      returns (ServiceAccountKey) {
-    option (google.api.http) = {
-      get : "/v1/serviceAccounts/{service_account_email=*}/keys/{key_id=*}"
-    };
-    option (google.api.method_signature) = "service_account_email,key_id";
-  }
-
-  // Creates a [ServiceAccountKey][cloud.api.iam.v1.ServiceAccountKey]
-  // and returns it.
-  rpc CreateServiceAccountKey(CreateServiceAccountKeyRequest)
-      returns (ServiceAccountKey) {
-    option (google.api.http) = {
-      post : "/v1/serviceAccounts/{service_account_email=*}/keys"
-      body : "*"
-    };
-    option (google.api.method_signature) = "service_account_email";
-  }
-
-  // Deletes a [ServiceAccountKey][cloud.api.iam.v1.ServiceAccountKey].
-  rpc DeleteServiceAccountKey(DeleteServiceAccountKeyRequest)
-      returns (google.protobuf.Empty) {
-    option (google.api.http) = {
-      delete : "/v1/serviceAccounts/{service_account_email=*}/keys/{key_id=*}"
-    };
-    option (google.api.method_signature) = "service_account_email,key_id";
-  }
-
+  // Creates a [RoleBinding][cloud.api.iam.v1.RoleBinding].
   rpc CreateRoleBinding(RoleBinding) returns (google.protobuf.Empty) {
     option (google.api.http) = {
       post : "/rolebindings"
@@ -105,6 +61,7 @@ service IAM {
     option (google.api.method_signature) = "role_name,user_id";
   }
 
+  // Deletes a [RoleBinding][cloud.api.iam.v1.RoleBinding].
   rpc DeleteRoleBinding(RoleBinding) returns (google.protobuf.Empty) {
     option (google.api.http) = {
       delete : "/rolebindings"
@@ -113,6 +70,7 @@ service IAM {
     option (google.api.method_signature) = "role_name,user_id";
   }
 
+  // Lists [RoleBindings][cloud.api.iam.v1.RoleBinding].
   rpc ListRoleBindings(ListRoleBindingsRequest)
       returns (ListRoleBindingsResponse) {
     option (google.api.http) = {
@@ -122,14 +80,14 @@ service IAM {
     option (google.api.method_signature) = "user_id";
   }
 
-  // Lists the Roles defined on a resource.
+  // Lists [Roles][cloud.api.iam.v1.Roles].
   rpc ListRoles(ListRolesRequest) returns (ListRolesResponse) {
     option (google.api.http) = {
       get : "/v1/roles"
     };
   }
 
-  // Gets a Role definition.
+  // Gets a [Role][cloud.api.iam.v1.Role].
   rpc GetRole(GetRoleRequest) returns (Role) {
     option (google.api.http) = {
       get : "/v1/roles/{name=*}"
@@ -137,79 +95,16 @@ service IAM {
   }
 }
 
-// A service account in the Identity and Access Management API.
-message ServiceAccount {
-  option (google.api.resource) = {
-    type : "iam.videocoin.network/ServiceAccount"
-    pattern : "serviceAccounts/{email}"
-  };
-
-  // @OutputOnly The email address of the service account.
-  string email = 1;
-
-  // @OutputOnly The unique and stable id of the service account.
-  string unique_id = 2;
-
-  // Optional. A user-specified name for the service account.
-  // Must be less than or equal to 100 UTF-8 bytes.
-  string display_name = 3;
-}
-
-// The service account list request.
-message ListServiceAccountsRequest {
-  // Optional limit on the number of service accounts to include in the
-  // response. Further accounts can subsequently be obtained by including the
-  // [ListServiceAccountsResponse.next_page_token][cloud.api.iam.v1.ListServiceAccountsResponse.next_page_token]
-  // in a subsequent request.
-  int32 page_size = 2;
-
-  // Optional pagination token returned in an earlier
-  // [ListServiceAccountsResponse.next_page_token][cloud.api.iam.v1.ListServiceAccountsResponse.next_page_token].
-  string page_token = 3;
-}
-
-// The service account list response.
-message ListServiceAccountsResponse {
-  // The list of matching service accounts.
-  repeated ServiceAccount accounts = 1;
-
-  // To retrieve the next page of results, set
-  // [ListServiceAccountsRequest.page_token][cloud.api.iam.v1.ListServiceAccountsRequest.page_token]
-  // to this value.
-  string next_page_token = 2;
-}
-
-// The service account get request.
-message GetServiceAccountRequest {
-  // Required. The service account email.
-  string email = 1 [ (google.api.field_behavior) = REQUIRED ];
-}
-
-// The service account create request.
-message CreateServiceAccountRequest {
-  // Required. The account id that is used to generate the service account
-  // email address and a stable unique id. It is unique within a project,
-  // must be 6-30 characters long, and match the regular expression
-  // `[a-z]([-a-z0-9]*[a-z0-9])` to comply with RFC1035.
-  string account_id = 1 [ (google.api.field_behavior) = REQUIRED ];
-}
-
-// The service account delete request.
-message DeleteServiceAccountRequest {
-  // Required. The service account email.
-  string email = 1 [ (google.api.field_behavior) = REQUIRED ];
-}
-
-message ServiceAccountKey {
+message Key {
   option (google.api.resource) = {
     type : "iam.videocoin.network/Key"
-    pattern : "serviceAccounts/{service_account}/keys/{key}"
+    pattern : "keys/{key}"
   };
 
   // The resource id.
   string id = 1;
 
-  // The private key data. Only provided in `GetServiceAccountKey`
+  // The private key data. Only provided in `CreateServiceAccountKey`
   // responses. Make sure to keep the private key data secure because it
   // allows for the assertion of the service account identity.
   bytes private_key_data = 2;
@@ -221,70 +116,41 @@ message ServiceAccountKey {
   google.protobuf.Timestamp valid_after_time = 4;
 
   // The key can be used before this timestamp.
-  // For system-managed key pairs, this timestamp is the end time for the
-  // private key signing operation. The public key could still be used
-  // for verification for a few hours after this time.
   google.protobuf.Timestamp valid_before_time = 5;
 }
 
-// The service account keys list request.
-message ListServiceAccountKeysRequest {
-  // Required. The service account email.
-  string service_account_email = 1 [ (google.api.field_behavior) = REQUIRED ];
+// The keys list response.
+message ListKeysRequest {
+  // Optional limit on the number of roles to include in the response.
+  int32 page_size = 1;
+
+  // Optional pagination token returned in an earlier ListRolesResponse.
+  string page_token = 2;
 }
 
-// The service account keys list response.
-message ListServiceAccountKeysResponse {
-  // The public keys for the service account.
-  repeated ServiceAccountKey keys = 1;
-}
+// The keys list response.
+message ListKeysResponse { repeated Key keys = 1; }
 
-// Supported public key output formats.
-enum ServiceAccountPublicKeyType {
-  // Unspecified. Returns nothing here.
-  TYPE_NONE = 0;
-
-  // X509 PEM format.
-  TYPE_X509_PEM_FILE = 1;
-
-  // Raw public key.
-  TYPE_RAW_PUBLIC_KEY = 2;
-}
-
-// The service account key get by id request.
-message GetServiceAccountKeyRequest {
-  // The service account email
-  string service_account_email = 1;
-
-  // Required. The key id.
+// The key get by id request.
+message GetKeyRequest {
   string key_id = 2 [ (google.api.field_behavior) = REQUIRED ];
 }
 
-// The service account key create request.
-message CreateServiceAccountKeyRequest {
-  // Required. The service account name.
-  string service_account_email = 1 [ (google.api.field_behavior) = REQUIRED ];
-}
-
-// The service account key delete request.
-message DeleteServiceAccountKeyRequest {
-  // The service account email.
-  string service_account_email = 1;
-
-  // Required. The service account email.
-  string key_id = 2 [ (google.api.field_behavior) = REQUIRED ];
+// The key delete request.
+message DeleteKeyRequest {
+  string key_id = 1 [ (google.api.field_behavior) = REQUIRED ];
 }
 
 // A role in the Identity and Access Management API.
 message Role {
   // The name of the role.
-  string name = 1;
+  string name = 1 [ (google.api.field_behavior) = REQUIRED ];
 
-  // Optional. A human-readable title for the role.  Typically this
+  // Optional A human-readable title for the role.  Typically this
   // is limited to 100 UTF-8 bytes.
   string title = 2;
 
-  // Optional. A human-readable description for the role.
+  // Optional A human-readable description for the role.
   string description = 3;
 
   // The names of the permissions this role grants when bound in an IAM policy.
@@ -328,13 +194,10 @@ message ListRolesResponse {
 
 message GetRoleRequest {
   // The name of the role.
-  string name = 1 [
-    (google.api.field_behavior) = REQUIRED,
-    (google.api.resource_reference).type = "*"
-  ];
+  string name = 1 [ (google.api.field_behavior) = REQUIRED ];
 }
 
-// A permission which can be included by a role.
+// A permission belongs to one or more roles.
 message Permission {
   // The name of this Permission.
   string name = 1;
@@ -348,10 +211,10 @@ message Permission {
 
 message RoleBinding {
   // The name of the role.
-  string role_name = 1 [ (google.api.field_behavior) = REQUIRED ];
+  string role_name = 1;
 
   // The user id.
-  string user_id = 2 [ (google.api.field_behavior) = REQUIRED ];
+  string user_id = 2;
 }
 
 message ListRoleBindingsRequest {
@@ -362,7 +225,4 @@ message ListRoleBindingsRequest {
   string page_token = 2;
 }
 
-message ListRoleBindingsResponse {
-  // The list of role bindings.
-  repeated RoleBinding bindings = 1;
-}
+message ListRoleBindingsResponse { repeated RoleBinding bindings = 1; }
