@@ -1,0 +1,228 @@
+syntax = "proto3";
+
+package cloud.api.iam.v1;
+
+import "github.com/gogo/protobuf/gogoproto/gogo.proto";
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/empty.proto";
+import "google/api/field_behavior.proto";
+import "google/api/resource.proto";
+import "google/api/annotations.proto";
+import "google/api/client.proto";
+
+option go_package = "v1";
+option (gogoproto.marshaler_all) = true;
+option (gogoproto.unmarshaler_all) = true;
+option (gogoproto.sizer_all) = true;
+option (gogoproto.goproto_registration) = true;
+option (gogoproto.messagename_all) = true;
+
+service IAM {
+  option (google.api.default_host) = "iam.videocoin.network";
+  option (google.api.oauth_scopes) =
+      "https://www.videocoin.network/auth/cloud-platform";
+
+  // Creates a [Key][cloud.api.iam.v1.Key] and returns it.
+  rpc CreateKey(google.protobuf.Empty) returns (Key) {
+    option (google.api.http) = {
+      post : "/v1/keys"
+    };
+  }
+
+  // Lists [Keys][cloud.api.iam.v1.Key].
+  rpc ListKeys(ListKeysRequest) returns (ListKeysResponse) {
+    option (google.api.http) = {
+      get : "/v1/keys"
+    };
+  }
+
+  // Gets the [Key][cloud.api.iam.v1.Key] by key id.
+  rpc GetKey(GetKeyRequest) returns (Key) {
+    option (google.api.http) = {
+      get : "/v1/keys/{key_id=*}"
+    };
+    option (google.api.method_signature) = "key_id";
+  }
+
+  // Deletes a [Key][cloud.api.iam.v1.Key] by key id..
+  rpc DeleteKey(DeleteKeyRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      delete : "/v1/keys/{key_id=*}"
+    };
+    option (google.api.method_signature) = "key_id";
+  }
+
+  // Creates a [RoleBinding][cloud.api.iam.v1.RoleBinding].
+  rpc CreateRoleBinding(RoleBinding) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      post : "/rolebindings"
+      body : "*"
+    };
+    option (google.api.method_signature) = "role_name,user_id";
+  }
+
+  // Deletes a [RoleBinding][cloud.api.iam.v1.RoleBinding].
+  rpc DeleteRoleBinding(RoleBinding) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      delete : "/rolebindings"
+      body : "*"
+    };
+    option (google.api.method_signature) = "role_name,user_id";
+  }
+
+  // Lists [RoleBindings][cloud.api.iam.v1.RoleBinding].
+  rpc ListRoleBindings(ListRoleBindingsRequest)
+      returns (ListRoleBindingsResponse) {
+    option (google.api.http) = {
+      get : "/rolebindings"
+      body : "*"
+    };
+    option (google.api.method_signature) = "user_id";
+  }
+
+  // Lists [Roles][cloud.api.iam.v1.Roles].
+  rpc ListRoles(ListRolesRequest) returns (ListRolesResponse) {
+    option (google.api.http) = {
+      get : "/v1/roles"
+    };
+  }
+
+  // Gets a [Role][cloud.api.iam.v1.Role].
+  rpc GetRole(GetRoleRequest) returns (Role) {
+    option (google.api.http) = {
+      get : "/v1/roles/{name=*}"
+    };
+  }
+}
+
+message Key {
+  option (google.api.resource) = {
+    type : "iam.videocoin.network/Key"
+    pattern : "keys/{key}"
+  };
+
+  // The resource id.
+  string id = 1;
+
+  // The private key data. Only provided in `CreateServiceAccountKey`
+  // responses. Make sure to keep the private key data secure because it
+  // allows for the assertion of the service account identity.
+  bytes private_key_data = 2;
+
+  // The public key data. Only provided in `GetServiceAccountKey` responses.
+  bytes public_key_data = 3;
+
+  // The key can be used after this timestamp.
+  google.protobuf.Timestamp valid_after_time = 4;
+
+  // The key can be used before this timestamp.
+  google.protobuf.Timestamp valid_before_time = 5;
+}
+
+// The keys list response.
+message ListKeysRequest {
+  // Optional limit on the number of roles to include in the response.
+  int32 page_size = 1;
+
+  // Optional pagination token returned in an earlier ListRolesResponse.
+  string page_token = 2;
+}
+
+// The keys list response.
+message ListKeysResponse { repeated Key keys = 1; }
+
+// The key get by id request.
+message GetKeyRequest {
+  string key_id = 2 [ (google.api.field_behavior) = REQUIRED ];
+}
+
+// The key delete request.
+message DeleteKeyRequest {
+  string key_id = 1 [ (google.api.field_behavior) = REQUIRED ];
+}
+
+// A role in the Identity and Access Management API.
+message Role {
+  // The name of the role.
+  string name = 1 [ (google.api.field_behavior) = REQUIRED ];
+
+  // Optional A human-readable title for the role.  Typically this
+  // is limited to 100 UTF-8 bytes.
+  string title = 2;
+
+  // Optional A human-readable description for the role.
+  string description = 3;
+
+  // The names of the permissions this role grants when bound in an IAM policy.
+  repeated string included_permissions = 4;
+}
+
+// A view for Role objects.
+enum RoleView {
+  // Omits the `included_permissions` field.
+  // This is the default value.
+  BASIC = 0;
+
+  // Returns all fields.
+  FULL = 1;
+}
+
+// The request to get all roles defined under a resource.
+message ListRolesRequest {
+  // Optional limit on the number of roles to include in the response.
+  int32 page_size = 1;
+
+  // Optional pagination token returned in an earlier ListRolesResponse.
+  string page_token = 2;
+
+  // Optional view for the returned Role objects. When `FULL` is specified,
+  // the `includedPermissions` field is returned, which includes a list of all
+  // permissions in the role. The default value is `BASIC`, which does not
+  // return the `includedPermissions` field.
+  RoleView view = 3;
+}
+
+// The response containing the roles defined under a resource.
+message ListRolesResponse {
+  // The list of predefined roles.
+  repeated Role roles = 1;
+
+  // To retrieve the next page of results, set
+  // `ListRolesRequest.page_token` to this value.
+  string next_page_token = 2;
+}
+
+message GetRoleRequest {
+  // The name of the role.
+  string name = 1 [ (google.api.field_behavior) = REQUIRED ];
+}
+
+// A permission belongs to one or more roles.
+message Permission {
+  // The name of this Permission.
+  string name = 1;
+
+  // The title of this Permission.
+  string title = 2;
+
+  // A brief description of what this Permission is used for.
+  string description = 3;
+}
+
+message RoleBinding {
+  // The name of the role.
+  string role_name = 1;
+
+  // The user id.
+  string user_id = 2;
+}
+
+message ListRoleBindingsRequest {
+  // Optional
+  string user_id = 1;
+
+  // Optional pagination token returned in an earlier ListRoleBindingsRequest.
+  string page_token = 2;
+}
+
+message ListRoleBindingsResponse { repeated RoleBinding bindings = 1; }
