@@ -2,8 +2,6 @@ package datastore
 
 import (
 	"io"
-
-	"github.com/jinzhu/gorm"
 )
 
 // DataStore is a repository for persistently storing collections of data
@@ -19,9 +17,12 @@ type DataStore interface {
 
 // Open gets a handle for a database.
 func Open(uri string) (DataStore, error) {
-	db, err := gorm.Open("mysql", uri)
-	if err != nil {
-		return nil, err
-	}
-	return &database{DB: db}, nil
+	// fixme
+	/*
+		db, err := gorm.Open("mysql", uri)
+		if err != nil {
+			return nil, err
+		}
+	*/
+	return &database{DB: nil}, nil
 }

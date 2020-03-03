@@ -35,8 +35,6 @@ spec:
               command: ["grpc_health_probe", "-addr=:{{ .Values.service.port }}"]
             initialDelaySeconds: 10
           env:
-            - name: IAM_RPCADDR
-              value: 0.0.0.0:{{ .Values.service.port }}
             - name: IAM_DBURI
               valueFrom:
                 secretKeyRef:
