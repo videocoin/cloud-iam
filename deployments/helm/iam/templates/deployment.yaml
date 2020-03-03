@@ -1,0 +1,67 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "iam.fullname" . }}
+  labels:
+    {{- include "iam.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "iam.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "iam.selectorLabels" . | nindent 8 }}
+    spec:
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: grpc
+              containerPort: {{ .Values.service.port }}
+              protocol: TCP
+          livenessProbe:
+            exec:
+              command: ["grpc_health_probe", "-addr=:{{ .Values.service.port }}"]
+            initialDelaySeconds: 5
+          readinessProbe:
+            exec:
+              command: ["grpc_health_probe", "-addr=:{{ .Values.service.port }}"]
+            initialDelaySeconds: 10
+          env:
+            - name: IAM_RPCADDR
+              value: 0.0.0.0:{{ .Values.service.port }}
+            - name: IAM_DBURI
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "iam.fullname" . }}
+                  key: dbUri
+            - name: IAM_ENCRYPTIONPASSPHRASE
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "iam.fullname" . }}
+                  key: encryptionPassphrase
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+      volumes:
+        - name: secrets
+          secret:
+            secretName: {{ include "iam.fullname" . }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}

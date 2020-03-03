@@ -1,0 +1,38 @@
+replicaCount: 1
+
+image:
+  repository: gcr.io/videocoin-net/iam
+  pullPolicy: IfNotPresent
+
+podSecurityContext:
+  {}
+  # fsGroup: 2000
+
+securityContext:
+  {}
+  # capabilities:
+  #   drop:
+  #   - ALL
+  # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+  # runAsUser: 1000
+
+service:
+  type: ClusterIP
+  port: 5000
+
+resources:
+  {}
+  #requests:
+  #  cpu: 100m
+  #  memory: 128Mi
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+
+secrets:
+  dbUri: ""
+  encryptionPassphrase: ""
