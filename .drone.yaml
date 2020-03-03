@@ -1,0 +1,80 @@
+kind: pipeline
+type: docker
+name: images
+
+volumes:
+  - name: dockersock
+    temp: {}
+
+services:
+  - name: docker
+    image: docker:dind
+    privileged: true
+    volumes:
+      - name: dockersock
+        path: /var/run
+
+steps:
+  - name: wait_for_docker
+    image: docker:dind
+    commands:
+      - sleep 5
+  - name: build
+    image: docker:dind
+    volumes:
+      - name: dockersock
+        path: /var/run
+    commands:
+      - docker build -t "registry.dev.videocoin.net/iam:${DRONE_TAG}" .
+  - name: push
+    image: docker:dind
+    environment:
+      USERNAME:
+        from_secret: docker_username
+      PASSWORD:
+        from_secret: docker_password
+    volumes:
+      - name: dockersock
+        path: /var/run
+    commands:
+      - docker login -u $${USERNAME} -p $${PASSWORD} registry.dev.videocoin.net
+      - docker push "registry.dev.videocoin.net/iam:${DRONE_TAG}"
+
+trigger:
+  event:
+    - tag
+
+---
+kind: pipeline
+type: docker
+name: deploy-charts
+
+volumes:
+  - name: cache
+    temp: {}
+
+steps:
+  - name: dump-kubeconfig
+    image: alpine
+    environment:
+      KUBECONFIG_DATA:
+        from_secret: kubeconfig
+    volumes:
+      - name: cache
+        path: /root/.cache
+    commands:
+      - echo "$${KUBECONFIG_DATA}" > /root/.cache/kubeconfig
+  - name: deploy-iam
+    image: devth/helm:v3.1.1
+    volumes:
+      - name: cache
+        path: /root/.cache
+    commands:
+      - helm --kubeconfig /root/.cache/kubeconfig --namespace iam upgrade --install --wait -f ./_assets/values.yaml --set-string image.tag="${DRONE_TAG}" iam-ci ./deployments/helm
+
+trigger:
+  event:
+    - tag
+
+depends_on:
+  - images

@@ -1,7 +1,7 @@
 replicaCount: 1
 
 image:
-  repository: gcr.io/videocoin-net/iam
+  repository: registry.dev.videocoin.net/iam
   pullPolicy: IfNotPresent
 
 podSecurityContext:
