@@ -2,7 +2,8 @@ NAME := iam
 BIN := iamd
 VERSION=$$(git describe --abbrev=0)-$$(git rev-parse --abbrev-ref HEAD)-$$(git rev-parse --short HEAD)
 LD_FLAGS = -X main.Version=${VERSION} -s -w
-BUILD_FLAGS = -mod=vendor -ldflags "$(LD_FLAGS)"
+#BUILD_FLAGS = -mod=vendor -ldflags "$(LD_FLAGS)"
+BUILD_FLAGS = -mod=vendor
 OUTPUT ?= build/bin/${BIN}
 
 GCP_PROJECT ?= videocoin-network
