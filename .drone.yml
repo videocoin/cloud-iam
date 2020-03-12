@@ -5,7 +5,7 @@ steps:
   - name: wait_for_docker
     image: docker:dind
     commands:
-      - sleep 5
+      - sleep 20
   - name: build
     image: docker:dind
     volumes:
