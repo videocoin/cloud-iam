@@ -1,8 +1,10 @@
 replicaCount: 1
 
 image:
-  repository: registry.dev.videocoin.net/iam
+  repository: registry.dev.videocoin.net/iam/iam
   pullPolicy: IfNotPresent
+
+imagePullSecrets: []
 
 podSecurityContext:
   {}
@@ -34,5 +36,5 @@ tolerations: []
 affinity: {}
 
 secrets:
-  dbUri: ""
-  encryptionPassphrase: ""
+  dbUri: 
+  encryptionPassphrase: 
