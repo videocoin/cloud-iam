@@ -1,0 +1,21 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: EnvoyFilter
+metadata:
+  name: backend-grpc
+spec:
+  filters:
+    - filterConfig:
+        print_options:
+          add_whitespace: true
+          always_print_enums_as_ints: false
+          always_print_primitive_fields: true
+          preserve_proto_field_names: false
+        proto_descriptor: /etc/envoy/proto.pb
+        services:
+          - BackendSerivce # Service name defined in proto
+      filterName: envoy.grpc_json_transcoder
+      filterType: HTTP
+      listenerMatch:
+        portNumber: 9090
+  workloadLabels:
+    app: backend

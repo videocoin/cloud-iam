@@ -4,7 +4,8 @@ image:
   repository: registry.dev.videocoin.net/iam/iam
   pullPolicy: IfNotPresent
 
-imagePullSecrets: []
+imagePullSecrets:
+  - name: regcred
 
 podSecurityContext:
   {}
@@ -23,6 +24,13 @@ service:
   type: ClusterIP
   port: 5000
 
+#gateway:
+#  hosts:
+#  - iam.dev.videocoin.net
+#  tls:
+#    enabled: false
+#    secretName: 
+
 resources:
   {}
   #requests:
@@ -36,5 +44,5 @@ tolerations: []
 affinity: {}
 
 secrets:
-  dbUri: 
-  encryptionPassphrase: 
+  dbUri: "test:123456789@tcp(10.235.0.3)/test"
+  encryptionPassphrase: "test"
