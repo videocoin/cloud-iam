@@ -1,0 +1,46 @@
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: Gateway
+metadata:
+  name: iam
+  namespace: iam
+spec:
+  selector:
+    istio: ingressgateway
+  servers:
+    - port:
+        number: 80
+        name: http
+        protocol: HTTP
+      hosts:
+        - "iam.dev.videocoin.net"
+      tls:
+        httpsRedirect: true
+    - port:
+        number: 443
+        name: https-443
+        protocol: HTTPS
+      hosts:
+        - "iam.dev.videocoin.net"
+      tls:
+        mode: SIMPLE
+        serverCertificate: /etc/istio/wildcard-dev-videocoin-net/tls.crt
+        privateKey: /etc/istio/wildcard-dev-videocoin-net/tls.key
+
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: iam
+  namespace: iam
+spec:
+  hosts:
+    - "iam.dev.videocoin.net"
+  gateways:
+    - iam
+  http:
+    - route:
+        - destination:
+            host: iam
+            port:
+              number: 5000

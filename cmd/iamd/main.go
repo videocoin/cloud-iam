@@ -3,20 +3,24 @@ package main
 import (
 	"context"
 	"fmt"
+	"log"
 	"net"
+	"net/http"
 	"os"
 	"os/signal"
 	"syscall"
 
+	grpc_prometheus "github.com/grpc-ecosystem/go-grpc-prometheus"
 	iam "github.com/videocoin/cloud-api/iam/v1"
+	"github.com/videocoin/common/grpcutil"
+	logz "github.com/videocoin/common/log"
 	healthpb "google.golang.org/grpc/health/grpc_health_v1"
 
 	"github.com/kelseyhightower/envconfig"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"github.com/sirupsen/logrus"
 	"github.com/videocoin/cloud-iam/datastore"
 	"github.com/videocoin/cloud-iam/service"
-	"github.com/videocoin/cloud-pkg/logger"
-	"github.com/videocoin/cloud-pkg/tracer"
 	"golang.org/x/sync/errgroup"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/health"
@@ -32,31 +36,24 @@ var (
 
 // Config is the global config.
 type Config struct {
+	LogLevel             string `default:"info" envconfig:"LOG_LEVEL"`
 	RPCAddr              string `default:"0.0.0.0:5000"`
 	DBURI                string `default:"root:@tcp(127.0.0.1:3306)/videocoin?charset=utf8&parseTime=True&loc=Local"`
 	EncryptionPassphrase string `required:"true"`
 }
 
 func main() {
-	logger.Init(ServiceName, Version)
-	log := logrus.NewEntry(logrus.New())
-	log.Logger.SetReportCaller(true)
-	log = logrus.WithFields(logrus.Fields{
-		"service": ServiceName,
-		"version": Version,
-	})
-
-	closer, err := tracer.NewTracer(ServiceName)
-	if err != nil {
-		log.Info(err.Error())
-	} else {
-		defer closer.Close()
-	}
-
 	cfg := new(Config)
 	if err := envconfig.Process(ServiceName, cfg); err != nil {
 		log.Fatal(err)
 	}
+
+	lvl, err := logrus.ParseLevel(cfg.LogLevel)
+	if err != nil {
+		log.Fatal(err)
+	}
+	logger := logrus.NewEntry(logz.NewLogrus(lvl))
+	logz.SetGlobal(logz.NewLogrus(lvl))
 
 	ctx := context.Background()
 	ctx, cancel := context.WithCancel(ctx)
@@ -77,11 +74,14 @@ func main() {
 		}
 		defer ds.Close()
 
-		grpcSrv = grpc.NewServer()
-		iam.RegisterIAMServer(grpcSrv, service.NewServer(log, ds, cfg.EncryptionPassphrase))
+		grpcSrv = grpc.NewServer(grpcutil.DefaultServerOpts(logger)...)
+		iam.RegisterIAMServer(grpcSrv, service.NewServer(ds, cfg.EncryptionPassphrase))
 		healthpb.RegisterHealthServer(grpcSrv, healthSrv)
 
 		healthSrv.SetServingStatus(fmt.Sprintf("grpc.health.v1.%s", ServiceName), healthpb.HealthCheckResponse_SERVING)
+
+		grpc_prometheus.Register(grpcSrv)
+		http.Handle("/metrics", promhttp.Handler())
 
 		lis, err := net.Listen("tcp", cfg.RPCAddr)
 		if err != nil {
