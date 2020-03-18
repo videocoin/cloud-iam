@@ -12,7 +12,6 @@ import (
 
 	grpc_prometheus "github.com/grpc-ecosystem/go-grpc-prometheus"
 	iam "github.com/videocoin/cloud-api/iam/v1"
-	"github.com/videocoin/common/grpcutil"
 	logz "github.com/videocoin/common/log"
 	healthpb "google.golang.org/grpc/health/grpc_health_v1"
 
@@ -21,6 +20,7 @@ import (
 	"github.com/sirupsen/logrus"
 	"github.com/videocoin/cloud-iam/datastore"
 	"github.com/videocoin/cloud-iam/service"
+	"github.com/videocoin/common/grpcutil"
 	"golang.org/x/sync/errgroup"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/health"
