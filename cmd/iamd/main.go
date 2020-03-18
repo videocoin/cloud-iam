@@ -11,7 +11,7 @@ import (
 	"syscall"
 
 	grpc_prometheus "github.com/grpc-ecosystem/go-grpc-prometheus"
-	iam "github.com/videocoin/cloud-api/iam/v1"
+	iam "github.com/videocoin/videocoinapis/videocoin/iam/v1"
 	logz "github.com/videocoin/common/log"
 	healthpb "google.golang.org/grpc/health/grpc_health_v1"
 

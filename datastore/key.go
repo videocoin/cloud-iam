@@ -6,9 +6,9 @@ import (
 	"errors"
 	"time"
 
-	iam "github.com/videocoin/cloud-api/iam/v1"
+	iam "github.com/videocoin/videocoinapis/videocoin/iam/v1"
 
-	"github.com/gogo/protobuf/types"
+	"github.com/golang/protobuf/ptypes"
 	"github.com/videocoin/cloud-pkg/dbutil/models"
 )
 
@@ -56,11 +56,11 @@ func (k *UserKey) CreationProto(passphrase string) (*iam.Key, error) {
 
 // Proto returns an IAM key.
 func (k *UserKey) Proto() (*iam.Key, error) {
-	validAfterTimePB, err := types.TimestampProto(k.ValidAfterTime)
+	validAfterTimePB, err := ptypes.TimestampProto(k.ValidAfterTime)
 	if err != nil {
 		return nil, err
 	}
-	validBeforeTimePB, err := types.TimestampProto(k.ValidBeforeTime)
+	validBeforeTimePB, err := ptypes.TimestampProto(k.ValidBeforeTime)
 	if err != nil {
 
 		return nil, err

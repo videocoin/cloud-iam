@@ -9,7 +9,8 @@ steps:
         path: /var/run
     commands:
       - sleep 20
-      - docker build -t "registry.dev.videocoin.net/iam/iam:${DRONE_TAG}" -f docker/iam.Dockerfile .
+      - docker build -t "registry.dev.videocoin.net/iam/iam:${DRONE_TAG}" -f docker/Dockerfile.iam .
+      - docker build -t "registry.dev.videocoin.net/iam/proxyv2:${DRONE_TAG}" -f docker/Dockerfile.proxyv2 .
   - name: push
     image: docker:dind
     environment:
@@ -23,6 +24,7 @@ steps:
     commands:
       - docker login -u $${USERNAME} -p $${PASSWORD} registry.dev.videocoin.net
       - docker push "registry.dev.videocoin.net/iam/iam:${DRONE_TAG}"
+      - docker push "registry.dev.videocoin.net/iam/proxyv2:${DRONE_TAG}"
 
 volumes:
   - name: dockersock

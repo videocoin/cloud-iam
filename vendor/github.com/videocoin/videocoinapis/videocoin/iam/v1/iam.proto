@@ -1,8 +1,7 @@
 syntax = "proto3";
 
-package cloud.api.iam.v1;
+package videocoin.iam.v1;
 
-import "github.com/gogo/protobuf/gogoproto/gogo.proto";
 import "google/protobuf/timestamp.proto";
 import "google/protobuf/empty.proto";
 import "google/api/field_behavior.proto";
@@ -11,11 +10,6 @@ import "google/api/annotations.proto";
 import "google/api/client.proto";
 
 option go_package = "v1";
-option (gogoproto.marshaler_all) = true;
-option (gogoproto.unmarshaler_all) = true;
-option (gogoproto.sizer_all) = true;
-option (gogoproto.goproto_registration) = true;
-option (gogoproto.messagename_all) = true;
 
 service IAM {
   option (google.api.default_host) = "iam.videocoin.network";

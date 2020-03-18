@@ -6,12 +6,8 @@ github.com/cespare/xxhash/v2
 github.com/davecgh/go-spew/spew
 # github.com/go-sql-driver/mysql v1.4.1
 github.com/go-sql-driver/mysql
-# github.com/gogo/googleapis v1.3.0
-github.com/gogo/googleapis/google/api
 # github.com/gogo/protobuf v1.3.1
-github.com/gogo/protobuf/gogoproto
 github.com/gogo/protobuf/proto
-github.com/gogo/protobuf/protoc-gen-gogo/descriptor
 github.com/gogo/protobuf/sortkeys
 github.com/gogo/protobuf/types
 # github.com/golang/protobuf v1.3.3
@@ -21,6 +17,7 @@ github.com/golang/protobuf/protoc-gen-go/descriptor
 github.com/golang/protobuf/ptypes
 github.com/golang/protobuf/ptypes/any
 github.com/golang/protobuf/ptypes/duration
+github.com/golang/protobuf/ptypes/empty
 github.com/golang/protobuf/ptypes/struct
 github.com/golang/protobuf/ptypes/timestamp
 # github.com/google/uuid v1.1.1
@@ -74,13 +71,13 @@ github.com/sirupsen/logrus
 # github.com/stretchr/testify v1.4.0
 github.com/stretchr/testify/assert
 github.com/stretchr/testify/require
-# github.com/videocoin/cloud-api v0.3.1-0.20200219032638-bed8bfa055f2
-github.com/videocoin/cloud-api/iam/v1
 # github.com/videocoin/cloud-pkg v0.0.8-0.20200207052840-495efec72284
 github.com/videocoin/cloud-pkg/dbutil/models
 # github.com/videocoin/common v0.0.0-20200318003105-ae465d220aa0
 github.com/videocoin/common/grpcutil
 github.com/videocoin/common/log
+# github.com/videocoin/videocoinapis v0.0.0-20200318200622-87a75ecdbd2e
+github.com/videocoin/videocoinapis/videocoin/iam/v1
 # golang.org/x/net v0.0.0-20190620200207-3b0461eec859
 golang.org/x/net/context
 golang.org/x/net/http/httpguts

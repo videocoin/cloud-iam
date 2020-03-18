@@ -4,9 +4,9 @@ import (
 	"context"
 	"crypto/rand"
 
-	iam "github.com/videocoin/cloud-api/iam/v1"
+	iam "github.com/videocoin/videocoinapis/videocoin/iam/v1"
 
-	"github.com/gogo/protobuf/types"
+	"github.com/golang/protobuf/ptypes/empty"
 	"github.com/jinzhu/gorm"
 	"github.com/videocoin/cloud-iam/datastore"
 	"github.com/videocoin/cloud-iam/pkg/auth"
@@ -30,7 +30,7 @@ func NewServer(ds datastore.DataStore, passphrase string) *Server {
 }
 
 // CreateKey creates a key for an authenticated user.
-func (srv *Server) CreateKey(ctx context.Context, empty *types.Empty) (*iam.Key, error) {
+func (srv *Server) CreateKey(ctx context.Context, empty *empty.Empty) (*iam.Key, error) {
 	subject, err := auth.FromIncomingContext(ctx)
 	if err != nil {
 		log.Errorln(err)
@@ -135,7 +135,7 @@ func (srv *Server) listUserKeys(userID string) ([]*iam.Key, error) {
 }
 
 // DeleteKey deletes an user key.
-func (srv *Server) DeleteKey(ctx context.Context, req *iam.DeleteKeyRequest) (*types.Empty, error) {
+func (srv *Server) DeleteKey(ctx context.Context, req *iam.DeleteKeyRequest) (*empty.Empty, error) {
 	subject, err := auth.FromIncomingContext(ctx)
 	if err != nil {
 		log.Errorln(err)
@@ -147,7 +147,7 @@ func (srv *Server) DeleteKey(ctx context.Context, req *iam.DeleteKeyRequest) (*t
 		return nil, status.Error(codes.Internal, err.Error())
 	}
 
-	return new(types.Empty), nil
+	return new(empty.Empty), nil
 }
 
 func (srv *Server) deleteUserKey(userID string, keyID string) error {
@@ -161,13 +161,13 @@ func (srv *Server) ListRoleBindings(context.Context, *iam.ListRoleBindingsReques
 }
 
 // CreateRoleBinding binds a role to an user.
-func (srv *Server) CreateRoleBinding(ctx context.Context, req *iam.RoleBinding) (*types.Empty, error) {
+func (srv *Server) CreateRoleBinding(ctx context.Context, req *iam.RoleBinding) (*empty.Empty, error) {
 	// TODO
 	return nil, nil
 }
 
 // DeleteRoleBinding deletes a role binding.
-func (srv *Server) DeleteRoleBinding(ctx context.Context, req *iam.RoleBinding) (*types.Empty, error) {
+func (srv *Server) DeleteRoleBinding(ctx context.Context, req *iam.RoleBinding) (*empty.Empty, error) {
 	// TODO
 	return nil, nil
 }

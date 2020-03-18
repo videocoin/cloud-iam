@@ -4,7 +4,7 @@ import (
 	"context"
 	"testing"
 
-	iam "github.com/videocoin/cloud-api/iam/v1"
+	iam "github.com/videocoin/videocoinapis/videocoin/iam/v1"
 
 	"github.com/gogo/protobuf/types"
 	"github.com/google/uuid"

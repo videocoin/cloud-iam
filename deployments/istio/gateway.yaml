@@ -18,7 +18,7 @@ spec:
         httpsRedirect: true
     - port:
         number: 443
-        name: https-443
+        name: https
         protocol: HTTPS
       hosts:
         - "iam.dev.videocoin.net"
@@ -40,7 +40,7 @@ spec:
     - iam
   http:
     - route:
-        - destination:
-            host: iam
-            port:
-              number: 5000
+      - destination:
+          host: iam
+          port:
+            number: 5000
