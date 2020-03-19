@@ -14,7 +14,7 @@ require (
 	github.com/stretchr/testify v1.4.0
 	github.com/videocoin/cloud-pkg v0.0.8-0.20200207052840-495efec72284
 	github.com/videocoin/common v0.0.0-20200318003105-ae465d220aa0
-	github.com/videocoin/videocoinapis v0.0.0-20200318200622-87a75ecdbd2e
+	github.com/videocoin/videocoinapis v0.0.0-20200318215910-f2ce1f8f4d1a
 	golang.org/x/sync v0.0.0-20190911185100-cd5d95a43a6e
 	golang.org/x/text v0.3.2 // indirect
 	google.golang.org/appengine v1.5.0 // indirect

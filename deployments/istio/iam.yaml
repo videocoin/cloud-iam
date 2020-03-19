@@ -41,7 +41,8 @@ spec:
         app: iam
         version: v1
       annotations:
-        sidecar.istio.io/proxyImage: registry.dev.videocoin.net/iam/iam:v0.1.0-dev.10
+        sidecar.istio.io/userVolume: '[{"name":"descriptor","configMap":{"name":"proto-descriptor","items":[{"key":"iam.descriptor","path":"iam.descriptor"}]}}]'
+        sidecar.istio.io/userVolumeMount: '[{"name":"descriptor","mountPath":"/etc/envoy"}]'
     spec:
       imagePullSecrets:
         - name: regcred
