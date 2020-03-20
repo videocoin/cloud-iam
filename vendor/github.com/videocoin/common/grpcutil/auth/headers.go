@@ -9,6 +9,7 @@ import (
 
 const (
 	headerAuthority = ":authority"
+	headerPath      = ":path"
 	bearer          = "bearer"
 )
 
@@ -18,4 +19,9 @@ func BearerFromMD(ctx context.Context) (string, error) { return grpc_auth.AuthFr
 // AuthorityFromMD is a helper function for extracting the :authority header from the gRPC metadata of the request.
 func AuthorityFromMD(ctx context.Context) string {
 	return metautils.ExtractIncoming(ctx).Get(headerAuthority)
+}
+
+// PathFromMD is a helper function for extracting the :path header from the gRPC metadata of the request.
+func PathFromMD(ctx context.Context) string {
+	return metautils.ExtractIncoming(ctx).Get(headerPath)
 }

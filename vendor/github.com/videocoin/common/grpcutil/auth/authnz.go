@@ -11,9 +11,18 @@ import (
 	"google.golang.org/grpc/status"
 )
 
+const (
+	healthCheckPath = "/grpc.health.v1.Health/Check"
+)
+
 // JWTAuthNZ returns an authentication and authorization handler.
 func JWTAuthNZ(audience string, accPublicKeyURLTemplate string, secretHMAC string) grpc_auth.AuthFunc {
 	return func(ctx context.Context) (context.Context, error) {
+		// skip for health check
+		if path := PathFromMD(ctx); path == healthCheckPath {
+			return ctx, nil
+		}
+
 		tokenStr, err := BearerFromMD(ctx)
 		if err != nil {
 			return nil, err

@@ -78,7 +78,7 @@ github.com/stretchr/testify/require
 github.com/stretchr/testify/assert
 # github.com/videocoin/cloud-pkg v0.0.8-0.20200207052840-495efec72284
 github.com/videocoin/cloud-pkg/dbutil/models
-# github.com/videocoin/common v0.0.0-20200320191005-44fd7696f629
+# github.com/videocoin/common v0.0.0-20200320201925-11711721b05b
 github.com/videocoin/common/grpcutil
 github.com/videocoin/common/grpcutil/auth
 github.com/videocoin/common/log
