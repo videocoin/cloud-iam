@@ -2,6 +2,7 @@ package grpcutil
 
 import (
 	grpcmiddleware "github.com/grpc-ecosystem/go-grpc-middleware"
+	grpcauth "github.com/grpc-ecosystem/go-grpc-middleware/auth"
 	grpclogrus "github.com/grpc-ecosystem/go-grpc-middleware/logging/logrus"
 	grpctags "github.com/grpc-ecosystem/go-grpc-middleware/tags"
 	grpctracing "github.com/grpc-ecosystem/go-grpc-middleware/tracing/opentracing"
@@ -12,6 +13,7 @@ import (
 	"google.golang.org/grpc"
 )
 
+// DefaultServerOpts ...
 func DefaultServerOpts(logger *logrus.Entry) []grpc.ServerOption {
 	tracerOpts := grpctracing.WithTracer(opentracing.GlobalTracer())
 	logrusOpts := []grpclogrus.Option{
@@ -36,6 +38,38 @@ func DefaultServerOpts(logger *logrus.Entry) []grpc.ServerOption {
 			grpctags.StreamServerInterceptor(),
 			grpctracing.StreamServerInterceptor(tracerOpts),
 			grpcprometheus.StreamServerInterceptor,
+			grpcvalidator.StreamServerInterceptor(),
+		)),
+	}
+}
+
+// DefaultServerOptsWithAuthNZ ...
+func DefaultServerOptsWithAuthNZ(logger *logrus.Entry, authFn grpcauth.AuthFunc) []grpc.ServerOption {
+	tracerOpts := grpctracing.WithTracer(opentracing.GlobalTracer())
+	logrusOpts := []grpclogrus.Option{
+		grpclogrus.WithDecider(func(methodFullName string, err error) bool {
+			if methodFullName == "/grpc.health.v1.Health/Check" {
+				return false
+			}
+			return true
+		}),
+	}
+
+	return []grpc.ServerOption{
+		grpc.UnaryInterceptor(grpcmiddleware.ChainUnaryServer(
+			grpclogrus.UnaryServerInterceptor(logger, logrusOpts...),
+			grpctags.UnaryServerInterceptor(),
+			grpctracing.UnaryServerInterceptor(tracerOpts),
+			grpcprometheus.UnaryServerInterceptor,
+			grpcauth.UnaryServerInterceptor(authFn),
+			grpcvalidator.UnaryServerInterceptor(),
+		)),
+		grpc.StreamInterceptor(grpcmiddleware.ChainStreamServer(
+			grpclogrus.StreamServerInterceptor(logger),
+			grpctags.StreamServerInterceptor(),
+			grpctracing.StreamServerInterceptor(tracerOpts),
+			grpcprometheus.StreamServerInterceptor,
+			grpcauth.StreamServerInterceptor(authFn),
 			grpcvalidator.StreamServerInterceptor(),
 		)),
 	}

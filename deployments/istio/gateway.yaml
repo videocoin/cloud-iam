@@ -32,10 +32,10 @@ spec:
     - iam
   http:
     - match:
-      - uri:
-          prefix: /
+        - uri:
+            prefix: /
       route:
-      - destination:
-          host: iam
-          port:
-            number: 5000
+        - destination:
+            host: iam
+            port:
+              number: 5000

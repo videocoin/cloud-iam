@@ -19,6 +19,7 @@ type: Opaque
 data:
   dbUri: "dGVzdDoxMjM0NTY3ODlAdGNwKDEwLjIzNS4wLjMpL3Rlc3Q=" #test:123456789@tcp(10.235.0.3)/test
   encryptionPassphrase: "dGVzdA==" #test
+  authTokenSecret: "dGVzdA==" #test
 
 ---
 apiVersion: apps/v1
@@ -48,7 +49,7 @@ spec:
         - name: regcred
       containers:
         - name: iam
-          image: registry.dev.videocoin.net/iam/iam:v0.1.0-dev.10
+          image: registry.dev.videocoin.net/iam/iam:v0.1.0-dev.11
           imagePullPolicy: IfNotPresent
           ports:
             - name: grpc
@@ -72,6 +73,11 @@ spec:
                 secretKeyRef:
                   name: iam
                   key: encryptionPassphrase
+            - name: IAM_AUTHTOKENSECRET
+              valueFrom:
+                secretKeyRef:
+                  name: iam
+                  key: authTokenSecret
             - name: GRPC_GO_LOG_SEVERITY_LEVEL
               value: info
             - name: GRPC_GO_LOG_VERBOSITY_LEVEL

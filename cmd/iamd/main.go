@@ -11,8 +11,8 @@ import (
 	"syscall"
 
 	grpc_prometheus "github.com/grpc-ecosystem/go-grpc-prometheus"
-	iam "github.com/videocoin/videocoinapis/videocoin/iam/v1"
 	logz "github.com/videocoin/common/log"
+	iam "github.com/videocoin/videocoinapis/videocoin/iam/v1"
 	healthpb "google.golang.org/grpc/health/grpc_health_v1"
 
 	"github.com/kelseyhightower/envconfig"
@@ -21,6 +21,7 @@ import (
 	"github.com/videocoin/cloud-iam/datastore"
 	"github.com/videocoin/cloud-iam/service"
 	"github.com/videocoin/common/grpcutil"
+	"github.com/videocoin/common/grpcutil/auth"
 	"golang.org/x/sync/errgroup"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/health"
@@ -36,9 +37,10 @@ var (
 
 // Config is the global config.
 type Config struct {
-	LogLevel             string `default:"info" envconfig:"LOG_LEVEL"`
+	LogLevel             string `default:"info"`
 	RPCAddr              string `default:"0.0.0.0:5000"`
 	DBURI                string `default:"root:@tcp(127.0.0.1:3306)/videocoin?charset=utf8&parseTime=True&loc=Local"`
+	AuthTokenSecret      string `required:"true"`
 	EncryptionPassphrase string `required:"true"`
 }
 
@@ -52,8 +54,9 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	logger := logrus.NewEntry(logz.NewLogrus(lvl))
-	logz.SetGlobal(logz.NewLogrus(lvl))
+	logger := logz.NewLogrus(lvl)
+	entry := logrus.NewEntry(logger)
+	logz.SetGlobal(logger)
 
 	ctx := context.Background()
 	ctx, cancel := context.WithCancel(ctx)
@@ -74,7 +77,7 @@ func main() {
 		}
 		defer ds.Close()
 
-		grpcSrv = grpc.NewServer(grpcutil.DefaultServerOpts(logger)...)
+		grpcSrv = grpc.NewServer(grpcutil.DefaultServerOptsWithAuthNZ(entry, auth.JWTAuthNZ("", "", cfg.AuthTokenSecret))...)
 		iam.RegisterIAMServer(grpcSrv, service.NewServer(ds, cfg.EncryptionPassphrase))
 		healthpb.RegisterHealthServer(grpcSrv, healthSrv)
 
