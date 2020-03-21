@@ -49,7 +49,7 @@ spec:
         - name: regcred
       containers:
         - name: iam
-          image: registry.dev.videocoin.net/iam/iam:v0.1.0-dev.11
+          image: registry.dev.videocoin.net/iam/iam:v0.1.0-dev.12
           imagePullPolicy: IfNotPresent
           ports:
             - name: grpc

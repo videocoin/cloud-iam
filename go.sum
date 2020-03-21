@@ -298,8 +298,8 @@ github.com/videocoin/cloud-api v0.0.17 h1:zPFd2jQ3etXxQdFPbPsVYSKWKx5M9ttTA8x1f2
 github.com/videocoin/cloud-api v0.0.17/go.mod h1:6HhpNaw1C8VsYtRpaF2gNZCKJmZjWjeQwXHn4lvm1QQ=
 github.com/videocoin/cloud-pkg v0.0.8-0.20200207052840-495efec72284 h1:SqsVKeqnhPSwkCzJVla3PmxJiPZJc+R4MGg7AaLNZMo=
 github.com/videocoin/cloud-pkg v0.0.8-0.20200207052840-495efec72284/go.mod h1:reC7JdY0mdVAriZvJnWZOy8MiJpTBU0MpUuAas0fXkg=
-github.com/videocoin/common v0.0.0-20200320201925-11711721b05b h1:7tWNUYt1mELPCvU4FmAEW52LztwJ8AmA3SZdjdas4mk=
-github.com/videocoin/common v0.0.0-20200320201925-11711721b05b/go.mod h1:OtMyOaIZhpokYr0hWR97avea3oOGStnuwlOa2D7b0yA=
+github.com/videocoin/common v0.0.0-20200321001951-ea10c6ca9b1d h1:31Wso6skQtRgtH2ZtBdFTs/UnUxRJGqyRerYkwp4UGA=
+github.com/videocoin/common v0.0.0-20200321001951-ea10c6ca9b1d/go.mod h1:5HywcHHMSSEFjQTw4c5Y8cHn70WPM90wQzbZMCoILZ0=
 github.com/videocoin/videocoinapis v0.0.0-20200318215910-f2ce1f8f4d1a h1:ZlzVM6coVjhgSeruCv5n62X+vZcnSv82EsmqLrl/XXQ=
 github.com/videocoin/videocoinapis v0.0.0-20200318215910-f2ce1f8f4d1a/go.mod h1:CBucjp4FIWr8ZGTrYHT5UeeozaKEgo2vIYJHZHVmiSg=
 github.com/yuin/goldmark v1.1.25/go.mod h1:3hX8gzYuyVAZsxl0MRgGTJEmQBFcNTphYh9decYSb74=
@@ -312,8 +312,6 @@ go.uber.org/atomic v1.5.1 h1:rsqfU5vBkVknbhUGbAUwQKR2H4ItV8tjJ+6kJX4cxHM=
 go.uber.org/atomic v1.5.1/go.mod h1:sABNBOSYdrvTF6hTgEIbc7YasKWGhgEQZyfxyTvoXHQ=
 go.uber.org/multierr v1.1.0/go.mod h1:wR5kodmAFQ0UK8QlbwjlSNy0Z68gJhDJUG5sjR94q/0=
 go.uber.org/zap v1.10.0/go.mod h1:vwi/ZaCAaUcBkycHslxD9B2zi4UTXhF60s6SWpuDF0Q=
-golang.org/x/arch v0.0.0-20200312215426-ff8b605520f4 h1:cZG+Ns0n5bdEEsURGnDinFswSebRNMqspbLvxrLZoIc=
-golang.org/x/arch v0.0.0-20200312215426-ff8b605520f4/go.mod h1:flIaEI6LNU6xOCD5PaJvn9wGP0agmIOqjrtsKGRguv4=
 golang.org/x/crypto v0.0.0-20170930174604-9419663f5a44/go.mod h1:6SG95UA2DQfeDnfUPMdvaQW0Q7yPrPDi9nlGo2tz2b4=
 golang.org/x/crypto v0.0.0-20180904163835-0709b304e793/go.mod h1:6SG95UA2DQfeDnfUPMdvaQW0Q7yPrPDi9nlGo2tz2b4=
 golang.org/x/crypto v0.0.0-20181029021203-45a5f77698d3/go.mod h1:6SG95UA2DQfeDnfUPMdvaQW0Q7yPrPDi9nlGo2tz2b4=
@@ -549,6 +547,5 @@ honnef.co/go/tools v0.0.0-20190523083050-ea95bdfd59fc/go.mod h1:rf3lG4BRIbNafJWh
 honnef.co/go/tools v0.0.1-2019.2.3/go.mod h1:a3bituU0lyd329TUQxRnasdCoJDkEUEAqEt0JzvZhAg=
 honnef.co/go/tools v0.0.1-2020.1.3/go.mod h1:X/FiERA/W4tHapMX5mGpAtMSVEeEUOyHaw9vFzvIQ3k=
 rsc.io/binaryregexp v0.2.0/go.mod h1:qTv7/COck+e2FymRvadv62gMdZztPaShugOCi3I+8D8=
-rsc.io/pdf v0.1.1/go.mod h1:n8OzWcQ6Sp37PL01nO98y4iUCRdTGarVfzxY20ICaU4=
 rsc.io/quote/v3 v3.1.0/go.mod h1:yEA65RcK8LyAZtP9Kv3t0HmxON59tX3rD+tICJqUlj0=
 rsc.io/sampler v1.3.0/go.mod h1:T1hPZKmBbMNahiBKFy5HrXp6adAjACjK9JXDnKaTXpA=

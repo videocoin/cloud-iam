@@ -13,7 +13,7 @@ require (
 	github.com/sirupsen/logrus v1.4.2
 	github.com/stretchr/testify v1.4.0
 	github.com/videocoin/cloud-pkg v0.0.8-0.20200207052840-495efec72284
-	github.com/videocoin/common v0.0.0-20200320201925-11711721b05b
+	github.com/videocoin/common v0.0.0-20200321001951-ea10c6ca9b1d
 	github.com/videocoin/videocoinapis v0.0.0-20200318215910-f2ce1f8f4d1a
 	golang.org/x/sync v0.0.0-20200317015054-43a5402ce75a
 	google.golang.org/grpc v1.28.0

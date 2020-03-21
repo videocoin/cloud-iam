@@ -15,6 +15,7 @@ import (
 	"google.golang.org/grpc/keepalive"
 )
 
+// DefaultClientDialOpts ...
 func DefaultClientDialOpts(logger *logrus.Entry) []grpc.DialOption {
 	tracerOpts := grpctracing.WithTracer(opentracing.GlobalTracer())
 
@@ -42,6 +43,7 @@ func DefaultClientDialOpts(logger *logrus.Entry) []grpc.DialOption {
 	}
 }
 
+// ClientDialOptsWithRetry ...
 func ClientDialOptsWithRetry(logger *logrus.Entry) []grpc.DialOption {
 	tracerOpts := grpctracing.WithTracer(opentracing.GlobalTracer())
 	retryOpts := []grpcretry.CallOption{

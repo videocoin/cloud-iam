@@ -26,12 +26,12 @@ github.com/golang/protobuf/ptypes/struct
 github.com/google/uuid
 # github.com/grpc-ecosystem/go-grpc-middleware v1.2.0
 github.com/grpc-ecosystem/go-grpc-middleware
-github.com/grpc-ecosystem/go-grpc-middleware/auth
 github.com/grpc-ecosystem/go-grpc-middleware/logging/logrus
 github.com/grpc-ecosystem/go-grpc-middleware/retry
 github.com/grpc-ecosystem/go-grpc-middleware/tags
 github.com/grpc-ecosystem/go-grpc-middleware/tracing/opentracing
 github.com/grpc-ecosystem/go-grpc-middleware/validator
+github.com/grpc-ecosystem/go-grpc-middleware/auth
 github.com/grpc-ecosystem/go-grpc-middleware/util/metautils
 github.com/grpc-ecosystem/go-grpc-middleware/logging
 github.com/grpc-ecosystem/go-grpc-middleware/logging/logrus/ctxlogrus
@@ -78,7 +78,7 @@ github.com/stretchr/testify/require
 github.com/stretchr/testify/assert
 # github.com/videocoin/cloud-pkg v0.0.8-0.20200207052840-495efec72284
 github.com/videocoin/cloud-pkg/dbutil/models
-# github.com/videocoin/common v0.0.0-20200320201925-11711721b05b
+# github.com/videocoin/common v0.0.0-20200321001951-ea10c6ca9b1d
 github.com/videocoin/common/grpcutil
 github.com/videocoin/common/grpcutil/auth
 github.com/videocoin/common/log
