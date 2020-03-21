@@ -1,0 +1,79 @@
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: metadata
+  namespace: iam
+  labels:
+    app: metadata
+type: Opaque
+data:
+  dbUri: "dGVzdDoxMjM0NTY3ODlAdGNwKDEwLjIzNS4wLjMpL3Rlc3Q=" #test:123456789@tcp(10.235.0.3)/test
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: metadata
+  namespace: iam
+  labels:
+    app: metadata
+    version: v1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: metadata
+      version: v1
+  template:
+    metadata:
+      labels:
+        app: metadata
+        version: v1
+    spec:
+      imagePullSecrets:
+        - name: regcred
+      containers:
+        - name: metadata
+          image: registry.dev.videocoin.net/iam/metadata:v0.1.0-dev.14
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 8080
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8080
+            initialDelaySeconds: 3
+            periodSeconds: 3
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8080
+            initialDelaySeconds: 3
+            periodSeconds: 3
+          env:
+            - name: METADATA_DBURI
+              valueFrom:
+                secretKeyRef:
+                  name: metadata
+                  key: dbUri
+      volumes:
+        - name: secrets
+          secret:
+            secretName: metadata
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: metadata
+  namespace: iam
+  labels:
+    app: metadata
+spec:
+  ports:
+    - name: http
+      port: 8080
+  selector:
+    app: metadata

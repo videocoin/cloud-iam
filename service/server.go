@@ -9,7 +9,6 @@ import (
 	"github.com/golang/protobuf/ptypes/empty"
 	"github.com/jinzhu/gorm"
 	"github.com/videocoin/cloud-iam/datastore"
-	"github.com/videocoin/cloud-iam/pkg/auth"
 	"github.com/videocoin/common/log"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -31,13 +30,12 @@ func NewServer(ds datastore.DataStore, passphrase string) *Server {
 
 // CreateKey creates a key for an authenticated user.
 func (srv *Server) CreateKey(ctx context.Context, empty *empty.Empty) (*iam.Key, error) {
-	subject, err := auth.FromIncomingContext(ctx)
+	sub, err := subjectFromCtx(ctx)
 	if err != nil {
-		log.Errorln(err)
-		return nil, status.Error(codes.FailedPrecondition, err.Error())
+		return nil, status.Error(codes.FailedPrecondition, "invalid auth info")
 	}
 
-	key, err := srv.createUserKey(subject)
+	key, err := srv.createUserKey(sub)
 	if err != nil {
 		log.Errorln(err)
 		return nil, status.Error(codes.Internal, err.Error())
@@ -66,13 +64,12 @@ func (srv *Server) createUserKey(userID string) (*iam.Key, error) {
 
 // GetKey gets a key for an authenticated user.
 func (srv *Server) GetKey(ctx context.Context, req *iam.GetKeyRequest) (*iam.Key, error) {
-	subject, err := auth.FromIncomingContext(ctx)
+	sub, err := subjectFromCtx(ctx)
 	if err != nil {
-		log.Errorln(err)
-		return nil, status.Error(codes.FailedPrecondition, err.Error())
+		return nil, status.Error(codes.FailedPrecondition, "invalid auth info")
 	}
 
-	key, err := srv.getUserKey(subject, req.KeyId)
+	key, err := srv.getUserKey(sub, req.KeyId)
 	if err != nil {
 		if gorm.IsRecordNotFoundError(err) {
 			log.Debugln(err)
@@ -101,13 +98,12 @@ func (srv *Server) getUserKey(userID string, keyID string) (*iam.Key, error) {
 
 // ListKeys lists keys for an authenticated user.
 func (srv *Server) ListKeys(ctx context.Context, req *iam.ListKeysRequest) (*iam.ListKeysResponse, error) {
-	subject, err := auth.FromIncomingContext(ctx)
+	sub, err := subjectFromCtx(ctx)
 	if err != nil {
-		log.Errorln(err)
-		return nil, status.Error(codes.FailedPrecondition, err.Error())
+		return nil, status.Error(codes.FailedPrecondition, "invalid auth info")
 	}
 
-	keys, err := srv.listUserKeys(subject)
+	keys, err := srv.listUserKeys(sub)
 	if err != nil {
 		log.Errorln(err)
 		return nil, status.Error(codes.Internal, err.Error())
@@ -136,13 +132,12 @@ func (srv *Server) listUserKeys(userID string) ([]*iam.Key, error) {
 
 // DeleteKey deletes an user key.
 func (srv *Server) DeleteKey(ctx context.Context, req *iam.DeleteKeyRequest) (*empty.Empty, error) {
-	subject, err := auth.FromIncomingContext(ctx)
+	sub, err := subjectFromCtx(ctx)
 	if err != nil {
-		log.Errorln(err)
-		return nil, status.Error(codes.FailedPrecondition, err.Error())
+		return nil, status.Error(codes.FailedPrecondition, "invalid auth info")
 	}
 
-	if err := srv.deleteUserKey(subject, req.KeyId); err != nil {
+	if err := srv.deleteUserKey(sub, req.KeyId); err != nil {
 		log.Errorln(err)
 		return nil, status.Error(codes.Internal, err.Error())
 	}

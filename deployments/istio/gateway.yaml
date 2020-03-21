@@ -1,4 +1,13 @@
 ---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: iam
+  namespace: iam
+  labels:
+    istio-injection: enabled
+
+---
 apiVersion: networking.istio.io/v1alpha3
 kind: Gateway
 metadata:
@@ -31,6 +40,14 @@ spec:
   gateways:
     - iam
   http:
+    - match:
+        - uri:
+            prefix: /service_accounts/v1/metadata
+      route:
+        - destination:
+            host: metadata
+            port:
+              number: 8080
     - match:
         - uri:
             prefix: /

@@ -4,7 +4,6 @@ VERSION=$$(git describe --abbrev=0)-$$(git rev-parse --abbrev-ref HEAD)-$$(git r
 LD_FLAGS = -X main.Version=${VERSION} -s -w
 #BUILD_FLAGS = -mod=vendor -ldflags "$(LD_FLAGS)"
 BUILD_FLAGS = -mod=vendor
-OUTPUT ?= build/bin/${BIN}
 
 .PHONY: default
 default: build
@@ -12,9 +11,13 @@ default: build
 .PHONY: all
 all: build
 
-.PHONY: build
-build:
-	go build $(BUILD_FLAGS) -o $(OUTPUT) ./cmd/${BIN}
+.PHONY: iamd
+iamd:
+	go build $(BUILD_FLAGS) -o build/bin/iamd ./cmd/iamd
+
+.PHONY: metadatad
+metadatad:
+	go build $(BUILD_FLAGS) -o build/bin/metadatad ./cmd/metadatad
 
 .PHONY: e2e
 e2e:

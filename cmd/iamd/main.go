@@ -3,7 +3,6 @@ package main
 import (
 	"context"
 	"fmt"
-	"log"
 	"net"
 	"net/http"
 	"os"
@@ -45,21 +44,27 @@ type Config struct {
 }
 
 func main() {
+	if err := run(); err != nil {
+		fmt.Fprintf(os.Stderr, "%s\n", err)
+		os.Exit(1)
+	}
+}
+
+func run() error {
 	cfg := new(Config)
 	if err := envconfig.Process(ServiceName, cfg); err != nil {
-		log.Fatal(err)
+		return err
 	}
 
 	lvl, err := logrus.ParseLevel(cfg.LogLevel)
 	if err != nil {
-		log.Fatal(err)
+		return err
 	}
 	logger := logz.NewLogrus(lvl)
 	entry := logrus.NewEntry(logger)
 	logz.SetGlobal(logger)
 
-	ctx := context.Background()
-	ctx, cancel := context.WithCancel(ctx)
+	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
 
 	stop := make(chan os.Signal, 1)
@@ -109,6 +114,8 @@ func main() {
 	}
 
 	if err := errgrp.Wait(); err != nil {
-		log.Fatal(err)
+		return err
 	}
+
+	return nil
 }

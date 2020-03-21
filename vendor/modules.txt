@@ -45,6 +45,8 @@ github.com/jinzhu/gorm
 github.com/jinzhu/gorm/dialects/mysql
 # github.com/jinzhu/inflection v1.0.0
 github.com/jinzhu/inflection
+# github.com/julienschmidt/httprouter v1.2.0
+github.com/julienschmidt/httprouter
 # github.com/kelseyhightower/envconfig v1.4.0
 github.com/kelseyhightower/envconfig
 # github.com/konsorten/go-windows-terminal-sequences v1.0.1
@@ -78,7 +80,7 @@ github.com/stretchr/testify/require
 github.com/stretchr/testify/assert
 # github.com/videocoin/cloud-pkg v0.0.8-0.20200207052840-495efec72284
 github.com/videocoin/cloud-pkg/dbutil/models
-# github.com/videocoin/common v0.0.0-20200321001951-ea10c6ca9b1d
+# github.com/videocoin/common v0.0.0-20200321190630-37424887c17c
 github.com/videocoin/common/grpcutil
 github.com/videocoin/common/grpcutil/auth
 github.com/videocoin/common/log

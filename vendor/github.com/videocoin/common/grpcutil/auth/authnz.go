@@ -15,28 +15,29 @@ func JWTAuthNZ(audience string, accPublicKeyURLTemplate string, secretHMAC strin
 	return func(ctx context.Context) (context.Context, error) {
 		tokenStr, err := BearerFromMD(ctx)
 		if err != nil {
-			return nil, err
+			return nil, status.Error(codes.Unauthenticated, err.Error())
 		}
 
 		token, _, err := new(jwt.Parser).ParseUnverified(tokenStr, &jwt.StandardClaims{})
 		if err != nil {
-			return nil, err
+			return nil, status.Error(codes.Unauthenticated, err.Error())
 		}
 
 		var authenticator Authenticator
 
 		if _, ok := token.Header["kid"]; ok {
-			authenticator = ServiceAccountAuthN(ctx, audience, accPublicKeyURLTemplate)
+			authenticator = ServiceAccountAuthN(audience, accPublicKeyURLTemplate)
 		} else {
-			authenticator = HMACAuthN(ctx, secretHMAC)
+			authenticator = HMACAuthN(secretHMAC)
 		}
 
 		sub, err := authenticator.Authenticate(ctx)
 		if err != nil {
 			return nil, status.Error(codes.Unauthenticated, err.Error())
 		}
-		grpc_ctxtags.Extract(ctx).Set("auth.sub", sub)
 
-		return ctx, nil
+		grpc_ctxtags.Extract(ctx).Set("auth.sub", sub)
+		newCtx := context.WithValue(ctx, "token", token)
+		return newCtx, nil
 	}
 }

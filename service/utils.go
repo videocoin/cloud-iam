@@ -1,10 +1,13 @@
 package service
 
 import (
+	"context"
 	"crypto/rsa"
+	"errors"
 	"io"
 	"time"
 
+	jwt "github.com/dgrijalva/jwt-go"
 	guuid "github.com/google/uuid"
 
 	"github.com/videocoin/cloud-iam/datastore"
@@ -41,4 +44,17 @@ func generateKey(rand io.Reader, passphrase string, userID string) (*datastore.U
 		ValidAfterTime:  time.Now(),
 		ValidBeforeTime: time.Now().AddDate(keyValidityPeriodYears, 0, 0),
 	}, nil
+}
+
+func subjectFromCtx(ctx context.Context) (string, error) {
+	token, ok := ctx.Value("token").(*jwt.Token)
+	if !ok {
+		return "", errors.New("invalid token info")
+	}
+	claims, ok := token.Claims.(*jwt.StandardClaims)
+	if !ok {
+		return "", errors.New("invalid token info")
+	}
+
+	return claims.Subject, nil
 }
