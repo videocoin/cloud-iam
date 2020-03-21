@@ -53,16 +53,6 @@ func run() error {
 	logger := logz.NewLogrus(lvl)
 	logz.SetGlobal(logger)
 
-	ds, err := datastore.Open(cfg.DBURI)
-	if err != nil {
-		return err
-	}
-	defer ds.Close()
-
-	srv := newServer()
-	srv.ds = ds
-	srv.router = httprouter.New()
-
 	stop := make(chan os.Signal, 1)
 	signal.Notify(stop, os.Interrupt, syscall.SIGTERM)
 	defer signal.Stop(stop)
@@ -72,6 +62,15 @@ func run() error {
 	errgrp, ctx := errgroup.WithContext(ctx)
 	var httpSrv *http.Server
 	errgrp.Go(func() error {
+		ds, err := datastore.Open(cfg.DBURI)
+		if err != nil {
+			return err
+		}
+		defer ds.Close()
+
+		srv := &server{ds: ds, router: httprouter.New()}
+		srv.routes()
+
 		httpSrv = &http.Server{Addr: cfg.Addr, Handler: srv}
 		return httpSrv.ListenAndServe()
 	})
