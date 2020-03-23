@@ -27,35 +27,6 @@ var _ = math.Inf
 // proto package needs to be updated.
 const _ = proto.ProtoPackageIsVersion3 // please upgrade the proto package
 
-// A view for Role objects.
-type RoleView int32
-
-const (
-	// Omits the `included_permissions` field.
-	// This is the default value.
-	RoleView_BASIC RoleView = 0
-	// Returns all fields.
-	RoleView_FULL RoleView = 1
-)
-
-var RoleView_name = map[int32]string{
-	0: "BASIC",
-	1: "FULL",
-}
-
-var RoleView_value = map[string]int32{
-	"BASIC": 0,
-	"FULL":  1,
-}
-
-func (x RoleView) String() string {
-	return proto.EnumName(RoleView_name, int32(x))
-}
-
-func (RoleView) EnumDescriptor() ([]byte, []int) {
-	return fileDescriptor_6d67148b8fa02d13, []int{0}
-}
-
 type Key struct {
 	// The resource id.
 	Id string `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
@@ -304,509 +275,57 @@ func (m *DeleteKeyRequest) GetKeyId() string {
 	return ""
 }
 
-// A role in the Identity and Access Management API.
-type Role struct {
-	// The name of the role.
-	Name string `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
-	// Optional A human-readable title for the role.  Typically this
-	// is limited to 100 UTF-8 bytes.
-	Title string `protobuf:"bytes,2,opt,name=title,proto3" json:"title,omitempty"`
-	// Optional A human-readable description for the role.
-	Description string `protobuf:"bytes,3,opt,name=description,proto3" json:"description,omitempty"`
-	// The names of the permissions this role grants when bound in an IAM policy.
-	IncludedPermissions  []string `protobuf:"bytes,4,rep,name=included_permissions,json=includedPermissions,proto3" json:"included_permissions,omitempty"`
-	XXX_NoUnkeyedLiteral struct{} `json:"-"`
-	XXX_unrecognized     []byte   `json:"-"`
-	XXX_sizecache        int32    `json:"-"`
-}
-
-func (m *Role) Reset()         { *m = Role{} }
-func (m *Role) String() string { return proto.CompactTextString(m) }
-func (*Role) ProtoMessage()    {}
-func (*Role) Descriptor() ([]byte, []int) {
-	return fileDescriptor_6d67148b8fa02d13, []int{5}
-}
-
-func (m *Role) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_Role.Unmarshal(m, b)
-}
-func (m *Role) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_Role.Marshal(b, m, deterministic)
-}
-func (m *Role) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_Role.Merge(m, src)
-}
-func (m *Role) XXX_Size() int {
-	return xxx_messageInfo_Role.Size(m)
-}
-func (m *Role) XXX_DiscardUnknown() {
-	xxx_messageInfo_Role.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_Role proto.InternalMessageInfo
-
-func (m *Role) GetName() string {
-	if m != nil {
-		return m.Name
-	}
-	return ""
-}
-
-func (m *Role) GetTitle() string {
-	if m != nil {
-		return m.Title
-	}
-	return ""
-}
-
-func (m *Role) GetDescription() string {
-	if m != nil {
-		return m.Description
-	}
-	return ""
-}
-
-func (m *Role) GetIncludedPermissions() []string {
-	if m != nil {
-		return m.IncludedPermissions
-	}
-	return nil
-}
-
-// The request to get all roles defined under a resource.
-type ListRolesRequest struct {
-	// Optional limit on the number of roles to include in the response.
-	PageSize int32 `protobuf:"varint,1,opt,name=page_size,json=pageSize,proto3" json:"page_size,omitempty"`
-	// Optional pagination token returned in an earlier ListRolesResponse.
-	PageToken string `protobuf:"bytes,2,opt,name=page_token,json=pageToken,proto3" json:"page_token,omitempty"`
-	// Optional view for the returned Role objects. When `FULL` is specified,
-	// the `includedPermissions` field is returned, which includes a list of all
-	// permissions in the role. The default value is `BASIC`, which does not
-	// return the `includedPermissions` field.
-	View                 RoleView `protobuf:"varint,3,opt,name=view,proto3,enum=videocoin.iam.v1.RoleView" json:"view,omitempty"`
-	XXX_NoUnkeyedLiteral struct{} `json:"-"`
-	XXX_unrecognized     []byte   `json:"-"`
-	XXX_sizecache        int32    `json:"-"`
-}
-
-func (m *ListRolesRequest) Reset()         { *m = ListRolesRequest{} }
-func (m *ListRolesRequest) String() string { return proto.CompactTextString(m) }
-func (*ListRolesRequest) ProtoMessage()    {}
-func (*ListRolesRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_6d67148b8fa02d13, []int{6}
-}
-
-func (m *ListRolesRequest) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_ListRolesRequest.Unmarshal(m, b)
-}
-func (m *ListRolesRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_ListRolesRequest.Marshal(b, m, deterministic)
-}
-func (m *ListRolesRequest) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_ListRolesRequest.Merge(m, src)
-}
-func (m *ListRolesRequest) XXX_Size() int {
-	return xxx_messageInfo_ListRolesRequest.Size(m)
-}
-func (m *ListRolesRequest) XXX_DiscardUnknown() {
-	xxx_messageInfo_ListRolesRequest.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_ListRolesRequest proto.InternalMessageInfo
-
-func (m *ListRolesRequest) GetPageSize() int32 {
-	if m != nil {
-		return m.PageSize
-	}
-	return 0
-}
-
-func (m *ListRolesRequest) GetPageToken() string {
-	if m != nil {
-		return m.PageToken
-	}
-	return ""
-}
-
-func (m *ListRolesRequest) GetView() RoleView {
-	if m != nil {
-		return m.View
-	}
-	return RoleView_BASIC
-}
-
-// The response containing the roles defined under a resource.
-type ListRolesResponse struct {
-	// The list of predefined roles.
-	Roles []*Role `protobuf:"bytes,1,rep,name=roles,proto3" json:"roles,omitempty"`
-	// To retrieve the next page of results, set
-	// `ListRolesRequest.page_token` to this value.
-	NextPageToken        string   `protobuf:"bytes,2,opt,name=next_page_token,json=nextPageToken,proto3" json:"next_page_token,omitempty"`
-	XXX_NoUnkeyedLiteral struct{} `json:"-"`
-	XXX_unrecognized     []byte   `json:"-"`
-	XXX_sizecache        int32    `json:"-"`
-}
-
-func (m *ListRolesResponse) Reset()         { *m = ListRolesResponse{} }
-func (m *ListRolesResponse) String() string { return proto.CompactTextString(m) }
-func (*ListRolesResponse) ProtoMessage()    {}
-func (*ListRolesResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_6d67148b8fa02d13, []int{7}
-}
-
-func (m *ListRolesResponse) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_ListRolesResponse.Unmarshal(m, b)
-}
-func (m *ListRolesResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_ListRolesResponse.Marshal(b, m, deterministic)
-}
-func (m *ListRolesResponse) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_ListRolesResponse.Merge(m, src)
-}
-func (m *ListRolesResponse) XXX_Size() int {
-	return xxx_messageInfo_ListRolesResponse.Size(m)
-}
-func (m *ListRolesResponse) XXX_DiscardUnknown() {
-	xxx_messageInfo_ListRolesResponse.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_ListRolesResponse proto.InternalMessageInfo
-
-func (m *ListRolesResponse) GetRoles() []*Role {
-	if m != nil {
-		return m.Roles
-	}
-	return nil
-}
-
-func (m *ListRolesResponse) GetNextPageToken() string {
-	if m != nil {
-		return m.NextPageToken
-	}
-	return ""
-}
-
-type GetRoleRequest struct {
-	// The name of the role.
-	Name                 string   `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
-	XXX_NoUnkeyedLiteral struct{} `json:"-"`
-	XXX_unrecognized     []byte   `json:"-"`
-	XXX_sizecache        int32    `json:"-"`
-}
-
-func (m *GetRoleRequest) Reset()         { *m = GetRoleRequest{} }
-func (m *GetRoleRequest) String() string { return proto.CompactTextString(m) }
-func (*GetRoleRequest) ProtoMessage()    {}
-func (*GetRoleRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_6d67148b8fa02d13, []int{8}
-}
-
-func (m *GetRoleRequest) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_GetRoleRequest.Unmarshal(m, b)
-}
-func (m *GetRoleRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_GetRoleRequest.Marshal(b, m, deterministic)
-}
-func (m *GetRoleRequest) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_GetRoleRequest.Merge(m, src)
-}
-func (m *GetRoleRequest) XXX_Size() int {
-	return xxx_messageInfo_GetRoleRequest.Size(m)
-}
-func (m *GetRoleRequest) XXX_DiscardUnknown() {
-	xxx_messageInfo_GetRoleRequest.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_GetRoleRequest proto.InternalMessageInfo
-
-func (m *GetRoleRequest) GetName() string {
-	if m != nil {
-		return m.Name
-	}
-	return ""
-}
-
-// A permission belongs to one or more roles.
-type Permission struct {
-	// The name of this Permission.
-	Name string `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
-	// The title of this Permission.
-	Title string `protobuf:"bytes,2,opt,name=title,proto3" json:"title,omitempty"`
-	// A brief description of what this Permission is used for.
-	Description          string   `protobuf:"bytes,3,opt,name=description,proto3" json:"description,omitempty"`
-	XXX_NoUnkeyedLiteral struct{} `json:"-"`
-	XXX_unrecognized     []byte   `json:"-"`
-	XXX_sizecache        int32    `json:"-"`
-}
-
-func (m *Permission) Reset()         { *m = Permission{} }
-func (m *Permission) String() string { return proto.CompactTextString(m) }
-func (*Permission) ProtoMessage()    {}
-func (*Permission) Descriptor() ([]byte, []int) {
-	return fileDescriptor_6d67148b8fa02d13, []int{9}
-}
-
-func (m *Permission) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_Permission.Unmarshal(m, b)
-}
-func (m *Permission) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_Permission.Marshal(b, m, deterministic)
-}
-func (m *Permission) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_Permission.Merge(m, src)
-}
-func (m *Permission) XXX_Size() int {
-	return xxx_messageInfo_Permission.Size(m)
-}
-func (m *Permission) XXX_DiscardUnknown() {
-	xxx_messageInfo_Permission.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_Permission proto.InternalMessageInfo
-
-func (m *Permission) GetName() string {
-	if m != nil {
-		return m.Name
-	}
-	return ""
-}
-
-func (m *Permission) GetTitle() string {
-	if m != nil {
-		return m.Title
-	}
-	return ""
-}
-
-func (m *Permission) GetDescription() string {
-	if m != nil {
-		return m.Description
-	}
-	return ""
-}
-
-type RoleBinding struct {
-	// The name of the role.
-	RoleName string `protobuf:"bytes,1,opt,name=role_name,json=roleName,proto3" json:"role_name,omitempty"`
-	// The user id.
-	UserId               string   `protobuf:"bytes,2,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
-	XXX_NoUnkeyedLiteral struct{} `json:"-"`
-	XXX_unrecognized     []byte   `json:"-"`
-	XXX_sizecache        int32    `json:"-"`
-}
-
-func (m *RoleBinding) Reset()         { *m = RoleBinding{} }
-func (m *RoleBinding) String() string { return proto.CompactTextString(m) }
-func (*RoleBinding) ProtoMessage()    {}
-func (*RoleBinding) Descriptor() ([]byte, []int) {
-	return fileDescriptor_6d67148b8fa02d13, []int{10}
-}
-
-func (m *RoleBinding) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_RoleBinding.Unmarshal(m, b)
-}
-func (m *RoleBinding) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_RoleBinding.Marshal(b, m, deterministic)
-}
-func (m *RoleBinding) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_RoleBinding.Merge(m, src)
-}
-func (m *RoleBinding) XXX_Size() int {
-	return xxx_messageInfo_RoleBinding.Size(m)
-}
-func (m *RoleBinding) XXX_DiscardUnknown() {
-	xxx_messageInfo_RoleBinding.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_RoleBinding proto.InternalMessageInfo
-
-func (m *RoleBinding) GetRoleName() string {
-	if m != nil {
-		return m.RoleName
-	}
-	return ""
-}
-
-func (m *RoleBinding) GetUserId() string {
-	if m != nil {
-		return m.UserId
-	}
-	return ""
-}
-
-type ListRoleBindingsRequest struct {
-	// Optional
-	UserId string `protobuf:"bytes,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
-	// Optional pagination token returned in an earlier ListRoleBindingsRequest.
-	PageToken            string   `protobuf:"bytes,2,opt,name=page_token,json=pageToken,proto3" json:"page_token,omitempty"`
-	XXX_NoUnkeyedLiteral struct{} `json:"-"`
-	XXX_unrecognized     []byte   `json:"-"`
-	XXX_sizecache        int32    `json:"-"`
-}
-
-func (m *ListRoleBindingsRequest) Reset()         { *m = ListRoleBindingsRequest{} }
-func (m *ListRoleBindingsRequest) String() string { return proto.CompactTextString(m) }
-func (*ListRoleBindingsRequest) ProtoMessage()    {}
-func (*ListRoleBindingsRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_6d67148b8fa02d13, []int{11}
-}
-
-func (m *ListRoleBindingsRequest) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_ListRoleBindingsRequest.Unmarshal(m, b)
-}
-func (m *ListRoleBindingsRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_ListRoleBindingsRequest.Marshal(b, m, deterministic)
-}
-func (m *ListRoleBindingsRequest) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_ListRoleBindingsRequest.Merge(m, src)
-}
-func (m *ListRoleBindingsRequest) XXX_Size() int {
-	return xxx_messageInfo_ListRoleBindingsRequest.Size(m)
-}
-func (m *ListRoleBindingsRequest) XXX_DiscardUnknown() {
-	xxx_messageInfo_ListRoleBindingsRequest.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_ListRoleBindingsRequest proto.InternalMessageInfo
-
-func (m *ListRoleBindingsRequest) GetUserId() string {
-	if m != nil {
-		return m.UserId
-	}
-	return ""
-}
-
-func (m *ListRoleBindingsRequest) GetPageToken() string {
-	if m != nil {
-		return m.PageToken
-	}
-	return ""
-}
-
-type ListRoleBindingsResponse struct {
-	Bindings             []*RoleBinding `protobuf:"bytes,1,rep,name=bindings,proto3" json:"bindings,omitempty"`
-	XXX_NoUnkeyedLiteral struct{}       `json:"-"`
-	XXX_unrecognized     []byte         `json:"-"`
-	XXX_sizecache        int32          `json:"-"`
-}
-
-func (m *ListRoleBindingsResponse) Reset()         { *m = ListRoleBindingsResponse{} }
-func (m *ListRoleBindingsResponse) String() string { return proto.CompactTextString(m) }
-func (*ListRoleBindingsResponse) ProtoMessage()    {}
-func (*ListRoleBindingsResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_6d67148b8fa02d13, []int{12}
-}
-
-func (m *ListRoleBindingsResponse) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_ListRoleBindingsResponse.Unmarshal(m, b)
-}
-func (m *ListRoleBindingsResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_ListRoleBindingsResponse.Marshal(b, m, deterministic)
-}
-func (m *ListRoleBindingsResponse) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_ListRoleBindingsResponse.Merge(m, src)
-}
-func (m *ListRoleBindingsResponse) XXX_Size() int {
-	return xxx_messageInfo_ListRoleBindingsResponse.Size(m)
-}
-func (m *ListRoleBindingsResponse) XXX_DiscardUnknown() {
-	xxx_messageInfo_ListRoleBindingsResponse.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_ListRoleBindingsResponse proto.InternalMessageInfo
-
-func (m *ListRoleBindingsResponse) GetBindings() []*RoleBinding {
-	if m != nil {
-		return m.Bindings
-	}
-	return nil
-}
-
 func init() {
-	proto.RegisterEnum("videocoin.iam.v1.RoleView", RoleView_name, RoleView_value)
 	proto.RegisterType((*Key)(nil), "videocoin.iam.v1.Key")
 	proto.RegisterType((*ListKeysRequest)(nil), "videocoin.iam.v1.ListKeysRequest")
 	proto.RegisterType((*ListKeysResponse)(nil), "videocoin.iam.v1.ListKeysResponse")
 	proto.RegisterType((*GetKeyRequest)(nil), "videocoin.iam.v1.GetKeyRequest")
 	proto.RegisterType((*DeleteKeyRequest)(nil), "videocoin.iam.v1.DeleteKeyRequest")
-	proto.RegisterType((*Role)(nil), "videocoin.iam.v1.Role")
-	proto.RegisterType((*ListRolesRequest)(nil), "videocoin.iam.v1.ListRolesRequest")
-	proto.RegisterType((*ListRolesResponse)(nil), "videocoin.iam.v1.ListRolesResponse")
-	proto.RegisterType((*GetRoleRequest)(nil), "videocoin.iam.v1.GetRoleRequest")
-	proto.RegisterType((*Permission)(nil), "videocoin.iam.v1.Permission")
-	proto.RegisterType((*RoleBinding)(nil), "videocoin.iam.v1.RoleBinding")
-	proto.RegisterType((*ListRoleBindingsRequest)(nil), "videocoin.iam.v1.ListRoleBindingsRequest")
-	proto.RegisterType((*ListRoleBindingsResponse)(nil), "videocoin.iam.v1.ListRoleBindingsResponse")
 }
 
 func init() { proto.RegisterFile("videocoin/iam/v1/iam.proto", fileDescriptor_6d67148b8fa02d13) }
 
 var fileDescriptor_6d67148b8fa02d13 = []byte{
-	// 1020 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xb4, 0x56, 0xcd, 0x6e, 0xe3, 0x54,
-	0x14, 0xc6, 0xf9, 0x69, 0xe3, 0x53, 0xda, 0xa6, 0x77, 0xda, 0x69, 0xc6, 0xc3, 0xa8, 0xc1, 0x20,
-	0x48, 0x43, 0x89, 0xd5, 0xb2, 0xa2, 0x52, 0x17, 0x6e, 0xcb, 0x8c, 0xaa, 0x76, 0xd0, 0xe0, 0x99,
-	0x41, 0x88, 0x8d, 0xe5, 0xc4, 0x27, 0xe9, 0x55, 0x1c, 0xdb, 0xd8, 0x37, 0xc9, 0x64, 0x46, 0x65,
-	0xc1, 0x12, 0x89, 0x15, 0x4f, 0xc0, 0x9a, 0x37, 0x61, 0x09, 0xbb, 0xae, 0x58, 0xb0, 0xe2, 0x29,
-	0xd0, 0xbd, 0xfe, 0x89, 0xa7, 0x76, 0x3a, 0x48, 0x30, 0xab, 0x2a, 0xe7, 0x7c, 0xe7, 0x7c, 0xe7,
-	0x9e, 0x9f, 0xaf, 0x06, 0x65, 0x42, 0x6d, 0xf4, 0x7a, 0x1e, 0x75, 0x35, 0x6a, 0x8d, 0xb4, 0xc9,
-	0x3e, 0xff, 0xd3, 0xf1, 0x03, 0x8f, 0x79, 0xa4, 0x9e, 0xfa, 0x3a, 0xdc, 0x38, 0xd9, 0x57, 0x76,
-	0x06, 0x9e, 0x37, 0x70, 0x50, 0x13, 0xfe, 0xee, 0xb8, 0xaf, 0x31, 0x3a, 0xc2, 0x90, 0x59, 0x23,
-	0x3f, 0x0a, 0x51, 0xee, 0xdf, 0x04, 0xe0, 0xc8, 0x67, 0xb3, 0xd8, 0x99, 0x44, 0x5b, 0x3e, 0xd5,
-	0xfa, 0x14, 0x1d, 0xdb, 0xec, 0xe2, 0xa5, 0x35, 0xa1, 0x5e, 0x10, 0x03, 0xee, 0x65, 0x00, 0x01,
-	0x86, 0xde, 0x38, 0xe8, 0x61, 0xec, 0x7a, 0x2f, 0xe3, 0xb2, 0x5c, 0xd7, 0x63, 0x16, 0xa3, 0x9e,
-	0x1b, 0xc6, 0xde, 0xed, 0x8c, 0xb7, 0xe7, 0x50, 0x74, 0x59, 0xe4, 0x50, 0x7f, 0x29, 0x41, 0xf9,
-	0x1c, 0x67, 0x64, 0x0d, 0x4a, 0xd4, 0x6e, 0x48, 0x4d, 0xa9, 0x25, 0x1b, 0x25, 0x6a, 0x93, 0x16,
-	0xd4, 0xfd, 0x80, 0x4e, 0x2c, 0x86, 0xe6, 0x10, 0x67, 0xa6, 0x6d, 0x31, 0xab, 0x51, 0x6a, 0x4a,
-	0xad, 0x77, 0x8d, 0xb5, 0xd8, 0x7e, 0x8e, 0xb3, 0x53, 0x8b, 0x59, 0xe4, 0x23, 0x58, 0xf7, 0xc7,
-	0x5d, 0x87, 0xf6, 0xe6, 0xc0, 0xb2, 0x00, 0xae, 0x46, 0xe6, 0x04, 0x77, 0x0a, 0xf5, 0x89, 0xe5,
-	0x50, 0xdb, 0xb4, 0xfa, 0x0c, 0x03, 0x93, 0x37, 0xa6, 0x51, 0x69, 0x4a, 0xad, 0x95, 0x03, 0xa5,
-	0x13, 0x55, 0xd7, 0x49, 0x9a, 0xd2, 0x79, 0x96, 0x74, 0xcd, 0x58, 0x13, 0x31, 0x3a, 0x0f, 0xe1,
-	0x46, 0xf2, 0x10, 0x36, 0xa2, 0x2c, 0x5d, 0xec, 0x7b, 0x01, 0x46, 0x69, 0xaa, 0x6f, 0x4c, 0xb3,
-	0x2e, 0x82, 0x8e, 0x45, 0x0c, 0xb7, 0x1e, 0xb6, 0xff, 0xd6, 0x3f, 0x86, 0x7b, 0x62, 0x6a, 0xe9,
-	0x0c, 0x5d, 0x64, 0x53, 0x2f, 0x18, 0x6a, 0xbc, 0x1f, 0x30, 0xc4, 0x59, 0xa8, 0xbd, 0x1a, 0xe2,
-	0xec, 0x4a, 0x7d, 0x0c, 0xeb, 0x17, 0x34, 0x64, 0xe7, 0x38, 0x0b, 0x0d, 0xfc, 0x6e, 0x8c, 0x21,
-	0x23, 0xf7, 0x41, 0xf6, 0xad, 0x01, 0x9a, 0x21, 0x7d, 0x89, 0xa2, 0x6b, 0x55, 0xa3, 0xc6, 0x0d,
-	0x4f, 0xe9, 0x4b, 0x24, 0x0f, 0x00, 0x84, 0x93, 0x79, 0x43, 0x74, 0x45, 0xd7, 0x64, 0x43, 0xc0,
-	0x9f, 0x71, 0x83, 0x7a, 0x04, 0xf5, 0x79, 0xba, 0xd0, 0xf7, 0xdc, 0x10, 0xc9, 0x2e, 0x54, 0x38,
-	0x61, 0x43, 0x6a, 0x96, 0x5b, 0x2b, 0x07, 0x5b, 0x9d, 0x9b, 0x8b, 0xd5, 0x39, 0xc7, 0x99, 0x21,
-	0x20, 0xea, 0x27, 0xb0, 0xfa, 0x08, 0x79, 0x74, 0x52, 0x8b, 0x02, 0x4b, 0xbc, 0xf3, 0xd4, 0x8e,
-	0xa8, 0x8e, 0xcb, 0x7f, 0xea, 0x25, 0xa3, 0x3a, 0xc4, 0xd9, 0x99, 0xad, 0x76, 0xa0, 0x7e, 0x8a,
-	0x0e, 0x8a, 0x69, 0xe5, 0xf1, 0x52, 0x0e, 0xff, 0xa3, 0x04, 0x15, 0xc3, 0x73, 0x90, 0x6c, 0x43,
-	0xc5, 0xb5, 0x46, 0x98, 0x85, 0x08, 0x03, 0xd9, 0x84, 0x2a, 0xa3, 0xcc, 0xc1, 0xf8, 0x5d, 0xd1,
-	0x0f, 0xd2, 0x84, 0x15, 0x1b, 0xc3, 0x5e, 0x40, 0x7d, 0xbe, 0x75, 0x62, 0x01, 0x64, 0x23, 0x6b,
-	0x22, 0xfb, 0xb0, 0x49, 0xdd, 0x9e, 0x33, 0xb6, 0xd1, 0x36, 0x7d, 0x0c, 0x46, 0x34, 0x0c, 0xf9,
-	0x7e, 0x36, 0x2a, 0xcd, 0x72, 0x4b, 0x36, 0xee, 0x24, 0xbe, 0x27, 0x73, 0x97, 0xfa, 0x7d, 0xd4,
-	0x28, 0x5e, 0xcf, 0xff, 0xd1, 0x78, 0xd2, 0x81, 0xca, 0x84, 0xe2, 0x54, 0x54, 0xb7, 0x76, 0xa0,
-	0xe4, 0x9b, 0xcc, 0x99, 0xbe, 0xa6, 0x38, 0x35, 0x04, 0x4e, 0xa5, 0xb0, 0x91, 0xe1, 0x8f, 0x27,
-	0xb5, 0x07, 0xd5, 0x80, 0x1b, 0xe2, 0x51, 0xdd, 0x2d, 0xce, 0x62, 0x44, 0x20, 0x7e, 0x1c, 0x2e,
-	0xbe, 0x60, 0x66, 0xae, 0xac, 0x55, 0x6e, 0x7e, 0x92, 0xee, 0xc4, 0x2e, 0xac, 0x3d, 0x42, 0xc1,
-	0x94, 0x3c, 0x74, 0xd1, 0x00, 0xd4, 0x6f, 0x00, 0xe6, 0x4d, 0x22, 0x24, 0x0b, 0xfb, 0x6f, 0x23,
-	0x52, 0x4f, 0x60, 0x85, 0x57, 0x70, 0x4c, 0x5d, 0x9b, 0xba, 0x03, 0xde, 0x6a, 0xfe, 0x08, 0x33,
-	0x93, 0xbf, 0xc6, 0x0d, 0x5f, 0x72, 0x8e, 0x6d, 0x58, 0x1e, 0x87, 0x18, 0xa4, 0x5b, 0x67, 0x2c,
-	0xf1, 0x9f, 0x67, 0xb6, 0xfa, 0x15, 0x6c, 0x27, 0x4d, 0x8b, 0x13, 0x85, 0xf3, 0x27, 0xa5, 0x31,
-	0x52, 0x36, 0xe6, 0x4d, 0x07, 0xf3, 0x1c, 0x1a, 0xf9, 0x94, 0xf1, 0x38, 0x3e, 0x87, 0x5a, 0x37,
-	0xb6, 0xc5, 0x13, 0x79, 0x50, 0x3c, 0x91, 0x38, 0xd2, 0x48, 0xe1, 0xed, 0x1d, 0xa8, 0x25, 0x03,
-	0x27, 0x32, 0x54, 0x8f, 0xf5, 0xa7, 0x67, 0x27, 0xf5, 0x77, 0x48, 0x0d, 0x2a, 0x0f, 0x9f, 0x5f,
-	0x5c, 0xd4, 0xa5, 0x83, 0x5f, 0x6b, 0x50, 0x3e, 0xd3, 0x1f, 0x93, 0x0b, 0x90, 0x4f, 0x02, 0x8c,
-	0x24, 0x8f, 0xdc, 0xcd, 0xa9, 0xcc, 0x17, 0x5c, 0xc1, 0x95, 0xe2, 0x9b, 0x55, 0xeb, 0x3f, 0xfc,
-	0xf1, 0xd7, 0xcf, 0x25, 0x50, 0x6b, 0xfc, 0x3f, 0x07, 0xbf, 0x5f, 0xd2, 0x83, 0x5a, 0x72, 0xfe,
-	0xe4, 0xfd, 0x7c, 0xd0, 0x0d, 0xa5, 0x51, 0xd4, 0xdb, 0x20, 0x51, 0x13, 0x12, 0x12, 0x32, 0x27,
-	0xe9, 0xc3, 0x52, 0x24, 0x12, 0x64, 0x27, 0x1f, 0xff, 0x9a, 0x7c, 0x2c, 0x2a, 0xfc, 0xc3, 0x6b,
-	0x3d, 0x96, 0x09, 0x91, 0x7c, 0x8b, 0xdc, 0x49, 0x92, 0x0b, 0x55, 0x34, 0xa9, 0x7d, 0xd4, 0xbe,
-	0x22, 0x23, 0x90, 0x53, 0x7d, 0x21, 0x05, 0xa5, 0xde, 0x14, 0x1f, 0x65, 0x41, 0xfb, 0x72, 0x74,
-	0xed, 0x42, 0xba, 0x17, 0xb0, 0x11, 0x4d, 0x22, 0xbb, 0xa7, 0xb7, 0x0f, 0x7c, 0x21, 0xe3, 0xde,
-	0xb5, 0xbe, 0x91, 0xee, 0xf7, 0x5e, 0xbc, 0x98, 0x82, 0x9c, 0xa8, 0xab, 0x1a, 0xf7, 0x24, 0x9b,
-	0x72, 0x28, 0xb5, 0x39, 0x73, 0xf4, 0x96, 0xb7, 0xcb, 0xdc, 0xce, 0x33, 0xff, 0x24, 0xcd, 0x65,
-	0x30, 0x59, 0x7f, 0xb2, 0x5b, 0xbc, 0x15, 0x05, 0x57, 0xa7, 0xb4, 0xff, 0x0d, 0x34, 0x5e, 0x24,
-	0xf5, 0x5a, 0x5f, 0x7e, 0xad, 0x1e, 0x92, 0xaf, 0x67, 0x00, 0x72, 0xaa, 0x8a, 0x44, 0x5d, 0x9c,
-	0x3c, 0x2d, 0xe0, 0x83, 0x5b, 0x31, 0x31, 0xf3, 0x86, 0xe0, 0x5b, 0x21, 0x32, 0x1f, 0x7b, 0xa4,
-	0x9d, 0x26, 0x2c, 0xc7, 0x9a, 0x48, 0x9a, 0x85, 0x4b, 0x9c, 0x91, 0x4b, 0x65, 0x81, 0x0e, 0xab,
-	0x8a, 0xc8, 0xbb, 0x49, 0x48, 0x9a, 0x57, 0x7b, 0xc5, 0xdb, 0x7e, 0xd4, 0xbe, 0x52, 0x2e, 0x7e,
-	0xd3, 0xb7, 0x0a, 0xbf, 0x00, 0x7e, 0xd7, 0xf7, 0x2f, 0x19, 0xf3, 0xc3, 0x43, 0x4d, 0x9b, 0x4e,
-	0xa7, 0x05, 0x5f, 0x08, 0xd6, 0x98, 0x5d, 0x6a, 0x3d, 0xc7, 0x1b, 0xdb, 0x9f, 0xfa, 0x8e, 0xc5,
-	0xfa, 0x5e, 0x30, 0x3a, 0xae, 0x7c, 0x5b, 0x9a, 0xec, 0x77, 0x97, 0xc4, 0xac, 0x3f, 0xfb, 0x27,
-	0x00, 0x00, 0xff, 0xff, 0x18, 0xac, 0x74, 0xc4, 0x37, 0x0a, 0x00, 0x00,
+	// 620 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x84, 0x93, 0xc1, 0x6e, 0xd3, 0x40,
+	0x10, 0x86, 0x15, 0xa7, 0xad, 0x9a, 0x29, 0x6d, 0xc3, 0xa2, 0x42, 0xea, 0x82, 0x1a, 0x2c, 0x04,
+	0xa1, 0x08, 0x5b, 0x29, 0xb7, 0x4a, 0x3d, 0xb8, 0x14, 0x50, 0x95, 0xf6, 0x62, 0x7a, 0xe2, 0x62,
+	0x6d, 0xe2, 0x49, 0xbb, 0x8a, 0xed, 0x35, 0xf6, 0xda, 0x91, 0x8b, 0x7a, 0xe1, 0x15, 0x78, 0x02,
+	0x5e, 0x87, 0x23, 0xdc, 0x90, 0x90, 0x38, 0x70, 0xe2, 0x29, 0xd0, 0xae, 0xed, 0x36, 0x24, 0x29,
+	0x9c, 0x22, 0xcd, 0xff, 0xff, 0x33, 0x93, 0x6f, 0xc7, 0xa0, 0x67, 0xcc, 0x43, 0x3e, 0xe0, 0x2c,
+	0xb4, 0x18, 0x0d, 0xac, 0xac, 0x2b, 0x7f, 0xcc, 0x28, 0xe6, 0x82, 0x93, 0xe6, 0x95, 0x66, 0xca,
+	0x62, 0xd6, 0xd5, 0xb7, 0xcf, 0x38, 0x3f, 0xf3, 0xd1, 0x52, 0x7a, 0x3f, 0x1d, 0x5a, 0x82, 0x05,
+	0x98, 0x08, 0x1a, 0x44, 0x45, 0x44, 0xdf, 0x9a, 0x36, 0x60, 0x10, 0x89, 0xbc, 0x14, 0xab, 0x34,
+	0x8d, 0x98, 0x35, 0x64, 0xe8, 0x7b, 0x6e, 0x1f, 0xcf, 0x69, 0xc6, 0x78, 0x5c, 0x1a, 0x36, 0x27,
+	0x0c, 0x31, 0x26, 0x3c, 0x8d, 0x07, 0x58, 0x4a, 0xf7, 0x27, 0x24, 0x1a, 0x86, 0x5c, 0x50, 0xc1,
+	0x78, 0x98, 0x94, 0xea, 0xbd, 0x09, 0x75, 0xe0, 0x33, 0x0c, 0x45, 0x21, 0x18, 0x9f, 0x35, 0xa8,
+	0xf7, 0x30, 0x27, 0x6b, 0xa0, 0x31, 0xaf, 0x55, 0x6b, 0xd7, 0x3a, 0x0d, 0x47, 0x63, 0x1e, 0xe9,
+	0x40, 0x33, 0x8a, 0x59, 0x46, 0x05, 0xba, 0x23, 0xcc, 0x5d, 0x8f, 0x0a, 0xda, 0xd2, 0xda, 0xb5,
+	0xce, 0x2d, 0x67, 0xad, 0xac, 0xf7, 0x30, 0x3f, 0xa4, 0x82, 0x92, 0xc7, 0xb0, 0x1e, 0xa5, 0x7d,
+	0x9f, 0x0d, 0xae, 0x8d, 0x75, 0x65, 0x5c, 0x2d, 0xca, 0x95, 0xef, 0x10, 0x9a, 0x19, 0xf5, 0x99,
+	0xe7, 0xd2, 0xa1, 0xc0, 0xd8, 0x95, 0x60, 0x5a, 0x0b, 0xed, 0x5a, 0x67, 0x65, 0x57, 0x37, 0x8b,
+	0xed, 0xcc, 0x0a, 0x8a, 0x79, 0x5a, 0x51, 0x73, 0xd6, 0x54, 0xc6, 0x96, 0x11, 0x59, 0x24, 0xaf,
+	0xe1, 0x76, 0xd1, 0xa5, 0x8f, 0x43, 0x1e, 0x63, 0xd1, 0x66, 0xf1, 0xbf, 0x6d, 0xd6, 0x55, 0xe8,
+	0x40, 0x65, 0x64, 0x75, 0x6f, 0xe7, 0xb7, 0xfd, 0x04, 0x36, 0xd5, 0xab, 0x5d, 0xbd, 0x61, 0x88,
+	0x62, 0xcc, 0xe3, 0x91, 0x25, 0x79, 0xc0, 0x08, 0xf3, 0xc4, 0xfa, 0x30, 0xc2, 0xfc, 0xd2, 0x38,
+	0x81, 0xf5, 0x63, 0x96, 0x88, 0x1e, 0xe6, 0x89, 0x83, 0xef, 0x53, 0x4c, 0x04, 0xd9, 0x82, 0x46,
+	0x44, 0xcf, 0xd0, 0x4d, 0xd8, 0x05, 0x2a, 0x6a, 0x8b, 0xce, 0xb2, 0x2c, 0xbc, 0x65, 0x17, 0x48,
+	0x1e, 0x00, 0x28, 0x51, 0xf0, 0x11, 0x86, 0x8a, 0x5a, 0xc3, 0x51, 0xf6, 0x53, 0x59, 0x30, 0xf6,
+	0xa1, 0x79, 0xdd, 0x2e, 0x89, 0x78, 0x98, 0x20, 0x79, 0x0a, 0x0b, 0x72, 0x60, 0xab, 0xd6, 0xae,
+	0x77, 0x56, 0x76, 0x37, 0xcc, 0xe9, 0xc3, 0x32, 0x7b, 0x98, 0x3b, 0xca, 0x62, 0x3c, 0x83, 0xd5,
+	0x37, 0x28, 0xd3, 0xd5, 0x2e, 0x3a, 0x2c, 0x49, 0xf2, 0xcc, 0x2b, 0x46, 0x1d, 0xd4, 0x7f, 0xda,
+	0x9a, 0xb3, 0x38, 0xc2, 0xfc, 0xc8, 0x33, 0x4c, 0x68, 0x1e, 0xa2, 0x8f, 0xea, 0xb5, 0x66, 0xfd,
+	0xb5, 0x69, 0xff, 0xee, 0x8f, 0x3a, 0xd4, 0x8f, 0xec, 0x13, 0x72, 0x0c, 0x8d, 0x97, 0x31, 0x16,
+	0xaf, 0x4c, 0xee, 0xce, 0x80, 0x7d, 0x25, 0x8f, 0x56, 0x9f, 0xbf, 0xa6, 0xd1, 0xfc, 0xf8, 0xed,
+	0xd7, 0x27, 0x0d, 0x8c, 0x65, 0xf9, 0xb1, 0xc8, 0x95, 0xc9, 0x00, 0x96, 0xab, 0x7f, 0x4c, 0x1e,
+	0xce, 0x86, 0xa6, 0xe0, 0xea, 0xc6, 0xbf, 0x2c, 0x05, 0xb0, 0x6a, 0x08, 0xb9, 0x1e, 0x32, 0x84,
+	0xa5, 0x82, 0x0b, 0xd9, 0x9e, 0xcd, 0xff, 0x45, 0xec, 0xa6, 0xc5, 0x1f, 0x7d, 0xb7, 0x4b, 0x32,
+	0xaa, 0xf9, 0x06, 0xb9, 0x53, 0x35, 0x57, 0x87, 0xe0, 0x32, 0x6f, 0x7f, 0xe7, 0x92, 0x04, 0xd0,
+	0xb8, 0x42, 0x4a, 0xe6, 0xac, 0x3a, 0xcd, 0x5b, 0xbf, 0x01, 0xdf, 0xcc, 0xb8, 0x9d, 0x79, 0xe3,
+	0xf4, 0xe3, 0x2f, 0xf6, 0xc6, 0xdc, 0x33, 0xfd, 0x6a, 0x77, 0xcf, 0x85, 0x88, 0x92, 0x3d, 0xcb,
+	0x1a, 0x8f, 0xc7, 0x73, 0xce, 0x98, 0xa6, 0xe2, 0xdc, 0x1a, 0xf8, 0x3c, 0xf5, 0x9e, 0x47, 0x3e,
+	0x15, 0x43, 0x1e, 0x07, 0x07, 0x0b, 0xef, 0xb4, 0xac, 0xdb, 0x5f, 0x52, 0x9b, 0xbc, 0xf8, 0x13,
+	0x00, 0x00, 0xff, 0xff, 0xb3, 0xd6, 0x24, 0x50, 0xdc, 0x04, 0x00, 0x00,
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -829,16 +348,6 @@ type IAMClient interface {
 	GetKey(ctx context.Context, in *GetKeyRequest, opts ...grpc.CallOption) (*Key, error)
 	// Deletes a [Key][cloud.api.iam.v1.Key] by key id..
 	DeleteKey(ctx context.Context, in *DeleteKeyRequest, opts ...grpc.CallOption) (*empty.Empty, error)
-	// Creates a [RoleBinding][cloud.api.iam.v1.RoleBinding].
-	CreateRoleBinding(ctx context.Context, in *RoleBinding, opts ...grpc.CallOption) (*empty.Empty, error)
-	// Deletes a [RoleBinding][cloud.api.iam.v1.RoleBinding].
-	DeleteRoleBinding(ctx context.Context, in *RoleBinding, opts ...grpc.CallOption) (*empty.Empty, error)
-	// Lists [RoleBindings][cloud.api.iam.v1.RoleBinding].
-	ListRoleBindings(ctx context.Context, in *ListRoleBindingsRequest, opts ...grpc.CallOption) (*ListRoleBindingsResponse, error)
-	// Lists [Roles][cloud.api.iam.v1.Roles].
-	ListRoles(ctx context.Context, in *ListRolesRequest, opts ...grpc.CallOption) (*ListRolesResponse, error)
-	// Gets a [Role][cloud.api.iam.v1.Role].
-	GetRole(ctx context.Context, in *GetRoleRequest, opts ...grpc.CallOption) (*Role, error)
 }
 
 type iAMClient struct {
@@ -885,51 +394,6 @@ func (c *iAMClient) DeleteKey(ctx context.Context, in *DeleteKeyRequest, opts ..
 	return out, nil
 }
 
-func (c *iAMClient) CreateRoleBinding(ctx context.Context, in *RoleBinding, opts ...grpc.CallOption) (*empty.Empty, error) {
-	out := new(empty.Empty)
-	err := c.cc.Invoke(ctx, "/videocoin.iam.v1.IAM/CreateRoleBinding", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *iAMClient) DeleteRoleBinding(ctx context.Context, in *RoleBinding, opts ...grpc.CallOption) (*empty.Empty, error) {
-	out := new(empty.Empty)
-	err := c.cc.Invoke(ctx, "/videocoin.iam.v1.IAM/DeleteRoleBinding", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *iAMClient) ListRoleBindings(ctx context.Context, in *ListRoleBindingsRequest, opts ...grpc.CallOption) (*ListRoleBindingsResponse, error) {
-	out := new(ListRoleBindingsResponse)
-	err := c.cc.Invoke(ctx, "/videocoin.iam.v1.IAM/ListRoleBindings", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *iAMClient) ListRoles(ctx context.Context, in *ListRolesRequest, opts ...grpc.CallOption) (*ListRolesResponse, error) {
-	out := new(ListRolesResponse)
-	err := c.cc.Invoke(ctx, "/videocoin.iam.v1.IAM/ListRoles", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *iAMClient) GetRole(ctx context.Context, in *GetRoleRequest, opts ...grpc.CallOption) (*Role, error) {
-	out := new(Role)
-	err := c.cc.Invoke(ctx, "/videocoin.iam.v1.IAM/GetRole", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 // IAMServer is the server API for IAM service.
 type IAMServer interface {
 	// Creates a [Key][cloud.api.iam.v1.Key] and returns it.
@@ -940,16 +404,6 @@ type IAMServer interface {
 	GetKey(context.Context, *GetKeyRequest) (*Key, error)
 	// Deletes a [Key][cloud.api.iam.v1.Key] by key id..
 	DeleteKey(context.Context, *DeleteKeyRequest) (*empty.Empty, error)
-	// Creates a [RoleBinding][cloud.api.iam.v1.RoleBinding].
-	CreateRoleBinding(context.Context, *RoleBinding) (*empty.Empty, error)
-	// Deletes a [RoleBinding][cloud.api.iam.v1.RoleBinding].
-	DeleteRoleBinding(context.Context, *RoleBinding) (*empty.Empty, error)
-	// Lists [RoleBindings][cloud.api.iam.v1.RoleBinding].
-	ListRoleBindings(context.Context, *ListRoleBindingsRequest) (*ListRoleBindingsResponse, error)
-	// Lists [Roles][cloud.api.iam.v1.Roles].
-	ListRoles(context.Context, *ListRolesRequest) (*ListRolesResponse, error)
-	// Gets a [Role][cloud.api.iam.v1.Role].
-	GetRole(context.Context, *GetRoleRequest) (*Role, error)
 }
 
 // UnimplementedIAMServer can be embedded to have forward compatible implementations.
@@ -967,21 +421,6 @@ func (*UnimplementedIAMServer) GetKey(ctx context.Context, req *GetKeyRequest) (
 }
 func (*UnimplementedIAMServer) DeleteKey(ctx context.Context, req *DeleteKeyRequest) (*empty.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteKey not implemented")
-}
-func (*UnimplementedIAMServer) CreateRoleBinding(ctx context.Context, req *RoleBinding) (*empty.Empty, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method CreateRoleBinding not implemented")
-}
-func (*UnimplementedIAMServer) DeleteRoleBinding(ctx context.Context, req *RoleBinding) (*empty.Empty, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method DeleteRoleBinding not implemented")
-}
-func (*UnimplementedIAMServer) ListRoleBindings(ctx context.Context, req *ListRoleBindingsRequest) (*ListRoleBindingsResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method ListRoleBindings not implemented")
-}
-func (*UnimplementedIAMServer) ListRoles(ctx context.Context, req *ListRolesRequest) (*ListRolesResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method ListRoles not implemented")
-}
-func (*UnimplementedIAMServer) GetRole(ctx context.Context, req *GetRoleRequest) (*Role, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetRole not implemented")
 }
 
 func RegisterIAMServer(s *grpc.Server, srv IAMServer) {
@@ -1060,96 +499,6 @@ func _IAM_DeleteKey_Handler(srv interface{}, ctx context.Context, dec func(inter
 	return interceptor(ctx, in, info, handler)
 }
 
-func _IAM_CreateRoleBinding_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(RoleBinding)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(IAMServer).CreateRoleBinding(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/videocoin.iam.v1.IAM/CreateRoleBinding",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(IAMServer).CreateRoleBinding(ctx, req.(*RoleBinding))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _IAM_DeleteRoleBinding_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(RoleBinding)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(IAMServer).DeleteRoleBinding(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/videocoin.iam.v1.IAM/DeleteRoleBinding",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(IAMServer).DeleteRoleBinding(ctx, req.(*RoleBinding))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _IAM_ListRoleBindings_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ListRoleBindingsRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(IAMServer).ListRoleBindings(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/videocoin.iam.v1.IAM/ListRoleBindings",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(IAMServer).ListRoleBindings(ctx, req.(*ListRoleBindingsRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _IAM_ListRoles_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ListRolesRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(IAMServer).ListRoles(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/videocoin.iam.v1.IAM/ListRoles",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(IAMServer).ListRoles(ctx, req.(*ListRolesRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _IAM_GetRole_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetRoleRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(IAMServer).GetRole(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/videocoin.iam.v1.IAM/GetRole",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(IAMServer).GetRole(ctx, req.(*GetRoleRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 var _IAM_serviceDesc = grpc.ServiceDesc{
 	ServiceName: "videocoin.iam.v1.IAM",
 	HandlerType: (*IAMServer)(nil),
@@ -1169,26 +518,6 @@ var _IAM_serviceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "DeleteKey",
 			Handler:    _IAM_DeleteKey_Handler,
-		},
-		{
-			MethodName: "CreateRoleBinding",
-			Handler:    _IAM_CreateRoleBinding_Handler,
-		},
-		{
-			MethodName: "DeleteRoleBinding",
-			Handler:    _IAM_DeleteRoleBinding_Handler,
-		},
-		{
-			MethodName: "ListRoleBindings",
-			Handler:    _IAM_ListRoleBindings_Handler,
-		},
-		{
-			MethodName: "ListRoles",
-			Handler:    _IAM_ListRoles_Handler,
-		},
-		{
-			MethodName: "GetRole",
-			Handler:    _IAM_GetRole_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

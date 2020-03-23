@@ -44,3 +44,42 @@ func (db *database) ListUserKeys(userID string) ([]*UserKey, error) {
 func (db *database) DeleteUserKey(userID string, keyID string) error {
 	return db.Delete(&UserKey{}, "user_id = ? AND key_id = ?", userID, keyID).Error
 }
+
+// GetRole gets a role.
+func (db *database) GetRole(name string) (*Role, error) {
+	role := &Role{}
+	if err := db.Find(role, "name = ?", name).Error; err != nil {
+		return nil, err
+	}
+	return role, nil
+}
+
+func (db *database) GetMethodPermission(fullMethod string) (string, error) {
+	//var perm *Permissions
+	//db.Model(&user).Related(&perm, "CreditCard")
+	return "", nil
+}
+
+/*
+func (db *database) ListRoleBindings(role string) ([]*RoleBinding, error) {
+	// TODO
+	return nil, nil
+}
+
+func (db *database) CreateRoleBinding() (*RoleBinding, error) {
+	// TODO
+	return nil, nil
+}
+
+func (db *database) DeleteRoleBinding() error {
+	// TODO
+	return nil
+}
+*/
+
+/*
+func (db *database) ListRoles() ([]*Role, error) {
+	// TODO
+	return nil, nil
+}
+*/

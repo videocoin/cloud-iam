@@ -14,28 +14,26 @@ import (
 	"google.golang.org/grpc/status"
 )
 
-// Server implements the IAMServer interface.
-type Server struct {
+type server struct {
 	ds         datastore.DataStore
 	passphrase string
 }
 
 // NewServer creates an IAM server.
-func NewServer(ds datastore.DataStore, passphrase string) *Server {
-	return &Server{
-		ds:         ds,
-		passphrase: passphrase,
+func NewServer(ds datastore.DataStore) *server {
+	return &server{
+		ds: ds,
 	}
 }
 
 // CreateKey creates a key for an authenticated user.
-func (srv *Server) CreateKey(ctx context.Context, empty *empty.Empty) (*iam.Key, error) {
+func (s *server) CreateKey(ctx context.Context, empty *empty.Empty) (*iam.Key, error) {
 	sub, err := subjectFromCtx(ctx)
 	if err != nil {
 		return nil, status.Error(codes.FailedPrecondition, "invalid auth info")
 	}
 
-	key, err := srv.createUserKey(sub)
+	key, err := s.createUserKey(sub)
 	if err != nil {
 		log.Errorln(err)
 		return nil, status.Error(codes.Internal, err.Error())
@@ -44,32 +42,33 @@ func (srv *Server) CreateKey(ctx context.Context, empty *empty.Empty) (*iam.Key,
 	return key, nil
 }
 
-func (srv *Server) createUserKey(userID string) (*iam.Key, error) {
-	key, err := generateKey(rand.Reader, srv.passphrase, userID)
+func (s *server) createUserKey(userID string) (*iam.Key, error) {
+	priv, userKey, err := generateKey(rand.Reader, userID)
 	if err != nil {
 		return nil, err
 	}
 
-	if err := srv.ds.CreateUserKey(key); err != nil {
+	if err := s.ds.CreateUserKey(userKey); err != nil {
 		return nil, err
 	}
 
-	keyPB, err := key.CreationProto(srv.passphrase)
+	keyPB, err := userKey.Proto()
 	if err != nil {
 		return nil, err
 	}
+	keyPB.PrivateKeyData = priv
 
 	return keyPB, nil
 }
 
 // GetKey gets a key for an authenticated user.
-func (srv *Server) GetKey(ctx context.Context, req *iam.GetKeyRequest) (*iam.Key, error) {
+func (s *server) GetKey(ctx context.Context, req *iam.GetKeyRequest) (*iam.Key, error) {
 	sub, err := subjectFromCtx(ctx)
 	if err != nil {
 		return nil, status.Error(codes.FailedPrecondition, "invalid auth info")
 	}
 
-	key, err := srv.getUserKey(sub, req.KeyId)
+	key, err := s.getUserKey(sub, req.KeyId)
 	if err != nil {
 		if gorm.IsRecordNotFoundError(err) {
 			log.Debugln(err)
@@ -82,8 +81,8 @@ func (srv *Server) GetKey(ctx context.Context, req *iam.GetKeyRequest) (*iam.Key
 	return key, nil
 }
 
-func (srv *Server) getUserKey(userID string, keyID string) (*iam.Key, error) {
-	key, err := srv.ds.GetUserKey(userID, keyID)
+func (s *server) getUserKey(userID string, keyID string) (*iam.Key, error) {
+	key, err := s.ds.GetUserKey(userID, keyID)
 	if err != nil {
 		return nil, err
 	}
@@ -97,13 +96,13 @@ func (srv *Server) getUserKey(userID string, keyID string) (*iam.Key, error) {
 }
 
 // ListKeys lists keys for an authenticated user.
-func (srv *Server) ListKeys(ctx context.Context, req *iam.ListKeysRequest) (*iam.ListKeysResponse, error) {
+func (s *server) ListKeys(ctx context.Context, req *iam.ListKeysRequest) (*iam.ListKeysResponse, error) {
 	sub, err := subjectFromCtx(ctx)
 	if err != nil {
 		return nil, status.Error(codes.FailedPrecondition, "invalid auth info")
 	}
 
-	keys, err := srv.listUserKeys(sub)
+	keys, err := s.listUserKeys(sub)
 	if err != nil {
 		log.Errorln(err)
 		return nil, status.Error(codes.Internal, err.Error())
@@ -112,8 +111,8 @@ func (srv *Server) ListKeys(ctx context.Context, req *iam.ListKeysRequest) (*iam
 	return &iam.ListKeysResponse{Keys: keys}, nil
 }
 
-func (srv *Server) listUserKeys(userID string) ([]*iam.Key, error) {
-	keys, err := srv.ds.ListUserKeys(userID)
+func (s *server) listUserKeys(userID string) ([]*iam.Key, error) {
+	keys, err := s.ds.ListUserKeys(userID)
 	if err != nil {
 		return nil, err
 	}
@@ -131,13 +130,13 @@ func (srv *Server) listUserKeys(userID string) ([]*iam.Key, error) {
 }
 
 // DeleteKey deletes an user key.
-func (srv *Server) DeleteKey(ctx context.Context, req *iam.DeleteKeyRequest) (*empty.Empty, error) {
+func (s *server) DeleteKey(ctx context.Context, req *iam.DeleteKeyRequest) (*empty.Empty, error) {
 	sub, err := subjectFromCtx(ctx)
 	if err != nil {
 		return nil, status.Error(codes.FailedPrecondition, "invalid auth info")
 	}
 
-	if err := srv.deleteUserKey(sub, req.KeyId); err != nil {
+	if err := s.deleteUserKey(sub, req.KeyId); err != nil {
 		log.Errorln(err)
 		return nil, status.Error(codes.Internal, err.Error())
 	}
@@ -145,42 +144,6 @@ func (srv *Server) DeleteKey(ctx context.Context, req *iam.DeleteKeyRequest) (*e
 	return new(empty.Empty), nil
 }
 
-func (srv *Server) deleteUserKey(userID string, keyID string) error {
-	return srv.ds.DeleteUserKey(userID, keyID)
-}
-
-// ListRoleBindings lists role bindings.
-func (srv *Server) ListRoleBindings(context.Context, *iam.ListRoleBindingsRequest) (*iam.ListRoleBindingsResponse, error) {
-	// TODO
-	return nil, nil
-}
-
-// CreateRoleBinding binds a role to an user.
-func (srv *Server) CreateRoleBinding(ctx context.Context, req *iam.RoleBinding) (*empty.Empty, error) {
-	// TODO
-	return nil, nil
-}
-
-// DeleteRoleBinding deletes a role binding.
-func (srv *Server) DeleteRoleBinding(ctx context.Context, req *iam.RoleBinding) (*empty.Empty, error) {
-	// TODO
-	return nil, nil
-}
-
-// GetRole gets a predefined role.
-func (srv *Server) GetRole(ctx context.Context, req *iam.GetRoleRequest) (*iam.Role, error) {
-	// TODO
-	return nil, nil
-}
-
-// ListRoles lists the predefined roles.
-func (srv *Server) ListRoles(ctx context.Context, req *iam.ListRolesRequest) (*iam.ListRolesResponse, error) {
-	// TODO
-	return nil, nil
-}
-
-// ListUserRoles lists the user roles.
-func (srv *Server) ListUserRoles(ctx context.Context, req *iam.ListRolesRequest) (*iam.ListRolesResponse, error) {
-	// TODO
-	return nil, nil
+func (s *server) deleteUserKey(userID string, keyID string) error {
+	return s.ds.DeleteUserKey(userID, keyID)
 }

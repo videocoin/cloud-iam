@@ -38,3 +38,9 @@ e2e-nobuild:
 .PHONY: e2e-stop
 e2e-stop:
 	cd test/e2e && docker-compose down --volumes
+
+
+.phony: proto
+proto:
+	protoc -I . -I ${GOPATH}/src/github.com/googleapis/api-common-protos --go_out=plugins=grpc:. api/admin/v1/rbac.proto
+	

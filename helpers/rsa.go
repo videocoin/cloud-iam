@@ -7,20 +7,12 @@ import (
 	"io"
 )
 
-// PrivKeyToBytesWithPassphrasePEM returns the PEM encoding of the given
-// DER-encoded private key encrypted with the specified passphrase.
-func PrivKeyToBytesWithPassphrasePEM(random io.Reader, priv *rsa.PrivateKey, passphrase string) ([]byte, error) {
+// PrivKeyToBytesPEM returns the PEM encoding of the given
+// DER-encoded private key.
+func PrivKeyToBytesPEM(random io.Reader, priv *rsa.PrivateKey) ([]byte, error) {
 	block := &pem.Block{
 		Type:  "PRIVATE KEY",
 		Bytes: x509.MarshalPKCS1PrivateKey(priv),
-	}
-
-	if passphrase != "" {
-		var err error
-		block, err = x509.EncryptPEMBlock(random, block.Type, block.Bytes, []byte(passphrase), x509.PEMCipherAES256)
-		if err != nil {
-			return nil, err
-		}
 	}
 
 	return pem.EncodeToMemory(block), nil

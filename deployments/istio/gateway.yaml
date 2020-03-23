@@ -50,6 +50,14 @@ spec:
               number: 8080
     - match:
         - uri:
+            prefix: /v1/roles
+      route:
+        - destination:
+            host: metadata
+            port:
+              number: 8080
+    - match:
+        - uri:
             prefix: /
       route:
         - destination:

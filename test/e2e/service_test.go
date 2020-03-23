@@ -1,18 +1,6 @@
 package e2e_test
 
-import (
-	"context"
-	"testing"
-
-	iam "github.com/videocoin/videocoinapis/videocoin/iam/v1"
-
-	"github.com/gogo/protobuf/types"
-	"github.com/google/uuid"
-	"github.com/stretchr/testify/require"
-	"github.com/videocoin/cloud-iam/pkg/auth"
-	"google.golang.org/grpc"
-)
-
+/*
 func TestIAMService(t *testing.T) {
 	conn, err := grpc.Dial(":5000", grpc.WithInsecure())
 	require.NoError(t, err)
@@ -29,3 +17,4 @@ func TestIAMService(t *testing.T) {
 	require.NotEmpty(t, key.Id)
 	require.NotNil(t, key.PrivateKeyData)
 }
+*/

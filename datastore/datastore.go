@@ -14,6 +14,11 @@ type DataStore interface {
 	ListUserKeys(userID string) ([]*UserKey, error)
 	DeleteUserKey(userID string, keyID string) error
 
+	GetRole(name string) (*Role, error)
+	//ListRoles() ([]*Role, error)
+
+	GetMethodPermission(fullMethod string) (string, error)
+
 	io.Closer
 }
 

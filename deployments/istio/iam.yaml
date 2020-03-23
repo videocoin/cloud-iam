@@ -9,7 +9,6 @@ metadata:
 type: Opaque
 data:
   dbUri: "dGVzdDoxMjM0NTY3ODlAdGNwKDEwLjIzNS4wLjMpL3Rlc3Q=" #test:123456789@tcp(10.235.0.3)/test
-  encryptionPassphrase: "dGVzdA==" #test
   authTokenSecret: "dGVzdA==" #test
 
 ---
@@ -40,7 +39,7 @@ spec:
         - name: regcred
       containers:
         - name: iam
-          image: registry.dev.videocoin.net/iam/iam:v0.1.0-dev.16
+          image: registry.dev.videocoin.net/iam/iam:v0.1.0-dev.17
           imagePullPolicy: IfNotPresent
           ports:
             - name: grpc
@@ -59,11 +58,6 @@ spec:
                 secretKeyRef:
                   name: iam
                   key: dbUri
-            - name: IAM_ENCRYPTIONPASSPHRASE
-              valueFrom:
-                secretKeyRef:
-                  name: iam
-                  key: encryptionPassphrase
             - name: IAM_AUTHTOKENSECRET
               valueFrom:
                 secretKeyRef:
@@ -118,3 +112,44 @@ spec:
         portNumber: 5000
   workloadLabels:
     app: iam
+
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: iam-db-migrate
+  namespace: iam
+  labels:
+    app: iam
+  #annotations:
+  #  "helm.sh/hook": post-install,pre-upgrade
+  #  "helm.sh/hook-weight": "1"
+  #  "helm.sh/hook-delete-policy": hook-succeeded
+spec:
+  template:
+    metadata:
+      name: db-migrate
+      labels:
+        app: iam
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: db-migrator
+          image: registry.dev.videocoin.net/iam/iam:v0.1.0-dev.17
+          command:
+            - "migrate"
+            - "-path"
+            - "/migrations"
+            - "-database"
+            - "$(DBURI)"
+            - "up"
+          env:
+            - name: DBURI
+              valueFrom:
+                secretKeyRef:
+                  name: iam
+                  key: dbUri
+      volumes:
+        - name: secrets
+          secret:
+            secretName: iam

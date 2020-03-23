@@ -20,26 +20,25 @@ const (
 )
 
 // generateKey generates an internal user key.
-func generateKey(rand io.Reader, passphrase string, userID string) (*datastore.UserKey, error) {
+func generateKey(rand io.Reader, userID string) ([]byte, *datastore.UserKey, error) {
 	key, err := rsa.GenerateKey(rand, bitsRSA)
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 
-	keyBytes, err := helpers.PrivKeyToBytesWithPassphrasePEM(rand, key, passphrase)
+	privBytes, err := helpers.PrivKeyToBytesPEM(rand, key)
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 
 	pubBytes, err := helpers.PubKeyToBytesPEM(&key.PublicKey)
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 
-	return &datastore.UserKey{
+	return privBytes, &datastore.UserKey{
 		ID:              guuid.New().String(),
 		UserID:          userID,
-		PrivateKeyData:  keyBytes,
 		PublicKeyData:   pubBytes,
 		ValidAfterTime:  time.Now(),
 		ValidBeforeTime: time.Now().AddDate(keyValidityPeriodYears, 0, 0),

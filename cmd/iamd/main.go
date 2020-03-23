@@ -36,11 +36,10 @@ var (
 
 // Config is the global config.
 type Config struct {
-	LogLevel             string `default:"info"`
-	RPCAddr              string `default:"0.0.0.0:5000"`
-	DBURI                string `default:"root:@tcp(127.0.0.1:3306)/videocoin?charset=utf8&parseTime=True&loc=Local"`
-	AuthTokenSecret      string `required:"true"`
-	EncryptionPassphrase string `required:"true"`
+	LogLevel        string `default:"info"`
+	RPCAddr         string `default:"0.0.0.0:5000"`
+	DBURI           string `default:"root:@tcp(127.0.0.1:3306)/videocoin?charset=utf8&parseTime=True&loc=Local"`
+	AuthTokenSecret string `required:"true"`
 }
 
 func main() {
@@ -83,7 +82,7 @@ func run() error {
 		defer ds.Close()
 
 		grpcSrv = grpc.NewServer(grpcutil.DefaultServerOptsWithAuthNZ(entry, auth.JWTAuthNZ("", "", cfg.AuthTokenSecret))...)
-		iam.RegisterIAMServer(grpcSrv, service.NewServer(ds, cfg.EncryptionPassphrase))
+		iam.RegisterIAMServer(grpcSrv, service.NewServer(ds))
 		healthpb.RegisterHealthServer(grpcSrv, healthSrv)
 
 		healthSrv.SetServingStatus(fmt.Sprintf("grpc.health.v1.%s", ServiceName), healthpb.HealthCheckResponse_SERVING)
