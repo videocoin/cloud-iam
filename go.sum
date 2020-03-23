@@ -156,6 +156,8 @@ github.com/modern-go/reflect2 v1.0.1/go.mod h1:bx2lNnkwVCuqBIxFjflWJWanXIb3Rllmb
 github.com/mwitkow/go-conntrack v0.0.0-20161129095857-cc309e4a2223/go.mod h1:qRWi+5nqEBWmkhHvq77mSJWrCKwh8bxhgT7d/eI7P4U=
 github.com/opentracing/opentracing-go v1.1.0 h1:pWlfV3Bxv7k65HYwkikxat0+s3pV4bsqf19k25Ur8rU=
 github.com/opentracing/opentracing-go v1.1.0/go.mod h1:UkNAQd3GIcIGf0SeVgPpRdFStlNbqXla1AfSYxPUl2o=
+github.com/patrickmn/go-cache v2.1.0+incompatible h1:HRMgzkcYKYpi3C8ajMPV8OFXaaRUnok+kx1WdO15EQc=
+github.com/patrickmn/go-cache v2.1.0+incompatible/go.mod h1:3Qf8kWWT7OJRJbdiICTKqZju1ZixQ/KpMGzzAfe6+WQ=
 github.com/pkg/errors v0.8.0/go.mod h1:bwawxfHBFNV+L2hUp1rHADufV3IMtnDRdf1r5NINEl0=
 github.com/pkg/errors v0.8.1 h1:iURUrRGxPUNPdy5/HRSm+Yj6okJ6UtLINN0Q9M4+h3I=
 github.com/pkg/errors v0.8.1/go.mod h1:bwawxfHBFNV+L2hUp1rHADufV3IMtnDRdf1r5NINEl0=
@@ -190,8 +192,13 @@ github.com/stretchr/testify v1.2.2/go.mod h1:a8OnRcib4nhh0OaRAV+Yts87kKdq0PP7pXf
 github.com/stretchr/testify v1.3.0/go.mod h1:M5WIy9Dh21IEIfnGCwXGc5bZfKNJtfHm1UVUgZn+9EI=
 github.com/stretchr/testify v1.4.0 h1:2E4SXV/wtOkTonXsotYi4li6zVWxYlZuYNCXe9XRJyk=
 github.com/stretchr/testify v1.4.0/go.mod h1:j7eGeouHqKxXV5pUuKE4zz7dFj8WfuZ+81PSLYec5m4=
+github.com/videocoin/common v0.0.0-20200318003105-ae465d220aa0 h1:wj9r/hb+50xdL1eqVDM17hWNK6FyC4Ct/XePWfQYC3U=
 github.com/videocoin/common v0.0.0-20200323153054-72cf9d4783e0 h1:0wgYq+Bh3DtlGH8l1T+pQ/6IiDVU84WDhZRH1UdTv/s=
 github.com/videocoin/common v0.0.0-20200323153054-72cf9d4783e0/go.mod h1:OBS0eAv9XxFs8auiNYqqcCg4MD+V0IDI0GKzq9UUEqE=
+github.com/videocoin/common v0.0.0-20200323183302-815e054e9963 h1:5NQXux77LAFAMV+9oZ9+RInqi07Np5nohVZi3SWd38Q=
+github.com/videocoin/common v0.0.0-20200323183302-815e054e9963/go.mod h1:LAmhKvEvPY8Yx6t6QmiZZc/rlOY9yEzUW9efy+whIFM=
+github.com/videocoin/common v0.0.0-20200323183951-2852146ce790 h1:fHC2Wtw/KeZejYiKYKUOFXplYe4/eQu/e6HU0wD2ggc=
+github.com/videocoin/common v0.0.0-20200323183951-2852146ce790/go.mod h1:LAmhKvEvPY8Yx6t6QmiZZc/rlOY9yEzUW9efy+whIFM=
 github.com/videocoin/videocoinapis v0.0.0-20200322182759-1b6a46f5db00 h1:/KCD/OI9exIVzwAzVOTMJFgTicVQoWj0QKUwdtS2cOw=
 github.com/videocoin/videocoinapis v0.0.0-20200322182759-1b6a46f5db00/go.mod h1:CBucjp4FIWr8ZGTrYHT5UeeozaKEgo2vIYJHZHVmiSg=
 github.com/yuin/goldmark v1.1.25/go.mod h1:3hX8gzYuyVAZsxl0MRgGTJEmQBFcNTphYh9decYSb74=

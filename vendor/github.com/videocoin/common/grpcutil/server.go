@@ -45,7 +45,7 @@ func DefaultServerOpts(logger *logrus.Entry) []grpc.ServerOption {
 }
 
 // DefaultServerOptsWithAuthNZ ...
-func DefaultServerOptsWithAuthNZ(logger *logrus.Entry, authFn auth.AuthFunc) []grpc.ServerOption {
+func DefaultServerOptsWithAuthNZ(logger *logrus.Entry, authFn auth.AuthNZFunc) []grpc.ServerOption {
 	tracerOpts := grpctracing.WithTracer(opentracing.GlobalTracer())
 	logrusOpts := []grpclogrus.Option{
 		grpclogrus.WithDecider(func(methodFullName string, err error) bool {

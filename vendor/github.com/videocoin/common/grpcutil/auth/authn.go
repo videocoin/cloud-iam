@@ -40,6 +40,10 @@ func ServiceAccountAuthN(audience string, pubKeyURLTemplate string) Authenticato
 				return nil, err
 			}
 
+			if _, err := uuid.Parse(claims.Subject); err != nil {
+				return nil, fmt.Errorf("Invalid subject: %s", claims.Subject)
+			}
+
 			if url.Hostname() != audience {
 				return nil, fmt.Errorf("Unexpected audience: %s", claims.Audience)
 			}
@@ -86,6 +90,10 @@ func HMACAuthN(secret string) AuthenticatorFunc {
 		_, err = jwt.ParseWithClaims(tokenStr, claims, func(token *jwt.Token) (interface{}, error) {
 			if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 				return nil, fmt.Errorf("Unexpected signing method: %v", token.Header["alg"])
+			}
+
+			if _, err := uuid.Parse(claims.Subject); err != nil {
+				return nil, fmt.Errorf("Invalid subject: %s", claims.Subject)
 			}
 
 			return []byte(secret), nil

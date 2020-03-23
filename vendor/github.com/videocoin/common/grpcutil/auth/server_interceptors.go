@@ -11,19 +11,6 @@ import (
 	"google.golang.org/grpc"
 )
 
-// AuthFunc is the pluggable function that performs authentication.
-//
-// The passed in `Context` will contain the gRPC metadata.MD object (for header-based authentication) and
-// the peer.Peer information that can contain transport-based credentials (e.g. `credentials.AuthInfo`).
-//
-// The returned context will be propagated to handlers, allowing user changes to `Context`. However,
-// please make sure that the `Context` returned is a child `Context` of the one passed in.
-//
-// If error is returned, its `grpc.Code()` will be returned to the user as well as the verbatim message.
-// Please make sure you use `codes.Unauthenticated` (lacking auth) and `codes.PermissionDenied`
-// (authed, but lacking perms) appropriately.
-type AuthFunc func(ctx context.Context) (context.Context, error)
-
 // ServiceAuthFuncOverride allows a given gRPC service implementation to override the global `AuthFunc`.
 //
 // If a service implements the AuthFuncOverride method, it takes precedence over the `AuthFunc` method,
@@ -33,7 +20,7 @@ type ServiceAuthFuncOverride interface {
 }
 
 // UnaryServerInterceptor returns a new unary server interceptors that performs per-request auth.
-func UnaryServerInterceptor(authFunc AuthFunc, opts ...Option) grpc.UnaryServerInterceptor {
+func UnaryServerInterceptor(authNZFunc AuthNZFunc, opts ...Option) grpc.UnaryServerInterceptor {
 	o := evaluateServerOpt(opts)
 	return func(ctx context.Context, req interface{}, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (interface{}, error) {
 		var newCtx context.Context
@@ -42,7 +29,7 @@ func UnaryServerInterceptor(authFunc AuthFunc, opts ...Option) grpc.UnaryServerI
 			if overrideSrv, ok := info.Server.(ServiceAuthFuncOverride); ok {
 				newCtx, err = overrideSrv.AuthFuncOverride(ctx, info.FullMethod)
 			} else {
-				newCtx, err = authFunc(ctx)
+				newCtx, err = authNZFunc(ctx, info.FullMethod)
 			}
 			if err != nil {
 				return nil, err
@@ -56,7 +43,7 @@ func UnaryServerInterceptor(authFunc AuthFunc, opts ...Option) grpc.UnaryServerI
 }
 
 // StreamServerInterceptor returns a new unary server interceptors that performs per-request auth.
-func StreamServerInterceptor(authFunc AuthFunc, opts ...Option) grpc.StreamServerInterceptor {
+func StreamServerInterceptor(authNZFunc AuthNZFunc, opts ...Option) grpc.StreamServerInterceptor {
 	o := evaluateServerOpt(opts)
 	return func(srv interface{}, stream grpc.ServerStream, info *grpc.StreamServerInfo, handler grpc.StreamHandler) error {
 		var newCtx context.Context
@@ -66,7 +53,7 @@ func StreamServerInterceptor(authFunc AuthFunc, opts ...Option) grpc.StreamServe
 			if overrideSrv, ok := srv.(ServiceAuthFuncOverride); ok {
 				newCtx, err = overrideSrv.AuthFuncOverride(stream.Context(), info.FullMethod)
 			} else {
-				newCtx, err = authFunc(stream.Context())
+				newCtx, err = authNZFunc(stream.Context(), info.FullMethod)
 			}
 			if err != nil {
 				return err

@@ -11,11 +11,9 @@ require (
 	github.com/jinzhu/gorm v1.9.12
 	github.com/julienschmidt/httprouter v1.2.0
 	github.com/kelseyhightower/envconfig v1.4.0
-	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
-	github.com/modern-go/reflect2 v1.0.1 // indirect
 	github.com/prometheus/client_golang v1.5.1
 	github.com/sirupsen/logrus v1.4.2
-	github.com/videocoin/common v0.0.0-20200323153054-72cf9d4783e0
+	github.com/videocoin/common v0.0.0-20200323183951-2852146ce790
 	github.com/videocoin/videocoinapis v0.0.0-20200322182759-1b6a46f5db00
 	golang.org/x/sync v0.0.0-20200317015054-43a5402ce75a
 	google.golang.org/genproto v0.0.0-20200317114155-1f3552e48f24
