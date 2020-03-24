@@ -2,10 +2,10 @@
 apiVersion: v1
 kind: Secret
 metadata:
-  name: mgr
+  name: admin
   namespace: iam
   labels:
-    app: mgr
+    app: admin
 type: Opaque
 data:
   dbUri: "dGVzdDoxMjM0NTY3ODlAdGNwKDEwLjIzNS4wLjMpL3Rlc3Q/Y2hhcnNldD11dGY4JnBhcnNlVGltZT1UcnVl" #test:123456789@tcp(10.235.0.3)/test?charset=utf8&parseTime=True
@@ -14,28 +14,28 @@ data:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: mgr
+  name: admin
   namespace: iam
   labels:
-    app: mgr
+    app: admin
     version: v1
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: mgr
+      app: admin
       version: v1
   template:
     metadata:
       labels:
-        app: mgr
+        app: admin
         version: v1
     spec:
       imagePullSecrets:
         - name: regcred
       containers:
-        - name: mgr
-          image: registry.dev.videocoin.net/iam/mgr:v0.1.0-dev.18
+        - name: admin
+          image: registry.dev.videocoin.net/iam/admin:v0.1.0-dev.18
           imagePullPolicy: IfNotPresent
           ports:
             - name: grpc
@@ -49,27 +49,27 @@ spec:
               command: ["grpc_health_probe", "-addr=:5000"]
             initialDelaySeconds: 10
           env:
-            - name: MGR_DBURI
+            - name: admin_DBURI
               valueFrom:
                 secretKeyRef:
-                  name: mgr
+                  name: admin
                   key: dbUri
       volumes:
         - name: secrets
           secret:
-            secretName: mgr
+            secretName: admin
 
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: mgr
+  name: admin
   namespace: iam
   labels:
-    app: mgr
+    app: admin
 spec:
   ports:
     - name: grpc
       port: 5000
   selector:
-    app: mgr
+    app: admin

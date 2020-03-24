@@ -26,7 +26,7 @@ import (
 
 var (
 	// ServiceName is the service name.
-	ServiceName = "mgr"
+	ServiceName = "admin"
 
 	// Version is the application version.
 	Version = "dev"

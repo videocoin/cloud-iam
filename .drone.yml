@@ -10,7 +10,7 @@ steps:
     commands:
       - sleep 20
       - docker build -t "registry.dev.videocoin.net/iam/iam:${DRONE_TAG}" -f docker/Dockerfile.iamd .
-      - docker build -t "registry.dev.videocoin.net/iam/mgr:${DRONE_TAG}" -f docker/Dockerfile.mgr .
+      - docker build -t "registry.dev.videocoin.net/iam/admin:${DRONE_TAG}" -f docker/Dockerfile.admind .
   - name: push
     image: docker:dind
     environment:
@@ -24,7 +24,7 @@ steps:
     commands:
       - docker login -u $${USERNAME} -p $${PASSWORD} registry.dev.videocoin.net
       - docker push "registry.dev.videocoin.net/iam/iam:${DRONE_TAG}"
-      - docker push "registry.dev.videocoin.net/iam/mgr:${DRONE_TAG}"
+      - docker push "registry.dev.videocoin.net/iam/admin:${DRONE_TAG}"
 
 volumes:
   - name: dockersock

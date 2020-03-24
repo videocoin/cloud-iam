@@ -15,9 +15,9 @@ all: build
 iamd:
 	go build $(BUILD_FLAGS) -o build/bin/iamd ./cmd/iamd
 
-.PHONY: mgrd
-mgrd:
-	go build $(BUILD_FLAGS) -o build/bin/mgrd ./cmd/mgrd
+.PHONY: admind
+admind:
+	go build $(BUILD_FLAGS) -o build/bin/admind ./cmd/admind
 
 #.PHONY: metadatad
 #metadatad:
