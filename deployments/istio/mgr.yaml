@@ -2,10 +2,10 @@
 apiVersion: v1
 kind: Secret
 metadata:
-  name: metadata
+  name: mgr
   namespace: iam
   labels:
-    app: metadata
+    app: mgr
 type: Opaque
 data:
   dbUri: "dGVzdDoxMjM0NTY3ODlAdGNwKDEwLjIzNS4wLjMpL3Rlc3Q/Y2hhcnNldD11dGY4JnBhcnNlVGltZT1UcnVl" #test:123456789@tcp(10.235.0.3)/test?charset=utf8&parseTime=True
@@ -14,66 +14,62 @@ data:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: metadata
+  name: mgr
   namespace: iam
   labels:
-    app: metadata
+    app: mgr
     version: v1
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: metadata
+      app: mgr
       version: v1
   template:
     metadata:
       labels:
-        app: metadata
+        app: mgr
         version: v1
     spec:
       imagePullSecrets:
         - name: regcred
       containers:
-        - name: metadata
-          image: registry.dev.videocoin.net/iam/metadata:v0.1.0-dev.17
+        - name: mgr
+          image: registry.dev.videocoin.net/iam/mgr:v0.1.0-dev.18
           imagePullPolicy: IfNotPresent
           ports:
-            - name: http
-              containerPort: 8080
+            - name: grpc
+              containerPort: 5000
           livenessProbe:
-            httpGet:
-              path: /health
-              port: 8080
-            initialDelaySeconds: 3
-            periodSeconds: 3
+            exec:
+              command: ["grpc_health_probe", "-addr=:5000"]
+            initialDelaySeconds: 5
           readinessProbe:
-            httpGet:
-              path: /health
-              port: 8080
-            initialDelaySeconds: 3
-            periodSeconds: 3
+            exec:
+              command: ["grpc_health_probe", "-addr=:5000"]
+            initialDelaySeconds: 10
           env:
-            - name: METADATA_DBURI
+            - name: MGR_DBURI
               valueFrom:
                 secretKeyRef:
-                  name: metadata
+                  name: mgr
                   key: dbUri
       volumes:
         - name: secrets
           secret:
-            secretName: metadata
+            secretName: mgr
 
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: metadata
+  name: mgr
   namespace: iam
   labels:
-    app: metadata
+    app: mgr
 spec:
   ports:
-    - name: http
-      port: 8080
+    - name: grpc
+      port: 5000
   selector:
-    app: metadata
+    app: mgr

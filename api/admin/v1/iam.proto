@@ -2,14 +2,16 @@ syntax = "proto3";
 
 package videocoin.iam.admin.v1;
 
-// import "google/protobuf/empty.proto";
 import "google/api/field_behavior.proto";
-import "google/api/annotations.proto";
+// import "google/protobuf/empty.proto";
+// import "google/api/annotations.proto";
 // import "google/api/client.proto";
 
 option go_package = "v1";
 
-service RBAC {
+service IAM {
+  rpc GetUserPublicKey(GetUserPublicKeyRequest) returns (PublicKey) {}
+
   /*
   rpc CreateRoleBinding(RoleBinding) returns (google.protobuf.Empty) {
     option (google.api.http) = {
@@ -37,7 +39,7 @@ service RBAC {
     };
     option (google.api.method_signature) = "user_id";
   }
-  */
+
 
   // Lists [Roles][cloud.api.iam.v1.Roles].
   rpc ListRoles(ListRolesRequest) returns (ListRolesResponse) {
@@ -52,8 +54,17 @@ service RBAC {
       get : "/v1/roles/{name=*}"
     };
   }
+  */
 }
 
+message PublicKey { bytes public_key_data = 1; }
+
+message GetUserPublicKeyRequest {
+  string user_id = 1 [ (google.api.field_behavior) = REQUIRED ];
+  string key_id = 2 [ (google.api.field_behavior) = REQUIRED ];
+}
+
+/*
 // A role in the Identity and Access Management API.
 message Role {
   // The name of the role.
@@ -122,7 +133,6 @@ message Permission {
   string description = 3;
 }
 
-/*
 message RoleBinding {
   // The name of the role.
   string role_name = 1;

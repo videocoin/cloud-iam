@@ -15,9 +15,13 @@ all: build
 iamd:
 	go build $(BUILD_FLAGS) -o build/bin/iamd ./cmd/iamd
 
-.PHONY: metadatad
-metadatad:
-	go build $(BUILD_FLAGS) -o build/bin/metadatad ./cmd/metadatad
+.PHONY: mgrd
+mgrd:
+	go build $(BUILD_FLAGS) -o build/bin/mgrd ./cmd/mgrd
+
+#.PHONY: metadatad
+#metadatad:
+#	go build $(BUILD_FLAGS) -o build/bin/metadatad ./cmd/metadatad
 
 .PHONY: e2e
 e2e:
@@ -42,5 +46,5 @@ e2e-stop:
 
 .phony: proto
 proto:
-	protoc -I . -I ${GOPATH}/src/github.com/googleapis/api-common-protos --go_out=plugins=grpc:. api/admin/v1/rbac.proto
+	protoc -I . -I ${GOPATH}/src/github.com/googleapis/api-common-protos --go_out=plugins=grpc:. api/admin/v1/iam.proto
 	

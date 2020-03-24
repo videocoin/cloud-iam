@@ -8,7 +8,8 @@ metadata:
     app: iam
 type: Opaque
 data:
-  dbUri: "dGVzdDoxMjM0NTY3ODlAdGNwKDEwLjIzNS4wLjMpL3Rlc3Q=" #test:123456789@tcp(10.235.0.3)/test
+  fullDbUri: "bXlzcWw6Ly90ZXN0OjEyMzQ1Njc4OUB0Y3AoMTAuMjM1LjAuMzozMzA2KS90ZXN0P2NoYXJzZXQ9dXRmOCZwYXJzZVRpbWU9VHJ1ZQ==" #mysql://test:123456789@tcp(10.235.0.3:3306)/test?charset=utf8&parseTime=True
+  dbUri: "dGVzdDoxMjM0NTY3ODlAdGNwKDEwLjIzNS4wLjMpL3Rlc3Q/Y2hhcnNldD11dGY4JnBhcnNlVGltZT1UcnVl" #test:123456789@tcp(10.235.0.3)/test?charset=utf8&parseTime=True
   authTokenSecret: "dGVzdA==" #test
 
 ---
@@ -39,7 +40,7 @@ spec:
         - name: regcred
       containers:
         - name: iam
-          image: registry.dev.videocoin.net/iam/iam:v0.1.0-dev.17
+          image: registry.dev.videocoin.net/iam/iam:v0.1.0-dev.18
           imagePullPolicy: IfNotPresent
           ports:
             - name: grpc
@@ -121,10 +122,11 @@ metadata:
   namespace: iam
   labels:
     app: iam
-  #annotations:
-  #  "helm.sh/hook": post-install,pre-upgrade
-  #  "helm.sh/hook-weight": "1"
-  #  "helm.sh/hook-delete-policy": hook-succeeded
+annotations:
+  sidecar.istio.io/inject: false
+  #"helm.sh/hook": post-install,pre-upgrade
+  #"helm.sh/hook-weight": "1"
+  #"helm.sh/hook-delete-policy": hook-succeeded
 spec:
   template:
     metadata:
@@ -133,22 +135,24 @@ spec:
         app: iam
     spec:
       restartPolicy: Never
+      imagePullSecrets:
+        - name: regcred
       containers:
         - name: db-migrator
-          image: registry.dev.videocoin.net/iam/iam:v0.1.0-dev.17
+          image: registry.dev.videocoin.net/iam/iam:v0.1.0-dev.18
           command:
             - "migrate"
             - "-path"
             - "/migrations"
             - "-database"
             - "$(DBURI)"
-            - "up"
+            - "down"
           env:
             - name: DBURI
               valueFrom:
                 secretKeyRef:
                   name: iam
-                  key: dbUri
+                  key: fullDbUri
       volumes:
         - name: secrets
           secret:

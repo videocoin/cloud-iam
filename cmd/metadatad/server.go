@@ -1,7 +1,6 @@
 package main
 
 import (
-	"encoding/base64"
 	"net/http"
 
 	"github.com/google/uuid"
@@ -29,8 +28,8 @@ func (s *server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 func (s *server) routes() {
 	s.router.GET("/health", s.handleHealth())
 	s.router.GET("/service_accounts/v1/metadata/x509/:sub", s.handlePublicKeyGet())
-	s.router.GET("/methods/v1/metadata/perm/:method", s.handlePermissionGet())
-	s.router.GET("/v1/roles/:name", s.handleRoleGet())
+	//s.router.GET("/methods/v1/metadata/perm/:method", s.handlePermissionGet())
+	// s.router.GET("/v1/roles/:name", s.handleRoleGet())
 }
 
 func (s *server) handleHealth() httprouter.Handle {
@@ -55,12 +54,13 @@ func (s *server) handlePublicKeyGet() httprouter.Handle {
 
 		jwks := make(map[string]string)
 		for _, key := range keys {
-			jwks[key.ID] = base64.StdEncoding.EncodeToString(key.PublicKeyData)
+			jwks[key.ID] = string(key.PublicKeyData)
 		}
 		s.respond(w, r, jwks, http.StatusOK)
 	}
 }
 
+/*
 func (s *server) handleRoleGet() httprouter.Handle {
 	return func(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 		role, err := s.ds.GetRole(ps.ByName("name"))
@@ -72,15 +72,15 @@ func (s *server) handleRoleGet() httprouter.Handle {
 	}
 }
 
+
 func (s *server) handlePermissionGet() httprouter.Handle {
 	return func(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
-		/*
 			role, err := s.ds.GetMethodPermission(ps.ByName("method"))
 			if err != nil {
 				log.Errorln(err)
 				s.respond(w, r, nil, http.StatusInternalServerError)
 			}
 			s.respond(w, r, role, http.StatusOK)
-		*/
 	}
 }
+*/
