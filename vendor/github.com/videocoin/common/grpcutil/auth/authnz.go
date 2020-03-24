@@ -33,10 +33,10 @@ type AuthNZFunc func(ctx context.Context, fullMethod string) (context.Context, e
 func JWTAuthNZ(audience string, accPublicKeyURLTemplate string, secretHMAC string) AuthNZFunc {
 	var (
 		// TODO(rgeraldes) include token cache
-		accAuthN  Authenticator = ServiceAccountAuthN(audience, accPublicKeyURLTemplate)
-		hmacAuthN Authenticator = HMACAuthN(secretHMAC)
-		rbacAuthZ Authorizer    = RBACAuthZ()
-		parserJWT               = new(jwt.Parser)
+		accAuthN   Authenticator = ServiceAccountAuthN(audience, accPublicKeyURLTemplate)
+		hmacAuthN  Authenticator = HMACAuthN(secretHMAC)
+		authorizer Authorizer    = RBACAuthZ()
+		parserJWT                = new(jwt.Parser)
 	)
 
 	return func(ctx context.Context, fullMethod string) (context.Context, error) {
@@ -62,7 +62,7 @@ func JWTAuthNZ(audience string, accPublicKeyURLTemplate string, secretHMAC strin
 			return nil, status.Error(codes.Unauthenticated, err.Error())
 		}
 
-		if err := rbacAuthZ.Authorize(ctx, sub, fullMethod); err != nil {
+		if err := authorizer.Authorize(ctx, sub, fullMethod); err != nil {
 			return nil, status.Error(codes.PermissionDenied, err.Error())
 		}
 

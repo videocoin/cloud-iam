@@ -39,17 +39,10 @@ func generateKey(rand io.Reader, userID string) ([]byte, *datastore.UserKey, err
 	validAfter := time.Now()
 	validBefore := time.Now().AddDate(keyValidityPeriodYears, 0, 0)
 
-	certBytesDER, err := createSelfSignedCert(validAfter, validBefore, priv)
-	if err != nil {
-		return nil, nil, err
-	}
-	certBytesPEM := helpers.CertToBytesPEM(certBytesDER)
-
 	return helpers.PrivKeyToBytesPEM(rand, priv), &datastore.UserKey{
 		ID:              guuid.New().String(),
 		UserID:          userID,
 		PublicKeyData:   pubBytes,
-		CertX509:        certBytesPEM,
 		ValidAfterTime:  validAfter,
 		ValidBeforeTime: validBefore,
 	}, nil

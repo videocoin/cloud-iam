@@ -2,8 +2,12 @@ package auth
 
 import (
 	"context"
+	"encoding/json"
+	"errors"
 	"fmt"
+	"net/http"
 
+	cleanhttp "github.com/hashicorp/go-cleanhttp"
 	cache "github.com/patrickmn/go-cache"
 )
 
@@ -75,17 +79,31 @@ type RoleCache struct {
 
 // GetUserRole ...
 func (c *RoleCache) GetUserRole(ctx context.Context, principal string) (string, error) {
-	return "MINER", nil
+	role, ok := c.Cache.Get(principal)
+	if ok {
+		return role.(string), nil
+	}
+
+	role, err := c.RoleStore.GetUserRole(ctx, principal)
+	if err != nil {
+		return "", err
+	}
+	c.Cache.Set(principal, role, cache.NoExpiration)
+
+	return role.(string), nil
 }
 
 // GetRole ...
 func (c *RoleCache) GetRole(ctx context.Context, name string) (*Role, error) {
-	// does not have delete for testing purposes
-	return &Role{IncludedPermissions: []string{
-		"iam.serviceAccountKeys.create",
-		"iam.serviceAccountKeys.list",
-		"iam.serviceAccountKeys.get",
-	}}, nil
+	if name == "USER_ROLE_MINER" {
+		return &Role{IncludedPermissions: []string{
+			"iam.serviceAccountKeys.create",
+			"iam.serviceAccountKeys.list",
+			"iam.serviceAccountKeys.get",
+		}}, nil
+	}
+
+	return &Role{IncludedPermissions: []string{}}, nil
 }
 
 // NewRoleCache ...
@@ -98,12 +116,35 @@ func NewRoleCache(store RoleStore) *RoleCache {
 
 // RoleRepo ...
 type RoleRepo struct {
-	// TODO
+	url string // https://studio.dev.videocoin.network/api/v1/user
 }
 
 // GetUserRole ...
 func (r *RoleRepo) GetUserRole(ctx context.Context, principal string) (string, error) {
-	return "", nil
+	tokenStr, err := BearerFromMD(ctx)
+	if err != nil {
+		return "", err
+	}
+
+	req, err := http.NewRequest("GET", "https://studio.dev.videocoin.network/api/v1/user", nil)
+	req.Header.Add("Authorization", fmt.Sprintf("Bearer %s", tokenStr))
+
+	res, err := cleanhttp.DefaultClient().Do(req)
+	if err != nil {
+		return "", nil
+	}
+
+	props := map[string]interface{}{}
+	if err := json.NewDecoder(res.Body).Decode(&props); err != nil {
+		return "", fmt.Errorf("unable to decode JSON response: %v", err)
+	}
+
+	role, ok := props["role"]
+	if !ok {
+		return "", errors.New("role not available")
+	}
+
+	return role.(string), nil
 }
 
 // GetRole ...

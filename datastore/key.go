@@ -19,7 +19,6 @@ type UserKey struct {
 	ID              string `gorm:"primary_key"`
 	UserID          string
 	PublicKeyData   []byte
-	CertX509        []byte
 	ValidAfterTime  time.Time
 	ValidBeforeTime time.Time
 }

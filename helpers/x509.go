@@ -21,8 +21,3 @@ func PubKeyToBytesPEM(pub *rsa.PublicKey) ([]byte, error) {
 	}
 	return pem.EncodeToMemory(&pem.Block{Type: "PUBLIC KEY", Bytes: pubASN1}), nil
 }
-
-// CertToBytesPEM ...
-func CertToBytesPEM(derBytes []byte) []byte {
-	return pem.EncodeToMemory(&pem.Block{Type: "CERTIFICATE", Bytes: derBytes})
-}
