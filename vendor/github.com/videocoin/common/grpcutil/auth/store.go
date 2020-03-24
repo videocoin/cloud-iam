@@ -127,11 +127,14 @@ func (r *RoleRepo) GetUserRole(ctx context.Context, principal string) (string, e
 	}
 
 	req, err := http.NewRequest("GET", "https://studio.dev.videocoin.network/api/v1/user", nil)
+	if err != nil {
+		return "", err
+	}
 	req.Header.Add("Authorization", fmt.Sprintf("Bearer %s", tokenStr))
 
 	res, err := cleanhttp.DefaultClient().Do(req)
 	if err != nil {
-		return "", nil
+		return "", err
 	}
 
 	props := map[string]interface{}{}

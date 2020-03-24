@@ -69,7 +69,7 @@ github.com/prometheus/procfs/internal/fs
 github.com/prometheus/procfs/internal/util
 # github.com/sirupsen/logrus v1.4.2
 github.com/sirupsen/logrus
-# github.com/videocoin/common v0.0.0-20200324195545-59b4e4899349
+# github.com/videocoin/common v0.0.0-20200324203028-b4561ee9dc10
 github.com/videocoin/common/dbutil/models
 github.com/videocoin/common/grpcutil
 github.com/videocoin/common/grpcutil/auth

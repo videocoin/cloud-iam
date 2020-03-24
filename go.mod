@@ -13,7 +13,7 @@ require (
 	github.com/kelseyhightower/envconfig v1.4.0
 	github.com/prometheus/client_golang v1.5.1
 	github.com/sirupsen/logrus v1.4.2
-	github.com/videocoin/common v0.0.0-20200324195545-59b4e4899349
+	github.com/videocoin/common v0.0.0-20200324203028-b4561ee9dc10
 	github.com/videocoin/videocoinapis v0.0.0-20200322182759-1b6a46f5db00
 	golang.org/x/sync v0.0.0-20200317015054-43a5402ce75a
 	google.golang.org/genproto v0.0.0-20200317114155-1f3552e48f24
