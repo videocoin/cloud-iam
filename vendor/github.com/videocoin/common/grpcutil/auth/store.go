@@ -2,12 +2,12 @@ package auth
 
 import (
 	"context"
-	"crypto/tls"
 	"encoding/json"
 	"errors"
 	"fmt"
 	"net/http"
 
+	cleanhttp "github.com/hashicorp/go-cleanhttp"
 	cache "github.com/patrickmn/go-cache"
 )
 
@@ -132,18 +132,10 @@ func (r *RoleRepo) GetUserRole(ctx context.Context, principal string) (string, e
 	}
 	req.Header.Add("Authorization", fmt.Sprintf("Bearer %s", tokenStr))
 
-	http.DefaultTransport.(*http.Transport).TLSClientConfig = &tls.Config{InsecureSkipVerify: true}
-	res, err := http.DefaultClient.Do(req)
-	if err != nil {
-		return "", err
-	}
-
-	/* fixme: Get https://studio.dev.videocoin.network/api/v1/user: x509: certificate signed by unknown authority
 	res, err := cleanhttp.DefaultClient().Do(req)
 	if err != nil {
 		return "", err
 	}
-	*/
 
 	props := map[string]interface{}{}
 	if err := json.NewDecoder(res.Body).Decode(&props); err != nil {

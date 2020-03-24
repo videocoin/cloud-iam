@@ -192,12 +192,10 @@ github.com/stretchr/testify v1.2.2/go.mod h1:a8OnRcib4nhh0OaRAV+Yts87kKdq0PP7pXf
 github.com/stretchr/testify v1.3.0/go.mod h1:M5WIy9Dh21IEIfnGCwXGc5bZfKNJtfHm1UVUgZn+9EI=
 github.com/stretchr/testify v1.4.0 h1:2E4SXV/wtOkTonXsotYi4li6zVWxYlZuYNCXe9XRJyk=
 github.com/stretchr/testify v1.4.0/go.mod h1:j7eGeouHqKxXV5pUuKE4zz7dFj8WfuZ+81PSLYec5m4=
-github.com/videocoin/common v0.0.0-20200324195545-59b4e4899349 h1:SuqDU1yEJdwYy93CT064X8g8NgAvQObU5G17gBD2IEs=
-github.com/videocoin/common v0.0.0-20200324195545-59b4e4899349/go.mod h1:LAmhKvEvPY8Yx6t6QmiZZc/rlOY9yEzUW9efy+whIFM=
-github.com/videocoin/common v0.0.0-20200324203028-b4561ee9dc10 h1:/rP8/FjagfmPAuiavMxNFSt+4sdw95I/xayA8ucXi9A=
-github.com/videocoin/common v0.0.0-20200324203028-b4561ee9dc10/go.mod h1:LAmhKvEvPY8Yx6t6QmiZZc/rlOY9yEzUW9efy+whIFM=
 github.com/videocoin/common v0.0.0-20200324221030-e331ad3d4892 h1:0NxzAwU9CQ/xqiFWkw+3ZPAA4ZGPXMRVKvRzA5lfcFM=
 github.com/videocoin/common v0.0.0-20200324221030-e331ad3d4892/go.mod h1:LAmhKvEvPY8Yx6t6QmiZZc/rlOY9yEzUW9efy+whIFM=
+github.com/videocoin/common v0.0.0-20200324233542-85db54f91ec1 h1:qIeLgzD5Zd6Tc9J1eMVm+eyUzkooFoyCZu9uaJABeP8=
+github.com/videocoin/common v0.0.0-20200324233542-85db54f91ec1/go.mod h1:LAmhKvEvPY8Yx6t6QmiZZc/rlOY9yEzUW9efy+whIFM=
 github.com/videocoin/videocoinapis v0.0.0-20200322182759-1b6a46f5db00 h1:/KCD/OI9exIVzwAzVOTMJFgTicVQoWj0QKUwdtS2cOw=
 github.com/videocoin/videocoinapis v0.0.0-20200322182759-1b6a46f5db00/go.mod h1:CBucjp4FIWr8ZGTrYHT5UeeozaKEgo2vIYJHZHVmiSg=
 github.com/yuin/goldmark v1.1.25/go.mod h1:3hX8gzYuyVAZsxl0MRgGTJEmQBFcNTphYh9decYSb74=
