@@ -4,10 +4,9 @@ import (
 	"errors"
 	"time"
 
-	iam "github.com/videocoin/videocoinapis/videocoin/iam/v1"
-
 	"github.com/golang/protobuf/ptypes"
 	"github.com/videocoin/common/dbutil/models"
+	iam "github.com/videocoin/videocoinapis/videocoin/iam/v1"
 )
 
 // ErrPEMDataNotFound is returned when no PEM data is found.

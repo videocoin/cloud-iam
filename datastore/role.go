@@ -2,7 +2,6 @@ package datastore
 
 import "github.com/videocoin/common/dbutil/models"
 
-// Role ...
 type Role struct {
 	models.Base
 	ID          string `gorm:"primary_key"`
@@ -17,7 +16,6 @@ func (r *Role) TableName() string {
 	return "roles"
 }
 
-// Permission ...
 type Permission struct {
 	models.Base
 	ID          string `gorm:"primary_key"`

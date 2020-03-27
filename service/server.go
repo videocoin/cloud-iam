@@ -4,12 +4,11 @@ import (
 	"context"
 	"crypto/rand"
 
-	iam "github.com/videocoin/videocoinapis/videocoin/iam/v1"
-
 	"github.com/golang/protobuf/ptypes/empty"
 	"github.com/jinzhu/gorm"
 	"github.com/videocoin/cloud-iam/datastore"
 	"github.com/videocoin/common/log"
+	iam "github.com/videocoin/videocoinapis/videocoin/iam/v1"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )

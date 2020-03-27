@@ -14,7 +14,6 @@ import (
 
 	jwt "github.com/dgrijalva/jwt-go"
 	guuid "github.com/google/uuid"
-
 	"github.com/videocoin/cloud-iam/datastore"
 	"github.com/videocoin/cloud-iam/helpers"
 )

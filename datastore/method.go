@@ -1,8 +1,6 @@
 package datastore
 
-import (
-	"github.com/videocoin/common/dbutil/models"
-)
+import "github.com/videocoin/common/dbutil/models"
 
 type Method struct {
 	models.Base
