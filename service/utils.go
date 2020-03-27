@@ -2,14 +2,9 @@ package service
 
 import (
 	"context"
-	"crypto/rand"
 	"crypto/rsa"
-	"crypto/x509"
-	"crypto/x509/pkix"
 	"errors"
-	"fmt"
 	"io"
-	"math/big"
 	"time"
 
 	jwt "github.com/dgrijalva/jwt-go"
@@ -45,33 +40,6 @@ func generateKey(rand io.Reader, userID string) ([]byte, *datastore.UserKey, err
 		ValidAfterTime:  validAfter,
 		ValidBeforeTime: validBefore,
 	}, nil
-}
-
-func createSelfSignedCert(notBefore time.Time, notAfter time.Time, priv *rsa.PrivateKey) ([]byte, error) {
-	serialNumberLimit := new(big.Int).Lsh(big.NewInt(1), 128)
-	serialNumber, err := rand.Int(rand.Reader, serialNumberLimit)
-	if err != nil {
-		return nil, fmt.Errorf("Failed to generate serial number: %v", err)
-	}
-
-	template := x509.Certificate{
-		SerialNumber: serialNumber,
-		Subject: pkix.Name{
-			Organization: []string{"VideoCoin Development Association Ltd"},
-		},
-		NotBefore:             notBefore,
-		NotAfter:              notAfter,
-		KeyUsage:              x509.KeyUsageKeyEncipherment | x509.KeyUsageDigitalSignature,
-		ExtKeyUsage:           []x509.ExtKeyUsage{x509.ExtKeyUsageServerAuth},
-		BasicConstraintsValid: true,
-	}
-
-	derBytes, err := x509.CreateCertificate(rand.Reader, &template, &template, &priv.PublicKey, priv)
-	if err != nil {
-		return nil, fmt.Errorf("Failed to create certificate: %v", err)
-	}
-
-	return derBytes, nil
 }
 
 func subjectFromCtx(ctx context.Context) (string, error) {
