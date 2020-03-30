@@ -10,7 +10,6 @@ import (
 	jwt "github.com/dgrijalva/jwt-go"
 	"github.com/google/uuid"
 	grpc_auth "github.com/grpc-ecosystem/go-grpc-middleware/auth"
-	"github.com/grpc-ecosystem/go-grpc-middleware/util/metautils"
 	"github.com/videocoin/runtime"
 )
 
@@ -26,7 +25,10 @@ var (
 
 // ServiceAccount handles authentication for service accounts.
 func ServiceAccount(audience string, hmacSecret string, pubKeyFunc PubKeyFunc) runtime.AuthenticatorFunc {
-	jwtCache := NewJWTCache(JwtCacheSize)
+	var (
+		jwtCache        = NewJWTCache(JwtCacheSize)
+		hmacSecretBytes = []byte(hmacSecret)
+	)
 
 	return func(ctx context.Context) (interface{}, error) {
 		tokenStr, err := grpc_auth.AuthFromMD(ctx, "Bearer")
@@ -36,7 +38,7 @@ func ServiceAccount(audience string, hmacSecret string, pubKeyFunc PubKeyFunc) r
 
 		userInfo, found := jwtCache.Get(tokenStr)
 		if found {
-			metautils.ExtractIncoming(ctx).Set(headerAuthorize, fmt.Sprintf("Bearer %v", userInfo.HMACToken))
+			context.WithValue(ctx, tokenKey{}, userInfo.HMACToken)
 			return userInfo.ID, nil
 		}
 
@@ -81,10 +83,10 @@ func ServiceAccount(audience string, hmacSecret string, pubKeyFunc PubKeyFunc) r
 			return "", fmt.Errorf("Couldn't handle this token: %v", err)
 		}
 
-		token := jwt.NewWithClaims(jwt.SigningMethodHS256, &jwt.StandardClaims{Subject: claims.Subject})
-		tokenStr, _ = token.SignedString(hmacSecret)
+		token := jwt.NewWithClaims(jwt.SigningMethodHS256, &jwt.StandardClaims{Subject: claims.Subject, IssuedAt: time.Now().Unix()})
+		tokenStr, _ = token.SignedString(hmacSecretBytes)
 		jwtCache.Add(tokenStr, &UserInfo{ID: claims.Subject, HMACToken: tokenStr}, time.Unix(claims.ExpiresAt, 0))
-		metautils.ExtractIncoming(ctx).Set(headerAuthorize, fmt.Sprintf("Bearer %v", tokenStr))
+		context.WithValue(ctx, tokenKey{}, tokenStr)
 
 		return claims.Subject, nil
 	}
@@ -102,6 +104,7 @@ func HMACJWT(secret string) runtime.AuthenticatorFunc {
 
 		userInfo, found := jwtCache.Get(tokenStr)
 		if found {
+			context.WithValue(ctx, tokenKey{}, tokenStr)
 			return userInfo.ID, nil
 		}
 
@@ -129,6 +132,7 @@ func HMACJWT(secret string) runtime.AuthenticatorFunc {
 		}
 
 		jwtCache.Add(tokenStr, &UserInfo{ID: claims.Subject}, time.Unix(claims.ExpiresAt, 0))
+		context.WithValue(ctx, tokenKey{}, tokenStr)
 
 		return claims.Subject, nil
 	}

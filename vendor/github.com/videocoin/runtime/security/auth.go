@@ -12,12 +12,6 @@ import (
 	"google.golang.org/grpc/status"
 )
 
-const (
-	TokenHeaderKeyIDKey = "kid"
-	SubCtxTagKey        = "auth.sub"
-	TokenCtxKey         = "token"
-)
-
 type PubKeyFunc func(ctx context.Context, subject string, keyID string) (interface{}, error)
 
 // Authnz returns an authentication and authorization handler for JWT-based auth.
@@ -41,23 +35,22 @@ func Authnz(audience string, hmacSecret string, pubKeyFunc PubKeyFunc) auth.Auth
 		}
 
 		var authenticator runtime.Authenticator
-		if _, ok := token.Header[TokenHeaderKeyIDKey]; ok {
+		if _, ok := token.Header["kid"]; ok {
 			authenticator = svcacc
 		} else {
 			authenticator = hmac
 		}
 
-		sub, err := authenticator.Authenticate(ctx)
+		user, err := authenticator.Authenticate(ctx)
 		if err != nil {
 			return nil, status.Error(codes.Unauthenticated, err.Error())
 		}
 
-		if err := rbac.Authorize(ctx, sub, fullMethod); err != nil {
+		if err := rbac.Authorize(ctx, user, fullMethod); err != nil {
 			return nil, status.Error(codes.PermissionDenied, err.Error())
 		}
 
-		grpc_ctxtags.Extract(ctx).Set(SubCtxTagKey, sub)
-		newCtx := context.WithValue(ctx, TokenCtxKey, token)
-		return newCtx, nil
+		grpc_ctxtags.Extract(ctx).Set("auth.sub", user)
+		return context.WithValue(ctx, userKey{}, user), nil
 	}
 }

@@ -7,7 +7,6 @@ import (
 	"fmt"
 	"net/http"
 
-	grpc_auth "github.com/grpc-ecosystem/go-grpc-middleware/auth"
 	cleanhttp "github.com/hashicorp/go-cleanhttp"
 	"github.com/videocoin/runtime"
 )
@@ -36,7 +35,7 @@ func RBAC() runtime.AuthorizerFunc {
 	}
 
 	return func(ctx context.Context, principal interface{}, fullMethod string) error {
-		tokenStr, _ := grpc_auth.AuthFromMD(ctx, "Bearer")
+		tokenStr := ctx.Value(tokenKey{}).(string)
 
 		key := NewBlake2b256([]byte(tokenStr + fullMethod))
 		val, found := authzCache.Get(key)

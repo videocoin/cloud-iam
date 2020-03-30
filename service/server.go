@@ -8,18 +8,16 @@ import (
 	"github.com/jinzhu/gorm"
 	"github.com/videocoin/cloud-iam/datastore"
 	"github.com/videocoin/common/log"
+	"github.com/videocoin/runtime/security"
 	iam "github.com/videocoin/videocoinapis/videocoin/iam/v1"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )
 
-type server struct {
-	ds         datastore.DataStore
-	passphrase string
-}
+type server struct{ ds datastore.DataStore }
 
-// NewServer creates an IAM server.
-func NewServer(ds datastore.DataStore) *server {
+// New creates an IAM server.
+func New(ds datastore.DataStore) *server {
 	return &server{
 		ds: ds,
 	}
@@ -27,12 +25,7 @@ func NewServer(ds datastore.DataStore) *server {
 
 // CreateKey creates a key for an authenticated user.
 func (s *server) CreateKey(ctx context.Context, empty *empty.Empty) (*iam.Key, error) {
-	sub, err := subjectFromCtx(ctx)
-	if err != nil {
-		return nil, status.Error(codes.FailedPrecondition, "invalid auth info")
-	}
-
-	key, err := s.createUserKey(sub)
+	key, err := s.createUserKey(security.UserFromCtx(ctx))
 	if err != nil {
 		log.Errorln(err)
 		return nil, status.Error(codes.Internal, err.Error())
@@ -62,12 +55,7 @@ func (s *server) createUserKey(userID string) (*iam.Key, error) {
 
 // GetKey gets a key for an authenticated user.
 func (s *server) GetKey(ctx context.Context, req *iam.GetKeyRequest) (*iam.Key, error) {
-	sub, err := subjectFromCtx(ctx)
-	if err != nil {
-		return nil, status.Error(codes.FailedPrecondition, "invalid auth info")
-	}
-
-	key, err := s.getUserKey(sub, req.KeyId)
+	key, err := s.getUserKey(security.UserFromCtx(ctx), req.KeyId)
 	if err != nil {
 		if gorm.IsRecordNotFoundError(err) {
 			log.Debugln(err)
@@ -96,12 +84,7 @@ func (s *server) getUserKey(userID string, keyID string) (*iam.Key, error) {
 
 // ListKeys lists keys for an authenticated user.
 func (s *server) ListKeys(ctx context.Context, req *iam.ListKeysRequest) (*iam.ListKeysResponse, error) {
-	sub, err := subjectFromCtx(ctx)
-	if err != nil {
-		return nil, status.Error(codes.FailedPrecondition, "invalid auth info")
-	}
-
-	keys, err := s.listUserKeys(sub)
+	keys, err := s.listUserKeys(security.UserFromCtx(ctx))
 	if err != nil {
 		log.Errorln(err)
 		return nil, status.Error(codes.Internal, err.Error())
@@ -130,12 +113,7 @@ func (s *server) listUserKeys(userID string) ([]*iam.Key, error) {
 
 // DeleteKey deletes an user key.
 func (s *server) DeleteKey(ctx context.Context, req *iam.DeleteKeyRequest) (*empty.Empty, error) {
-	sub, err := subjectFromCtx(ctx)
-	if err != nil {
-		return nil, status.Error(codes.FailedPrecondition, "invalid auth info")
-	}
-
-	if err := s.deleteUserKey(sub, req.KeyId); err != nil {
+	if err := s.deleteUserKey(security.UserFromCtx(ctx), req.KeyId); err != nil {
 		log.Errorln(err)
 		return nil, status.Error(codes.Internal, err.Error())
 	}

@@ -1,13 +1,10 @@
 package service
 
 import (
-	"context"
 	"crypto/rsa"
-	"errors"
 	"io"
 	"time"
 
-	jwt "github.com/dgrijalva/jwt-go"
 	guuid "github.com/google/uuid"
 	"github.com/videocoin/cloud-iam/datastore"
 	"github.com/videocoin/cloud-iam/helpers"
@@ -33,24 +30,11 @@ func generateKey(rand io.Reader, userID string) ([]byte, *datastore.UserKey, err
 	validAfter := time.Now()
 	validBefore := time.Now().AddDate(keyValidityPeriodYears, 0, 0)
 
-	return helpers.PrivKeyToBytesPEM(rand, priv), &datastore.UserKey{
+	return helpers.PrivKeyToBytesPEM(priv), &datastore.UserKey{
 		ID:              guuid.New().String(),
 		UserID:          userID,
 		PublicKeyData:   pubBytes,
 		ValidAfterTime:  validAfter,
 		ValidBeforeTime: validBefore,
 	}, nil
-}
-
-func subjectFromCtx(ctx context.Context) (string, error) {
-	token, ok := ctx.Value("token").(*jwt.Token)
-	if !ok {
-		return "", errors.New("invalid token info")
-	}
-	claims, ok := token.Claims.(*jwt.StandardClaims)
-	if !ok {
-		return "", errors.New("invalid token info")
-	}
-
-	return claims.Subject, nil
 }

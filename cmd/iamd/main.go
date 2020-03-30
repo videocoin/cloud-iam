@@ -82,7 +82,7 @@ func run(cfg *Config) error {
 		}
 		grpcSrv = grpc.NewServer(grpcutil.DefaultServerOptsWithAuth(cfg.entry, security.Authnz(cfg.Hostname, cfg.AuthTokenSecret, pubKeyFunc))...)
 
-		iam.RegisterIAMServer(grpcSrv, service.NewServer(ds))
+		iam.RegisterIAMServer(grpcSrv, service.New(ds))
 		healthpb.RegisterHealthServer(grpcSrv, healthSrv)
 		healthSrv.SetServingStatus(fmt.Sprintf("grpc.health.v1.%s", ServiceName), healthpb.HealthCheckResponse_SERVING)
 
