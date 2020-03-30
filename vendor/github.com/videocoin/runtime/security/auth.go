@@ -3,9 +3,7 @@ package security
 import (
 	"context"
 
-	jwt "github.com/dgrijalva/jwt-go"
 	grpc_auth "github.com/grpc-ecosystem/go-grpc-middleware/auth"
-	grpc_ctxtags "github.com/grpc-ecosystem/go-grpc-middleware/tags"
 	"github.com/videocoin/runtime"
 	"github.com/videocoin/runtime/middleware/auth"
 	"google.golang.org/grpc/codes"
@@ -17,10 +15,9 @@ type PubKeyFunc func(ctx context.Context, subject string, keyID string) (interfa
 // Authnz returns an authentication and authorization handler for JWT-based auth.
 func Authnz(audience string, hmacSecret string, pubKeyFunc PubKeyFunc) auth.AuthFunc {
 	var (
-		svcacc    runtime.Authenticator = ServiceAccount(audience, hmacSecret, pubKeyFunc)
-		hmac      runtime.Authenticator = HMACJWT(hmacSecret)
-		rbac      runtime.Authorizer    = RBAC()
-		parserJWT                       = new(jwt.Parser)
+		svcacc runtime.Authenticator = ServiceAccount(audience, hmacSecret, pubKeyFunc)
+		hmac   runtime.Authenticator = HMACJWT(hmacSecret)
+		rbac   runtime.Authorizer    = RBAC()
 	)
 
 	return func(ctx context.Context, fullMethod string) (context.Context, error) {
@@ -29,7 +26,7 @@ func Authnz(audience string, hmacSecret string, pubKeyFunc PubKeyFunc) auth.Auth
 			return nil, status.Error(codes.Unauthenticated, err.Error())
 		}
 
-		token, _, err := parserJWT.ParseUnverified(tokenStr, &jwt.StandardClaims{})
+		token, err := parseHeader(tokenStr)
 		if err != nil {
 			return nil, status.Error(codes.Unauthenticated, err.Error())
 		}
@@ -50,7 +47,6 @@ func Authnz(audience string, hmacSecret string, pubKeyFunc PubKeyFunc) auth.Auth
 			return nil, status.Error(codes.PermissionDenied, err.Error())
 		}
 
-		grpc_ctxtags.Extract(ctx).Set("auth.sub", user)
 		return context.WithValue(ctx, userKey{}, user), nil
 	}
 }

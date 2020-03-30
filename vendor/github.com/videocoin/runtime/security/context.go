@@ -7,19 +7,16 @@ import (
 	"google.golang.org/grpc/status"
 )
 
-type (
-	userKey  struct{}
-	tokenKey struct{}
-)
+type userKey struct{}
 
 func UserFromCtx(ctx context.Context) (string, error) {
-	user, ok := ctx.Value(userKey{}).(string)
+	userInfo, ok := ctx.Value(userKey{}).(*UserInfo)
 	if !ok {
-		return "", status.Errorf(codes.Unauthenticated, "Bad user string")
+		return "", status.Errorf(codes.Unauthenticated, "Bad user information")
 	}
-	if user == "" {
+	if userInfo.ID == "" {
 		return "", status.Errorf(codes.Unauthenticated, "User unauthenticated with Bearer")
 	}
 
-	return user, nil
+	return userInfo.ID, nil
 }

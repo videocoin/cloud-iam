@@ -38,8 +38,7 @@ func ServiceAccount(audience string, hmacSecret string, pubKeyFunc PubKeyFunc) r
 
 		userInfo, found := jwtCache.Get(tokenStr)
 		if found {
-			ctx = context.WithValue(ctx, tokenKey{}, userInfo.HMACToken)
-			return userInfo.ID, nil
+			return userInfo, nil
 		}
 
 		claims := new(jwt.StandardClaims)
@@ -50,15 +49,15 @@ func ServiceAccount(audience string, hmacSecret string, pubKeyFunc PubKeyFunc) r
 			}
 
 			if _, err := uuid.Parse(claims.Subject); err != nil {
-				return nil, fmt.Errorf("Invalid subject: %s", claims.Subject)
+				return nil, fmt.Errorf("invalid subject: %s", claims.Subject)
 			}
 
 			if url.Hostname() != audience {
-				return nil, fmt.Errorf("Unexpected audience: %s", claims.Audience)
+				return nil, fmt.Errorf("unexpected audience: %s", claims.Audience)
 			}
 
 			if _, ok := token.Method.(*jwt.SigningMethodRSA); !ok {
-				return nil, fmt.Errorf("Unexpected signing method: %v", token.Header["alg"])
+				return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
 			}
 
 			kid, ok := token.Header["kid"]
@@ -67,7 +66,7 @@ func ServiceAccount(audience string, hmacSecret string, pubKeyFunc PubKeyFunc) r
 			}
 
 			if _, err := uuid.Parse(kid.(string)); err != nil {
-				return nil, fmt.Errorf("Invalid kid: %v", kid)
+				return nil, fmt.Errorf("invalid kid: %v", kid)
 			}
 
 			return pubKeyFunc(ctx, claims.Subject, kid.(string))
@@ -80,15 +79,15 @@ func ServiceAccount(audience string, hmacSecret string, pubKeyFunc PubKeyFunc) r
 					return "", ErrTokenExpiredOrNotActive
 				}
 			}
-			return "", fmt.Errorf("Couldn't handle this token: %v", err)
+			return "", fmt.Errorf("couldn't handle this token: %v", err)
 		}
 
 		token := jwt.NewWithClaims(jwt.SigningMethodHS256, &jwt.StandardClaims{Subject: claims.Subject, IssuedAt: time.Now().Unix()})
 		tokenStr, _ = token.SignedString(hmacSecretBytes)
-		jwtCache.Add(tokenStr, &UserInfo{ID: claims.Subject, HMACToken: tokenStr}, time.Unix(claims.ExpiresAt, 0))
-		ctx = context.WithValue(ctx, tokenKey{}, tokenStr)
+		userInfo = &UserInfo{ID: claims.Subject, HMACToken: tokenStr}
+		jwtCache.Add(tokenStr, userInfo, time.Unix(claims.ExpiresAt, 0))
 
-		return claims.Subject, nil
+		return userInfo, nil
 	}
 }
 
@@ -104,18 +103,17 @@ func HMACJWT(secret string) runtime.AuthenticatorFunc {
 
 		userInfo, found := jwtCache.Get(tokenStr)
 		if found {
-			ctx = context.WithValue(ctx, tokenKey{}, tokenStr)
-			return userInfo.ID, nil
+			return userInfo, nil
 		}
 
 		claims := new(jwt.StandardClaims)
 		_, err = jwt.ParseWithClaims(tokenStr, claims, func(token *jwt.Token) (interface{}, error) {
 			if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
-				return nil, fmt.Errorf("Unexpected signing method: %v", token.Header["alg"])
+				return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
 			}
 
 			if _, err := uuid.Parse(claims.Subject); err != nil {
-				return nil, fmt.Errorf("Invalid subject: %s", claims.Subject)
+				return nil, fmt.Errorf("invalid subject: %s", claims.Subject)
 			}
 
 			return []byte(secret), nil
@@ -128,12 +126,12 @@ func HMACJWT(secret string) runtime.AuthenticatorFunc {
 					return "", ErrTokenExpiredOrNotActive
 				}
 			}
-			return "", fmt.Errorf("Couldn't handle this token: %v", err)
+			return "", fmt.Errorf("couldn't handle this token: %v", err)
 		}
 
-		jwtCache.Add(tokenStr, &UserInfo{ID: claims.Subject}, time.Unix(claims.ExpiresAt, 0))
-		ctx = context.WithValue(ctx, tokenKey{}, tokenStr)
+		userInfo = &UserInfo{ID: claims.Subject}
+		jwtCache.Add(tokenStr, userInfo, time.Unix(claims.ExpiresAt, 0))
 
-		return claims.Subject, nil
+		return userInfo, nil
 	}
 }

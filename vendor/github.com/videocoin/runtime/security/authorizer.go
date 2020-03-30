@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"net/http"
 
+	grpc_auth "github.com/grpc-ecosystem/go-grpc-middleware/auth"
 	cleanhttp "github.com/hashicorp/go-cleanhttp"
 	"github.com/videocoin/runtime"
 )
@@ -35,7 +36,23 @@ func RBAC() runtime.AuthorizerFunc {
 	}
 
 	return func(ctx context.Context, principal interface{}, fullMethod string) error {
-		tokenStr := ctx.Value(tokenKey{}).(string)
+		userInfo, ok := principal.(*UserInfo)
+		if !ok {
+			return errors.New("invalid principal")
+		}
+
+		var (
+			tokenStr string
+			err      error
+		)
+		if userInfo.HMACToken == "" {
+			tokenStr, err = grpc_auth.AuthFromMD(ctx, "Bearer")
+			if err != nil {
+				return err
+			}
+		} else {
+			tokenStr = userInfo.HMACToken
+		}
 
 		key := NewBlake2b256([]byte(tokenStr + fullMethod))
 		val, found := authzCache.Get(key)
@@ -43,13 +60,13 @@ func RBAC() runtime.AuthorizerFunc {
 			if val.Success {
 				return nil
 			}
-			return fmt.Errorf("Permission %s is required to perform this operation on account %s", val.RequiredPermission, principal)
+			return fmt.Errorf("permission %s is required to perform this operation on account %s", val.RequiredPermission, principal)
 		}
 
 		// maps method to permission
 		requiredPermission, found := mapMethodToPermission[fullMethod]
 		if !found {
-			return fmt.Errorf("Permission not found")
+			return fmt.Errorf("permission not found")
 		}
 
 		// get user role
@@ -61,7 +78,7 @@ func RBAC() runtime.AuthorizerFunc {
 		// load role definition
 		role, found := roles[userRole]
 		if !found {
-			return fmt.Errorf("Role not found")
+			return fmt.Errorf("role not found")
 		}
 
 		// verify if role has the required permission
@@ -74,7 +91,7 @@ func RBAC() runtime.AuthorizerFunc {
 
 		authzCache.Add(key, &AuthzValue{Success: false, RequiredPermission: requiredPermission})
 
-		return fmt.Errorf("Permission %s is required to perform this operation on account %s", requiredPermission, principal)
+		return fmt.Errorf("permission %s is required to perform this operation on account %s", requiredPermission, principal)
 	}
 }
 
