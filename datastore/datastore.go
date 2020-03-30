@@ -4,20 +4,16 @@ import (
 	"io"
 
 	"github.com/jinzhu/gorm"
+	"github.com/videocoin/cloud-iam/datastore/models"
 )
 
 // DataStore is a repository for persistently storing collections of data
 // related to identity and access management.
 type DataStore interface {
-	CreateUserKey(key *UserKey) error
-	GetUserKey(userID string, keyID string) (*UserKey, error)
-	ListUserKeys(userID string) ([]*UserKey, error)
+	CreateUserKey(key *models.UserKey) error
+	GetUserKey(userID string, keyID string) (*models.UserKey, error)
+	ListUserKeys(userID string) ([]*models.UserKey, error)
 	DeleteUserKey(userID string, keyID string) error
-
-	GetRole(name string) (*Role, error)
-	//ListRoles() ([]*Role, error)
-
-	GetMethodPermission(fullMethod string) (string, error)
 
 	io.Closer
 }

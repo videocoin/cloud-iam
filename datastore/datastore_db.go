@@ -5,6 +5,7 @@ import (
 	_ "github.com/jinzhu/gorm/dialects/mysql"
 
 	"github.com/jinzhu/gorm"
+	"github.com/videocoin/cloud-iam/datastore/models"
 )
 
 // database implements the DataStore interface.
@@ -18,13 +19,13 @@ func (db *database) Close() error {
 }
 
 // CreateKey creates an user key.
-func (db *database) CreateUserKey(key *UserKey) error {
+func (db *database) CreateUserKey(key *models.UserKey) error {
 	return db.Create(key).Error
 }
 
 // GetKey gets an user key.
-func (db *database) GetUserKey(userID string, keyID string) (*UserKey, error) {
-	key := &UserKey{}
+func (db *database) GetUserKey(userID string, keyID string) (*models.UserKey, error) {
+	key := &models.UserKey{}
 	if err := db.Find(key, "user_id = ? AND id = ?", userID, keyID).Error; err != nil {
 		return nil, err
 	}
@@ -32,8 +33,8 @@ func (db *database) GetUserKey(userID string, keyID string) (*UserKey, error) {
 }
 
 // ListKeys lists the user keys.
-func (db *database) ListUserKeys(userID string) ([]*UserKey, error) {
-	keys := []*UserKey{}
+func (db *database) ListUserKeys(userID string) ([]*models.UserKey, error) {
+	keys := []*models.UserKey{}
 	if err := db.Find(&keys, "user_id = ?", userID).Error; err != nil {
 		return nil, err
 	}
@@ -42,44 +43,5 @@ func (db *database) ListUserKeys(userID string) ([]*UserKey, error) {
 
 // DeleteKey deletes an user key.
 func (db *database) DeleteUserKey(userID string, keyID string) error {
-	return db.Delete(&UserKey{}, "user_id = ? AND key_id = ?", userID, keyID).Error
+	return db.Delete(&models.UserKey{}, "user_id = ? AND key_id = ?", userID, keyID).Error
 }
-
-// GetRole gets a role.
-func (db *database) GetRole(name string) (*Role, error) {
-	role := &Role{}
-	if err := db.Find(role, "name = ?", name).Error; err != nil {
-		return nil, err
-	}
-	return role, nil
-}
-
-func (db *database) GetMethodPermission(fullMethod string) (string, error) {
-	//var perm *Permissions
-	//db.Model(&user).Related(&perm, "CreditCard")
-	return "", nil
-}
-
-/*
-func (db *database) ListRoleBindings(role string) ([]*RoleBinding, error) {
-	// TODO
-	return nil, nil
-}
-
-func (db *database) CreateRoleBinding() (*RoleBinding, error) {
-	// TODO
-	return nil, nil
-}
-
-func (db *database) DeleteRoleBinding() error {
-	// TODO
-	return nil
-}
-*/
-
-/*
-func (db *database) ListRoles() ([]*Role, error) {
-	// TODO
-	return nil, nil
-}
-*/

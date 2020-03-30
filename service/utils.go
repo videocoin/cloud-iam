@@ -6,7 +6,7 @@ import (
 	"time"
 
 	guuid "github.com/google/uuid"
-	"github.com/videocoin/cloud-iam/datastore"
+	"github.com/videocoin/cloud-iam/datastore/models"
 	"github.com/videocoin/cloud-iam/helpers"
 )
 
@@ -16,7 +16,7 @@ const (
 )
 
 // generateKey generates an internal user key.
-func generateKey(rand io.Reader, userID string) ([]byte, *datastore.UserKey, error) {
+func generateKey(rand io.Reader, userID string) ([]byte, *models.UserKey, error) {
 	priv, err := rsa.GenerateKey(rand, bitsRSA)
 	if err != nil {
 		return nil, nil, err
@@ -30,7 +30,7 @@ func generateKey(rand io.Reader, userID string) ([]byte, *datastore.UserKey, err
 	validAfter := time.Now()
 	validBefore := time.Now().AddDate(keyValidityPeriodYears, 0, 0)
 
-	return helpers.PrivKeyToBytesPEM(priv), &datastore.UserKey{
+	return helpers.PrivKeyToBytesPEM(priv), &models.UserKey{
 		ID:              guuid.New().String(),
 		UserID:          userID,
 		PublicKeyData:   pubBytes,

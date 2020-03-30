@@ -73,8 +73,8 @@ func run(cfg *Config) error {
 		}
 		defer ds.Close()
 
-		pubKeyFunc := func(ctx context.Context, subject string, keyID string) (interface{}, error) {
-			key, err := ds.GetUserKey(subject, keyID)
+		pubKeyFunc := func(ctx context.Context, user string, keyID string) (interface{}, error) {
+			key, err := ds.GetUserKey(user, keyID)
 			if err != nil {
 				return nil, err
 			}

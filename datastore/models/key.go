@@ -1,16 +1,12 @@
-package datastore
+package models
 
 import (
-	"errors"
 	"time"
 
 	"github.com/golang/protobuf/ptypes"
 	"github.com/videocoin/common/dbutil/models"
 	iam "github.com/videocoin/videocoinapis/videocoin/iam/v1"
 )
-
-// ErrPEMDataNotFound is returned when no PEM data is found.
-var ErrPEMDataNotFound = errors.New("pem: data not found")
 
 // UserKey represents an user key.
 type UserKey struct {

@@ -7,13 +7,12 @@ import (
 	"errors"
 )
 
-// PrivKeyToBytesPEM returns the PEM encoding of the given DER-encoded private
-// key.
+// PrivKeyToBytesPEM returns the PEM encoding of a RSA private key.
 func PrivKeyToBytesPEM(priv *rsa.PrivateKey) []byte {
 	return pem.EncodeToMemory(&pem.Block{Type: "PRIVATE KEY", Bytes: x509.MarshalPKCS1PrivateKey(priv)})
 }
 
-// PubKeyToBytesPEM returns the PEM encoding the DER-encoded public key.
+// PubKeyToBytesPEM returns the PEM encoding of a RSA public key.
 func PubKeyToBytesPEM(pub *rsa.PublicKey) ([]byte, error) {
 	pubASN1, err := x509.MarshalPKIXPublicKey(pub)
 	if err != nil {
@@ -22,7 +21,7 @@ func PubKeyToBytesPEM(pub *rsa.PublicKey) ([]byte, error) {
 	return pem.EncodeToMemory(&pem.Block{Type: "PUBLIC KEY", Bytes: pubASN1}), nil
 }
 
-// PubKeyFromBytesPEM ...
+// PubKeyFromBytesPEM derives the RSA public key from its PEM encoding.
 func PubKeyFromBytesPEM(pemBytes []byte) (interface{}, error) {
 	block, _ := pem.Decode(pemBytes)
 	if block == nil || block.Type != "PUBLIC KEY" {
