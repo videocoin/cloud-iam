@@ -38,7 +38,7 @@ func ServiceAccount(audience string, hmacSecret string, pubKeyFunc PubKeyFunc) r
 
 		userInfo, found := jwtCache.Get(tokenStr)
 		if found {
-			context.WithValue(ctx, tokenKey{}, userInfo.HMACToken)
+			ctx = context.WithValue(ctx, tokenKey{}, userInfo.HMACToken)
 			return userInfo.ID, nil
 		}
 
@@ -86,7 +86,7 @@ func ServiceAccount(audience string, hmacSecret string, pubKeyFunc PubKeyFunc) r
 		token := jwt.NewWithClaims(jwt.SigningMethodHS256, &jwt.StandardClaims{Subject: claims.Subject, IssuedAt: time.Now().Unix()})
 		tokenStr, _ = token.SignedString(hmacSecretBytes)
 		jwtCache.Add(tokenStr, &UserInfo{ID: claims.Subject, HMACToken: tokenStr}, time.Unix(claims.ExpiresAt, 0))
-		context.WithValue(ctx, tokenKey{}, tokenStr)
+		ctx = context.WithValue(ctx, tokenKey{}, tokenStr)
 
 		return claims.Subject, nil
 	}
@@ -104,7 +104,7 @@ func HMACJWT(secret string) runtime.AuthenticatorFunc {
 
 		userInfo, found := jwtCache.Get(tokenStr)
 		if found {
-			context.WithValue(ctx, tokenKey{}, tokenStr)
+			ctx = context.WithValue(ctx, tokenKey{}, tokenStr)
 			return userInfo.ID, nil
 		}
 
@@ -132,7 +132,7 @@ func HMACJWT(secret string) runtime.AuthenticatorFunc {
 		}
 
 		jwtCache.Add(tokenStr, &UserInfo{ID: claims.Subject}, time.Unix(claims.ExpiresAt, 0))
-		context.WithValue(ctx, tokenKey{}, tokenStr)
+		ctx = context.WithValue(ctx, tokenKey{}, tokenStr)
 
 		return claims.Subject, nil
 	}
