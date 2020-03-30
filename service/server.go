@@ -25,7 +25,12 @@ func New(ds datastore.DataStore) *server {
 
 // CreateKey creates a key for an authenticated user.
 func (s *server) CreateKey(ctx context.Context, empty *empty.Empty) (*iam.Key, error) {
-	key, err := s.createUserKey(security.UserFromCtx(ctx))
+	user, err := security.UserFromCtx(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	key, err := s.createUserKey(user)
 	if err != nil {
 		log.Errorln(err)
 		return nil, status.Error(codes.Internal, err.Error())
@@ -55,7 +60,12 @@ func (s *server) createUserKey(userID string) (*iam.Key, error) {
 
 // GetKey gets a key for an authenticated user.
 func (s *server) GetKey(ctx context.Context, req *iam.GetKeyRequest) (*iam.Key, error) {
-	key, err := s.getUserKey(security.UserFromCtx(ctx), req.KeyId)
+	user, err := security.UserFromCtx(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	key, err := s.getUserKey(user, req.KeyId)
 	if err != nil {
 		if gorm.IsRecordNotFoundError(err) {
 			log.Debugln(err)
@@ -84,7 +94,12 @@ func (s *server) getUserKey(userID string, keyID string) (*iam.Key, error) {
 
 // ListKeys lists keys for an authenticated user.
 func (s *server) ListKeys(ctx context.Context, req *iam.ListKeysRequest) (*iam.ListKeysResponse, error) {
-	keys, err := s.listUserKeys(security.UserFromCtx(ctx))
+	user, err := security.UserFromCtx(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	keys, err := s.listUserKeys(user)
 	if err != nil {
 		log.Errorln(err)
 		return nil, status.Error(codes.Internal, err.Error())
@@ -113,7 +128,12 @@ func (s *server) listUserKeys(userID string) ([]*iam.Key, error) {
 
 // DeleteKey deletes an user key.
 func (s *server) DeleteKey(ctx context.Context, req *iam.DeleteKeyRequest) (*empty.Empty, error) {
-	if err := s.deleteUserKey(security.UserFromCtx(ctx), req.KeyId); err != nil {
+	user, err := security.UserFromCtx(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	if err := s.deleteUserKey(user, req.KeyId); err != nil {
 		log.Errorln(err)
 		return nil, status.Error(codes.Internal, err.Error())
 	}

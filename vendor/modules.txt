@@ -77,7 +77,7 @@ github.com/sirupsen/logrus
 github.com/videocoin/common/grpcutil
 github.com/videocoin/common/log
 github.com/videocoin/common/dbutil/models
-# github.com/videocoin/runtime v0.0.0-20200330003551-06be97b1d436
+# github.com/videocoin/runtime v0.0.0-20200330010837-e988050a058e
 github.com/videocoin/runtime/security
 github.com/videocoin/runtime/middleware/auth
 github.com/videocoin/runtime
