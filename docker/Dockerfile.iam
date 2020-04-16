@@ -4,7 +4,7 @@ WORKDIR /github.com/videocoin/cloud-iam
 
 COPY . .
 
-RUN make build
+RUN make iam
 
 FROM bitnami/minideb:jessie
 

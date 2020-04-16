@@ -9,12 +9,11 @@ import (
 	"syscall"
 
 	"github.com/kelseyhightower/envconfig"
-	"github.com/sirupsen/logrus"
+	log "github.com/sirupsen/logrus"
 	"github.com/videocoin/cloud-iam/datastore"
 	"github.com/videocoin/cloud-iam/helpers"
 	"github.com/videocoin/cloud-iam/service"
 	"github.com/videocoin/common/grpcutil"
-	log "github.com/videocoin/common/log"
 	"github.com/videocoin/runtime/security"
 	iam "github.com/videocoin/videocoinapis/videocoin/iam/v1"
 	"golang.org/x/sync/errgroup"
@@ -31,26 +30,22 @@ type Config struct {
 	Hostname        string `default:"iam.videocoin.network"`
 	DBURI           string `default:"root:@tcp(127.0.0.1:3306)/videocoin?charset=utf8&parseTime=True&loc=Local"`
 	AuthTokenSecret string `required:"true"`
-	entry           *logrus.Entry
 }
 
 func main() {
 	cfg := new(Config)
 	if err := envconfig.Process(ServiceName, cfg); err != nil {
-		fatal(err)
+		log.Fatal(err)
 	}
 
-	lvl, err := logrus.ParseLevel(cfg.LogLevel)
+	lvl, err := log.ParseLevel(cfg.LogLevel)
 	if err != nil {
-		fatal(err)
+		log.Fatal(err)
 	}
-	logger := log.NewLogrus(lvl)
-
-	cfg.entry = logrus.NewEntry(logger)
-	log.SetGlobal(logger)
+	log.SetLevel(lvl)
 
 	if err := run(cfg); err != nil {
-		log.Fatalln(err)
+		log.Fatal(err)
 	}
 }
 
@@ -80,7 +75,7 @@ func run(cfg *Config) error {
 			}
 			return helpers.PubKeyFromBytesPEM(key.PublicKeyData)
 		}
-		grpcSrv = grpc.NewServer(grpcutil.DefaultServerOptsWithAuth(cfg.entry, security.Authnz(cfg.Hostname, cfg.AuthTokenSecret, pubKeyFunc))...)
+		grpcSrv = grpc.NewServer(grpcutil.DefaultServerOptsWithAuth(log.NewEntry(log.StandardLogger()), security.Authnz(cfg.Hostname, cfg.AuthTokenSecret, pubKeyFunc))...)
 
 		iam.RegisterIAMServer(grpcSrv, service.New(ds))
 		healthpb.RegisterHealthServer(grpcSrv, healthSrv)

@@ -1,0 +1,13 @@
+FROM golang:1.13 as builder
+
+WORKDIR /github.com/videocoin/cloud-iam
+
+COPY . .
+
+RUN make metadata
+
+FROM bitnami/minideb:jessie
+
+COPY --from=builder /github.com/videocoin/cloud-iam/build/bin/metadatad /usr/local/bin/
+
+CMD ["iamd"]
