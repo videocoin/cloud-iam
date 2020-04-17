@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"net/http"
+	"net/url"
 	"time"
 
 	jwt "github.com/dgrijalva/jwt-go"
@@ -21,7 +22,6 @@ var (
 	headerAuthorize = "authorization"
 )
 
-/*
 // ServiceAccount handles authentication for service accounts.
 func ServiceAccount(audience string, hmacSecret string, pubKeyFunc PubKeyFunc) runtime.AuthenticatorFunc {
 	var (
@@ -29,8 +29,8 @@ func ServiceAccount(audience string, hmacSecret string, pubKeyFunc PubKeyFunc) r
 		hmacSecretBytes = []byte(hmacSecret)
 	)
 
-	return func(ctx context.Context) (interface{}, error) {
-		tokenStr, err := grpc_auth.AuthFromMD(ctx, "Bearer")
+	return func(r *http.Request) (interface{}, error) {
+		tokenStr, err := authFromReq(r, "Bearer")
 		if err != nil {
 			return "", err
 		}
@@ -68,7 +68,7 @@ func ServiceAccount(audience string, hmacSecret string, pubKeyFunc PubKeyFunc) r
 				return nil, fmt.Errorf("invalid kid: %v", kid)
 			}
 
-			return pubKeyFunc(ctx, claims.Subject, kid.(string))
+			return pubKeyFunc(claims.Subject, kid.(string))
 		})
 		if err != nil {
 			if ve, ok := err.(*jwt.ValidationError); ok {
@@ -89,7 +89,6 @@ func ServiceAccount(audience string, hmacSecret string, pubKeyFunc PubKeyFunc) r
 		return userInfo, nil
 	}
 }
-*/
 
 // HMACJWT handles authentication based on JWT with HMAC protection.
 func HMACJWT(secret string) runtime.AuthenticatorFunc {

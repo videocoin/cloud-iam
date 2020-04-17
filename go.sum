@@ -234,10 +234,8 @@ github.com/videocoin/common v0.0.0-20200330013747-f56e4962fe75 h1:Z6vv2LPwGl0E7Y
 github.com/videocoin/common v0.0.0-20200330013747-f56e4962fe75/go.mod h1:M6GaEeuvkI27EQJ5JXKyG8ZFd0NEApyjCsBRtEkwxXM=
 github.com/videocoin/runtime v0.0.0-20200330010837-e988050a058e h1:bIVp+TVsC7v73lOoCrbgWOTBwY2OrZkgJUN05wI6PyU=
 github.com/videocoin/runtime v0.0.0-20200330010837-e988050a058e/go.mod h1:bY9PlQVJAxllH9YKku/DKDY9SKJdKv2A7xX2e1q9oPw=
-github.com/videocoin/runtime v0.0.0-20200330025620-97069d157eee h1:9eGfItYOfwqRh4f8hcnrJ+FP4QCNpYC5orvRo1DXnEY=
-github.com/videocoin/runtime v0.0.0-20200330025620-97069d157eee/go.mod h1:bY9PlQVJAxllH9YKku/DKDY9SKJdKv2A7xX2e1q9oPw=
-github.com/videocoin/runtime v0.0.0-20200417160441-8810ced18981 h1:3G17Ppy5O6DBM5qudh5fiwk4g9mqlte3H/RoARTQrDA=
-github.com/videocoin/runtime v0.0.0-20200417160441-8810ced18981/go.mod h1:kRzasOAl1YIkSycP2fc2B05WyecNdAZ7N8vgathsIXc=
+github.com/videocoin/runtime v0.0.0-20200417230112-c23dbfebffce h1:oy1Snx1+AU7xjTyJ0GG1WLRLW5Sdnf9YU9cjhCeJqrE=
+github.com/videocoin/runtime v0.0.0-20200417230112-c23dbfebffce/go.mod h1:kRzasOAl1YIkSycP2fc2B05WyecNdAZ7N8vgathsIXc=
 github.com/videocoin/videocoinapis v0.0.0-20200416232914-74a919f5c32a h1:QCgl0d0LkNsIom6rShV0oPZdAMRXtPcICBHxuBiX6XA=
 github.com/videocoin/videocoinapis v0.0.0-20200416232914-74a919f5c32a/go.mod h1:CBucjp4FIWr8ZGTrYHT5UeeozaKEgo2vIYJHZHVmiSg=
 github.com/yuin/goldmark v1.1.25/go.mod h1:3hX8gzYuyVAZsxl0MRgGTJEmQBFcNTphYh9decYSb74=

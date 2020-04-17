@@ -4,6 +4,7 @@ import (
 	"context"
 	"net/http"
 
+	jwt "github.com/dgrijalva/jwt-go"
 	"github.com/videocoin/runtime"
 )
 
@@ -16,6 +17,7 @@ type AuthOption interface {
 
 type authOptions struct {
 	defaultAuthenticator runtime.Authenticator
+	authStrategies       []*authStrategy
 }
 
 type funcAuthOption struct {
@@ -32,9 +34,24 @@ func newFuncAuthOption(f func(*authOptions)) *funcAuthOption {
 	}
 }
 
-func WithAuthentication(auth runtime.Authenticator) AuthOption {
+type authStrategy struct {
+	auth runtime.Authenticator
+	rule AuthRuleFunc
+}
+
+type AuthRuleFunc func(token *jwt.Token) bool
+
+func WithAuthentication(auth runtime.Authenticator, rules ...AuthRuleFunc) AuthOption {
 	return newFuncAuthOption(func(o *authOptions) {
-		o.defaultAuthenticator = auth
+		if len(rules) == 0 {
+			o.defaultAuthenticator = auth
+			return
+		}
+
+		o.authStrategies = append(o.authStrategies, &authStrategy{
+			auth: auth,
+			rule: rules[0],
+		})
 	})
 }
 
@@ -72,14 +89,24 @@ func (a authnz) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 }
 
 func (a authnz) authenticate(r *http.Request) (interface{}, error) {
-	/*
-		tokenStr, err := authFromReq(r, "Bearer")
-		if err != nil {
-			return nil, err
-		}
-	*/
+	tokenStr, err := authFromReq(r, "Bearer")
+	if err != nil {
+		return nil, err
+	}
+	token, _, err := new(jwt.Parser).ParseUnverified(tokenStr, &jwt.StandardClaims{})
+	if err != nil {
+		return nil, err
+	}
 
-	return a.opts.defaultAuthenticator.Authenticate(r)
+	authenticator := a.opts.defaultAuthenticator
+	for _, strategy := range a.opts.authStrategies {
+		if strategy.rule(token) {
+			authenticator = strategy.auth
+			break
+		}
+	}
+
+	return authenticator.Authenticate(r)
 }
 
 func Auth(opt ...AuthOption) func(http.Handler) http.Handler {
