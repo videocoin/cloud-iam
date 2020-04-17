@@ -1,0 +1,15 @@
+FROM golang:1.13 as builder
+
+WORKDIR /github.com/videocoin/cloud-iam
+
+COPY . .
+
+RUN make proxy
+
+FROM bitnami/minideb:jessie
+
+COPY --from=builder /github.com/videocoin/cloud-iam/build/bin/proxyd /usr/local/bin/
+
+RUN install_packages ca-certificates
+
+CMD ["proxyd"]

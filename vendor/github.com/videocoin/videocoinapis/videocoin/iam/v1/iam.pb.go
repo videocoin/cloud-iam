@@ -283,7 +283,9 @@ func init() {
 	proto.RegisterType((*DeleteKeyRequest)(nil), "videocoin.iam.v1.DeleteKeyRequest")
 }
 
-func init() { proto.RegisterFile("videocoin/iam/v1/iam.proto", fileDescriptor_6d67148b8fa02d13) }
+func init() {
+	proto.RegisterFile("videocoin/iam/v1/iam.proto", fileDescriptor_6d67148b8fa02d13)
+}
 
 var fileDescriptor_6d67148b8fa02d13 = []byte{
 	// 620 bytes of a gzipped FileDescriptorProto

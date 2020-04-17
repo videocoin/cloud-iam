@@ -11,10 +11,8 @@ import (
 	"github.com/kelseyhightower/envconfig"
 	log "github.com/sirupsen/logrus"
 	"github.com/videocoin/cloud-iam/datastore"
-	"github.com/videocoin/cloud-iam/helpers"
 	"github.com/videocoin/cloud-iam/service"
 	"github.com/videocoin/common/grpcutil"
-	"github.com/videocoin/runtime/security"
 	iam "github.com/videocoin/videocoinapis/videocoin/iam/v1"
 	"golang.org/x/sync/errgroup"
 	"google.golang.org/grpc"
@@ -68,14 +66,7 @@ func run(cfg *Config) error {
 		}
 		defer ds.Close()
 
-		pubKeyFunc := func(ctx context.Context, user string, keyID string) (interface{}, error) {
-			key, err := ds.GetUserKey(user, keyID)
-			if err != nil {
-				return nil, err
-			}
-			return helpers.PubKeyFromBytesPEM(key.PublicKeyData)
-		}
-		grpcSrv = grpc.NewServer(grpcutil.DefaultServerOptsWithAuth(log.NewEntry(log.StandardLogger()), security.Authnz(cfg.Hostname, cfg.AuthTokenSecret, pubKeyFunc))...)
+		grpcSrv = grpc.NewServer(grpcutil.DefaultServerOpts(log.NewEntry(log.StandardLogger()))...)
 
 		iam.RegisterIAMServer(grpcSrv, service.New(ds))
 		healthpb.RegisterHealthServer(grpcSrv, healthSrv)
