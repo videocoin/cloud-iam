@@ -1,17 +1,6 @@
 package security
 
-import (
-	"context"
-	"encoding/json"
-	"errors"
-	"fmt"
-	"net/http"
-
-	grpc_auth "github.com/grpc-ecosystem/go-grpc-middleware/auth"
-	cleanhttp "github.com/hashicorp/go-cleanhttp"
-	"github.com/videocoin/runtime"
-)
-
+/*
 // RBAC handles role based access authorization.
 func RBAC() runtime.AuthorizerFunc {
 	authzCache := NewAuthzCache(AuthzCacheSize)
@@ -35,7 +24,7 @@ func RBAC() runtime.AuthorizerFunc {
 		},
 	}
 
-	return func(ctx context.Context, principal interface{}, fullMethod string) error {
+	return func(principal interface{}, fullMethod string) error {
 		userInfo, ok := principal.(*UserInfo)
 		if !ok {
 			return errors.New("invalid principal")
@@ -119,3 +108,4 @@ func getUserRole(tokenStr string) (string, error) {
 
 	return role.(string), nil
 }
+*/

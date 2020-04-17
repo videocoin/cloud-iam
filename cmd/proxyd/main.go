@@ -7,15 +7,18 @@ import (
 	"github.com/grpc-ecosystem/grpc-gateway/runtime"
 	"github.com/kelseyhightower/envconfig"
 	log "github.com/sirupsen/logrus"
+	"github.com/videocoin/runtime/security"
 	"google.golang.org/grpc"
 )
 
 const serviceName = "proxy"
 
 type config struct {
-	LogLevel   string `default:"info"`
-	ListenAddr string `default:":8080"`
-	GRPCAddr   string `default:"0.0.0.0:5000"`
+	LogLevel        string `default:"info"`
+	ListenAddr      string `default:":8080"`
+	GRPCAddr        string `default:"0.0.0.0:5000"`
+	Hostname        string `default:"iam.videocoin.network"`
+	AuthTokenSecret string `required:"true"`
 }
 
 func main() {
@@ -57,9 +60,10 @@ func run(cfg *config) error {
 	gw := runtime.NewServeMux()
 	mux.Handle("/", gw)
 
+	authOpts := []security.AuthOption{security.WithAuthentication(security.HMACJWT(cfg.AuthTokenSecret))}
 	srv := &http.Server{
 		Addr:    cfg.ListenAddr,
-		Handler: allowCORS(mux),
+		Handler: security.Auth(authOpts...)(allowCORS(mux)),
 	}
 
 	go func() {

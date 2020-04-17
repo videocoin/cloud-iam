@@ -81,7 +81,7 @@ github.com/sirupsen/logrus
 github.com/videocoin/common/dbutil/models
 github.com/videocoin/common/grpcutil
 github.com/videocoin/common/log
-# github.com/videocoin/runtime v0.0.0-20200330025620-97069d157eee
+# github.com/videocoin/runtime v0.0.0-20200417160441-8810ced18981
 github.com/videocoin/runtime
 github.com/videocoin/runtime/middleware/auth
 github.com/videocoin/runtime/security
@@ -108,6 +108,9 @@ golang.org/x/text/secure/bidirule
 golang.org/x/text/transform
 golang.org/x/text/unicode/bidi
 golang.org/x/text/unicode/norm
+# google.golang.org/api v0.20.0
+google.golang.org/api/googleapi
+google.golang.org/api/internal/third_party/uritemplates
 # google.golang.org/appengine v1.6.5
 google.golang.org/appengine/cloudsql
 # google.golang.org/genproto v0.0.0-20200317114155-1f3552e48f24

@@ -1,15 +1,13 @@
 package security
 
 import (
-	"context"
 	"errors"
 	"fmt"
-	"net/url"
+	"net/http"
 	"time"
 
 	jwt "github.com/dgrijalva/jwt-go"
 	"github.com/google/uuid"
-	grpc_auth "github.com/grpc-ecosystem/go-grpc-middleware/auth"
 	"github.com/videocoin/runtime"
 )
 
@@ -23,6 +21,7 @@ var (
 	headerAuthorize = "authorization"
 )
 
+/*
 // ServiceAccount handles authentication for service accounts.
 func ServiceAccount(audience string, hmacSecret string, pubKeyFunc PubKeyFunc) runtime.AuthenticatorFunc {
 	var (
@@ -90,13 +89,14 @@ func ServiceAccount(audience string, hmacSecret string, pubKeyFunc PubKeyFunc) r
 		return userInfo, nil
 	}
 }
+*/
 
 // HMACJWT handles authentication based on JWT with HMAC protection.
 func HMACJWT(secret string) runtime.AuthenticatorFunc {
 	jwtCache := NewJWTCache(JwtCacheSize)
 
-	return func(ctx context.Context) (interface{}, error) {
-		tokenStr, err := grpc_auth.AuthFromMD(ctx, "Bearer")
+	return func(r *http.Request) (interface{}, error) {
+		tokenStr, err := authFromReq(r, "Bearer")
 		if err != nil {
 			return "", err
 		}

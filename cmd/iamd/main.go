@@ -23,16 +23,14 @@ import (
 const serviceName = "iam"
 
 type Config struct {
-	LogLevel        string `default:"info"`
-	RPCAddr         string `default:"0.0.0.0:5000"`
-	Hostname        string `default:"iam.videocoin.network"`
-	DBURI           string `default:"root:@tcp(127.0.0.1:3306)/videocoin?charset=utf8&parseTime=True&loc=Local"`
-	AuthTokenSecret string `required:"true"`
+	LogLevel string `default:"info"`
+	RPCAddr  string `default:"0.0.0.0:5000"`
+	DBURI    string `default:"root:@tcp(127.0.0.1:3306)/videocoin?charset=utf8&parseTime=True&loc=Local"`
 }
 
 func main() {
 	cfg := new(Config)
-	if err := envconfig.Process(ServiceName, cfg); err != nil {
+	if err := envconfig.Process(serviceName, cfg); err != nil {
 		log.Fatal(err)
 	}
 
@@ -70,7 +68,7 @@ func run(cfg *Config) error {
 
 		iam.RegisterIAMServer(grpcSrv, service.New(ds))
 		healthpb.RegisterHealthServer(grpcSrv, healthSrv)
-		healthSrv.SetServingStatus(fmt.Sprintf("grpc.health.v1.%s", ServiceName), healthpb.HealthCheckResponse_SERVING)
+		healthSrv.SetServingStatus(fmt.Sprintf("grpc.health.v1.%s", serviceName), healthpb.HealthCheckResponse_SERVING)
 
 		lis, err := net.Listen("tcp", cfg.RPCAddr)
 		if err != nil {
@@ -88,7 +86,7 @@ func run(cfg *Config) error {
 
 	cancel()
 
-	healthSrv.SetServingStatus(fmt.Sprintf("grpc.health.v1.%s", ServiceName), healthpb.HealthCheckResponse_NOT_SERVING)
+	healthSrv.SetServingStatus(fmt.Sprintf("grpc.health.v1.%s", serviceName), healthpb.HealthCheckResponse_NOT_SERVING)
 
 	if grpcSrv != nil {
 		grpcSrv.GracefulStop()

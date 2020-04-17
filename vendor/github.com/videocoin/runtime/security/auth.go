@@ -2,51 +2,110 @@ package security
 
 import (
 	"context"
+	"net/http"
 
-	grpc_auth "github.com/grpc-ecosystem/go-grpc-middleware/auth"
 	"github.com/videocoin/runtime"
-	"github.com/videocoin/runtime/middleware/auth"
-	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/status"
 )
 
-type PubKeyFunc func(ctx context.Context, subject string, keyID string) (interface{}, error)
+var defaultAuthOptions = authOptions{}
 
-// Authnz returns an authentication and authorization handler for JWT-based auth.
-func Authnz(audience string, hmacSecret string, pubKeyFunc PubKeyFunc) auth.AuthFunc {
-	var (
-		svcacc runtime.Authenticator = ServiceAccount(audience, hmacSecret, pubKeyFunc)
-		hmac   runtime.Authenticator = HMACJWT(hmacSecret)
-		rbac   runtime.Authorizer    = RBAC()
-	)
+// AuthOption configures how we set up the authentication and authorization layers.
+type AuthOption interface {
+	apply(*authOptions)
+}
 
-	return func(ctx context.Context, fullMethod string) (context.Context, error) {
-		tokenStr, err := grpc_auth.AuthFromMD(ctx, "Bearer")
-		if err != nil {
-			return nil, status.Error(codes.Unauthenticated, err.Error())
-		}
+type authOptions struct {
+	defaultAuthenticator runtime.Authenticator
+}
 
-		token, err := parseHeader(tokenStr)
-		if err != nil {
-			return nil, status.Error(codes.Unauthenticated, err.Error())
-		}
+type funcAuthOption struct {
+	f func(*authOptions)
+}
 
-		var authenticator runtime.Authenticator
-		if _, ok := token.Header["kid"]; ok {
-			authenticator = svcacc
-		} else {
-			authenticator = hmac
-		}
+func (fdo *funcAuthOption) apply(do *authOptions) {
+	fdo.f(do)
+}
 
-		user, err := authenticator.Authenticate(ctx)
-		if err != nil {
-			return nil, status.Error(codes.Unauthenticated, err.Error())
-		}
-
-		if err := rbac.Authorize(ctx, user, fullMethod); err != nil {
-			return nil, status.Error(codes.PermissionDenied, err.Error())
-		}
-
-		return context.WithValue(ctx, userKey{}, user), nil
+func newFuncAuthOption(f func(*authOptions)) *funcAuthOption {
+	return &funcAuthOption{
+		f: f,
 	}
 }
+
+func WithAuthentication(auth runtime.Authenticator) AuthOption {
+	return newFuncAuthOption(func(o *authOptions) {
+		o.defaultAuthenticator = auth
+	})
+}
+
+type authnz struct {
+	opts authOptions
+	h    http.Handler
+}
+
+func newAuthnzHandler(h http.Handler, opt ...AuthOption) http.Handler {
+	opts := defaultAuthOptions
+	for _, o := range opt {
+		o.apply(&opts)
+	}
+
+	return &authnz{
+		opts: opts,
+		h:    h,
+	}
+}
+
+// Satisfies the http.Handler interface for basicAuth.
+func (a authnz) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	user, err := a.authenticate(r)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusUnauthorized)
+	}
+
+	/*
+		if err := a.rbac.Authorize(ctx, user, fullMethod); err != nil {
+			return nil, status.Error(codes.PermissionDenied, err.Error())
+		}
+	*/
+
+	a.h.ServeHTTP(w, r.WithContext(context.WithValue(r.Context(), userKey{}, user)))
+}
+
+func (a authnz) authenticate(r *http.Request) (interface{}, error) {
+	/*
+		tokenStr, err := authFromReq(r, "Bearer")
+		if err != nil {
+			return nil, err
+		}
+	*/
+
+	return a.opts.defaultAuthenticator.Authenticate(r)
+}
+
+func Auth(opt ...AuthOption) func(http.Handler) http.Handler {
+	return func(h http.Handler) http.Handler {
+		return newAuthnzHandler(h, opt...)
+	}
+}
+
+/*
+return &authnz{
+	svcacc: ServiceAccount(opts.audience, opts.hmacSecret, opts.pubKeyFunc),
+	hmac:   HMACJWT(opts.hmacSecret),
+	rbac:   RBAC(),
+}
+
+token, err := parseHeader(tokenStr)
+if err != nil {
+	return nil, err
+}
+
+var authenticator runtime.Authenticator
+if _, ok := token.Header["kid"]; ok {
+	authenticator = a.svcacc
+} else {
+	authenticator = a.hmac
+}
+
+return authenticator.Authenticate(r)
+*/
