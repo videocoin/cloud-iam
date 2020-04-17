@@ -57,13 +57,13 @@ func run(cfg *config) error {
 	mux := http.NewServeMux()
 	mux.HandleFunc("/health", handleHealthCheck(conn))
 
-	gw := runtime.NewServeMux()
-	mux.Handle("/", gw)
-
 	authOpts := []security.AuthOption{security.WithAuthentication(security.HMACJWT(cfg.AuthTokenSecret))}
+	gw := runtime.NewServeMux()
+	mux.Handle("/", security.Auth(authOpts...)(gw))
+
 	srv := &http.Server{
 		Addr:    cfg.ListenAddr,
-		Handler: security.Auth(authOpts...)(allowCORS(mux)),
+		Handler: allowCORS(mux),
 	}
 
 	go func() {
