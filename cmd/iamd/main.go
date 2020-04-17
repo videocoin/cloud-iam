@@ -20,7 +20,7 @@ import (
 	healthpb "google.golang.org/grpc/health/grpc_health_v1"
 )
 
-var ServiceName = "iam"
+const serviceName = "iam"
 
 type Config struct {
 	LogLevel        string `default:"info"`
@@ -95,9 +95,4 @@ func run(cfg *Config) error {
 	}
 
 	return errgrp.Wait()
-}
-
-func fatal(err error) {
-	fmt.Fprintf(os.Stderr, "%s\n", err)
-	os.Exit(1)
 }

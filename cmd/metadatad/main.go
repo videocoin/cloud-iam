@@ -62,5 +62,7 @@ func run(cfg *Config) error {
 		}
 	}()
 
+	fin.Wait()
+
 	return nil
 }
