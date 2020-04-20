@@ -77,18 +77,14 @@ github.com/prometheus/procfs/internal/util
 github.com/pseidemann/finish
 # github.com/sirupsen/logrus v1.5.0
 github.com/sirupsen/logrus
-# github.com/videocoin/common v0.0.0-20200330013747-f56e4962fe75
+# github.com/videocoin/common v0.0.0-20200420001538-c6f2c5f9554c
 github.com/videocoin/common/dbutil/models
 github.com/videocoin/common/grpcutil
 github.com/videocoin/common/log
-# github.com/videocoin/runtime v0.0.0-20200417230112-c23dbfebffce
-github.com/videocoin/runtime
-github.com/videocoin/runtime/middleware/auth
-github.com/videocoin/runtime/security
+# github.com/videocoin/runtime v0.0.0-20200420001230-63d44b789b2a
+github.com/videocoin/runtime/grpc/middleware/auth
 # github.com/videocoin/videocoinapis v0.0.0-20200416232914-74a919f5c32a
 github.com/videocoin/videocoinapis/videocoin/iam/v1
-# golang.org/x/crypto v0.0.0-20191205180655-e7c4368fe9dd
-golang.org/x/crypto/blake2b
 # golang.org/x/net v0.0.0-20200301022130-244492dfa37a
 golang.org/x/net/context
 golang.org/x/net/http/httpguts
@@ -100,7 +96,6 @@ golang.org/x/net/trace
 # golang.org/x/sync v0.0.0-20200317015054-43a5402ce75a
 golang.org/x/sync/errgroup
 # golang.org/x/sys v0.0.0-20200317113312-5766fd39f98d
-golang.org/x/sys/cpu
 golang.org/x/sys/unix
 golang.org/x/sys/windows
 # golang.org/x/text v0.3.2
@@ -108,9 +103,6 @@ golang.org/x/text/secure/bidirule
 golang.org/x/text/transform
 golang.org/x/text/unicode/bidi
 golang.org/x/text/unicode/norm
-# google.golang.org/api v0.20.0
-google.golang.org/api/googleapi
-google.golang.org/api/internal/third_party/uritemplates
 # google.golang.org/appengine v1.6.5
 google.golang.org/appengine/cloudsql
 # google.golang.org/genproto v0.0.0-20200317114155-1f3552e48f24

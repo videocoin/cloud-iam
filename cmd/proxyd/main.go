@@ -4,22 +4,18 @@ import (
 	"context"
 	"net/http"
 
-	jwt "github.com/dgrijalva/jwt-go"
 	"github.com/grpc-ecosystem/grpc-gateway/runtime"
 	"github.com/kelseyhightower/envconfig"
 	log "github.com/sirupsen/logrus"
-	"github.com/videocoin/runtime/security"
 	"google.golang.org/grpc"
 )
 
 const serviceName = "proxy"
 
 type config struct {
-	LogLevel        string `default:"info"`
-	ListenAddr      string `default:":8080"`
-	GRPCAddr        string `default:"0.0.0.0:5000"`
-	Hostname        string `default:"iam.videocoin.network"`
-	AuthTokenSecret string `required:"true"`
+	LogLevel   string `default:"info"`
+	ListenAddr string `default:":8080"`
+	GRPCAddr   string `default:"0.0.0.0:5000"`
 }
 
 func main() {
@@ -58,14 +54,8 @@ func run(cfg *config) error {
 	mux := http.NewServeMux()
 	mux.HandleFunc("/health", handleHealthCheck(conn))
 
-	hasKidHeader := func(token *jwt.Token) bool { return token.Header["kid"] != "" }
-	authOpts := []security.AuthOption{
-		security.WithAuthentication(security.HMACJWT(cfg.AuthTokenSecret)),
-		security.WithAuthentication(security.ServiceAccount(cfg.Hostname, cfg.AuthTokenSecret, security.ServiceAccountPublicKey), hasKidHeader),
-	}
-
 	gw := runtime.NewServeMux()
-	mux.Handle("/", security.Auth(authOpts...)(gw))
+	mux.Handle("/", gw)
 
 	srv := &http.Server{
 		Addr:    cfg.ListenAddr,

@@ -12,8 +12,8 @@ require (
 	github.com/kelseyhightower/envconfig v1.4.0
 	github.com/pseidemann/finish v1.0.0
 	github.com/sirupsen/logrus v1.5.0
-	github.com/videocoin/common v0.0.0-20200330013747-f56e4962fe75
-	github.com/videocoin/runtime v0.0.0-20200417230112-c23dbfebffce
+	github.com/videocoin/common v0.0.0-20200420001538-c6f2c5f9554c
+	github.com/videocoin/runtime v0.0.0-20200420001230-63d44b789b2a
 	github.com/videocoin/videocoinapis v0.0.0-20200416232914-74a919f5c32a
 	golang.org/x/sync v0.0.0-20200317015054-43a5402ce75a
 	google.golang.org/grpc v1.28.0

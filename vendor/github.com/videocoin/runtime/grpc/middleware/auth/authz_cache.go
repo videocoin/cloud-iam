@@ -1,11 +1,11 @@
-package security
+package auth
 
 import (
+	"crypto/md5"
 	"encoding/hex"
 	"time"
 
 	lru "github.com/hashicorp/golang-lru"
-	"golang.org/x/crypto/blake2b"
 )
 
 const (
@@ -57,7 +57,10 @@ func (c *AuthzCache) Get(key string) (*AuthzValue, bool) {
 	return authzVal, true
 }
 
-func NewBlake2b256(data []byte) string {
-	res := blake2b.Sum256(data)
-	return hex.EncodeToString(res[:])
+func (c *AuthzCache) ComposeKey(parts ...string) string {
+	hasher := md5.New()
+	for _, part := range parts {
+		hasher.Write([]byte(part))
+	}
+	return hex.EncodeToString(hasher.Sum(nil))
 }

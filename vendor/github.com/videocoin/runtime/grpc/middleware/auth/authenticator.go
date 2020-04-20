@@ -1,15 +1,15 @@
-package security
+package auth
 
 import (
+	"context"
 	"errors"
 	"fmt"
-	"net/http"
 	"net/url"
 	"time"
 
 	jwt "github.com/dgrijalva/jwt-go"
 	"github.com/google/uuid"
-	"github.com/videocoin/runtime"
+	grpc_auth "github.com/grpc-ecosystem/go-grpc-middleware/auth"
 )
 
 var (
@@ -18,19 +18,15 @@ var (
 	ErrKidRequired             = errors.New("kid required")
 )
 
-var (
-	headerAuthorize = "authorization"
-)
-
 // ServiceAccount handles authentication for service accounts.
-func ServiceAccount(audience string, hmacSecret string, pubKeyFunc PubKeyFunc) runtime.AuthenticatorFunc {
+func ServiceAccount(audience string, hmacSecret string, pubKeyFunc PubKeyFunc) AuthenticatorFunc {
 	var (
 		jwtCache        = NewJWTCache(JwtCacheSize)
 		hmacSecretBytes = []byte(hmacSecret)
 	)
 
-	return func(r *http.Request) (interface{}, error) {
-		tokenStr, err := authFromReq(r, "Bearer")
+	return func(ctx context.Context) (interface{}, error) {
+		tokenStr, err := grpc_auth.AuthFromMD(ctx, "Bearer")
 		if err != nil {
 			return "", err
 		}
@@ -68,7 +64,7 @@ func ServiceAccount(audience string, hmacSecret string, pubKeyFunc PubKeyFunc) r
 				return nil, fmt.Errorf("invalid kid: %v", kid)
 			}
 
-			return pubKeyFunc(claims.Subject, kid.(string))
+			return pubKeyFunc(ctx, claims.Subject, kid.(string))
 		})
 		if err != nil {
 			if ve, ok := err.(*jwt.ValidationError); ok {
@@ -91,11 +87,11 @@ func ServiceAccount(audience string, hmacSecret string, pubKeyFunc PubKeyFunc) r
 }
 
 // HMACJWT handles authentication based on JWT with HMAC protection.
-func HMACJWT(secret string) runtime.AuthenticatorFunc {
+func HMACJWT(secret string) AuthenticatorFunc {
 	jwtCache := NewJWTCache(JwtCacheSize)
 
-	return func(r *http.Request) (interface{}, error) {
-		tokenStr, err := authFromReq(r, "Bearer")
+	return func(ctx context.Context) (interface{}, error) {
+		tokenStr, err := grpc_auth.AuthFromMD(ctx, "Bearer")
 		if err != nil {
 			return "", err
 		}

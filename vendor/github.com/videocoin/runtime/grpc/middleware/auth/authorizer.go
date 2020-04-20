@@ -1,8 +1,18 @@
-package security
+package auth
 
-/*
+import (
+	"context"
+	"encoding/json"
+	"errors"
+	"fmt"
+	"net/http"
+
+	grpc_auth "github.com/grpc-ecosystem/go-grpc-middleware/auth"
+	cleanhttp "github.com/hashicorp/go-cleanhttp"
+)
+
 // RBAC handles role based access authorization.
-func RBAC() runtime.AuthorizerFunc {
+func RBAC() AuthorizerFunc {
 	authzCache := NewAuthzCache(AuthzCacheSize)
 
 	// fix me: mock data
@@ -20,11 +30,12 @@ func RBAC() runtime.AuthorizerFunc {
 				"iam.serviceAccountKeys.create",
 				"iam.serviceAccountKeys.get",
 				"iam.serviceAccountKeys.list",
+				"iam.serviceAccountKeys.delete",
 			},
 		},
 	}
 
-	return func(principal interface{}, fullMethod string) error {
+	return func(ctx context.Context, principal interface{}, fullMethod string) error {
 		userInfo, ok := principal.(*UserInfo)
 		if !ok {
 			return errors.New("invalid principal")
@@ -43,7 +54,7 @@ func RBAC() runtime.AuthorizerFunc {
 			tokenStr = userInfo.HMACToken
 		}
 
-		key := NewBlake2b256([]byte(tokenStr + fullMethod))
+		key := authzCache.ComposeKey(tokenStr, fullMethod)
 		val, found := authzCache.Get(key)
 		if found {
 			if val.Success {
@@ -52,25 +63,21 @@ func RBAC() runtime.AuthorizerFunc {
 			return fmt.Errorf("permission %s is required to perform this operation on account %s", val.RequiredPermission, principal)
 		}
 
-		// maps method to permission
 		requiredPermission, found := mapMethodToPermission[fullMethod]
 		if !found {
 			return fmt.Errorf("permission not found")
 		}
 
-		// get user role
 		userRole, err := getUserRole(tokenStr)
 		if err != nil {
 			return err
 		}
 
-		// load role definition
 		role, found := roles[userRole]
 		if !found {
 			return fmt.Errorf("role not found")
 		}
 
-		// verify if role has the required permission
 		for _, permission := range role.IncludedPermissions {
 			if permission == requiredPermission {
 				authzCache.Add(key, &AuthzValue{Success: true})
@@ -108,4 +115,3 @@ func getUserRole(tokenStr string) (string, error) {
 
 	return role.(string), nil
 }
-*/

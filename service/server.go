@@ -8,7 +8,7 @@ import (
 	"github.com/jinzhu/gorm"
 	"github.com/videocoin/cloud-iam/datastore"
 	"github.com/videocoin/common/log"
-	"github.com/videocoin/runtime/security"
+	"github.com/videocoin/runtime/grpc/middleware/auth"
 	iam "github.com/videocoin/videocoinapis/videocoin/iam/v1"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -25,7 +25,7 @@ func New(ds datastore.DataStore) *server {
 
 // CreateKey creates a key for an authenticated user.
 func (s *server) CreateKey(ctx context.Context, empty *empty.Empty) (*iam.Key, error) {
-	user, err := security.UserFromCtx(ctx)
+	user, err := auth.UserFromCtx(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -60,7 +60,7 @@ func (s *server) createUserKey(userID string) (*iam.Key, error) {
 
 // GetKey gets a key for an authenticated user.
 func (s *server) GetKey(ctx context.Context, req *iam.GetKeyRequest) (*iam.Key, error) {
-	user, err := security.UserFromCtx(ctx)
+	user, err := auth.UserFromCtx(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -94,7 +94,7 @@ func (s *server) getUserKey(userID string, keyID string) (*iam.Key, error) {
 
 // ListKeys lists keys for an authenticated user.
 func (s *server) ListKeys(ctx context.Context, req *iam.ListKeysRequest) (*iam.ListKeysResponse, error) {
-	user, err := security.UserFromCtx(ctx)
+	user, err := auth.UserFromCtx(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -128,7 +128,7 @@ func (s *server) listUserKeys(userID string) ([]*iam.Key, error) {
 
 // DeleteKey deletes an user key.
 func (s *server) DeleteKey(ctx context.Context, req *iam.DeleteKeyRequest) (*empty.Empty, error) {
-	user, err := security.UserFromCtx(ctx)
+	user, err := auth.UserFromCtx(ctx)
 	if err != nil {
 		return nil, err
 	}

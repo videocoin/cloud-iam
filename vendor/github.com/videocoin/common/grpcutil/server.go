@@ -8,7 +8,7 @@ import (
 	grpcvalidator "github.com/grpc-ecosystem/go-grpc-middleware/validator"
 	grpcprometheus "github.com/grpc-ecosystem/go-grpc-prometheus"
 	opentracing "github.com/opentracing/opentracing-go"
-	"github.com/videocoin/runtime/middleware/auth"
+	"github.com/videocoin/runtime/grpc/middleware/auth"
 
 	"github.com/sirupsen/logrus"
 	"google.golang.org/grpc"

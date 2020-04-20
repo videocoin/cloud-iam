@@ -8,11 +8,14 @@ import (
 	"os/signal"
 	"syscall"
 
+	jwt "github.com/dgrijalva/jwt-go"
 	"github.com/kelseyhightower/envconfig"
 	log "github.com/sirupsen/logrus"
 	"github.com/videocoin/cloud-iam/datastore"
+	"github.com/videocoin/cloud-iam/helpers"
 	"github.com/videocoin/cloud-iam/service"
 	"github.com/videocoin/common/grpcutil"
+	"github.com/videocoin/runtime/grpc/middleware/auth"
 	iam "github.com/videocoin/videocoinapis/videocoin/iam/v1"
 	"golang.org/x/sync/errgroup"
 	"google.golang.org/grpc"
@@ -23,9 +26,11 @@ import (
 const serviceName = "iam"
 
 type Config struct {
-	LogLevel string `default:"info"`
-	RPCAddr  string `default:"0.0.0.0:5000"`
-	DBURI    string `default:"root:@tcp(127.0.0.1:3306)/videocoin?charset=utf8&parseTime=True&loc=Local"`
+	LogLevel        string `default:"info"`
+	RPCAddr         string `default:"0.0.0.0:5000"`
+	DBURI           string `default:"root:@tcp(127.0.0.1:3306)/videocoin?charset=utf8&parseTime=True&loc=Local"`
+	Hostname        string `default:"iam.videocoin.network"`
+	AuthTokenSecret string `required:"true"`
 }
 
 func main() {
@@ -64,7 +69,21 @@ func run(cfg *Config) error {
 		}
 		defer ds.Close()
 
-		grpcSrv = grpc.NewServer(grpcutil.DefaultServerOpts(log.NewEntry(log.StandardLogger()))...)
+		pubKeyFunc := func(ctx context.Context, user string, keyID string) (interface{}, error) {
+			key, err := ds.GetUserKey(user, keyID)
+			if err != nil {
+				return nil, err
+			}
+			return helpers.PubKeyFromBytesPEM(key.PublicKeyData)
+		}
+
+		serviceAccountMatchingFunc := func(token *jwt.Token) bool { return token.Header["kid"] != "" }
+		authOpts := []auth.AuthOption{
+			auth.WithAuthentication(auth.HMACJWT(cfg.AuthTokenSecret)),
+			auth.WithAuthentication(auth.ServiceAccount(cfg.Hostname, cfg.AuthTokenSecret, pubKeyFunc), serviceAccountMatchingFunc),
+			auth.WithAuthorization(auth.RBAC()),
+		}
+		grpcSrv = grpc.NewServer(grpcutil.DefaultServerOptsWithAuth(log.NewEntry(log.StandardLogger()), auth.NewAuthnzHandler(authOpts...).HandleAuthnz)...)
 
 		iam.RegisterIAMServer(grpcSrv, service.New(ds))
 		healthpb.RegisterHealthServer(grpcSrv, healthSrv)
