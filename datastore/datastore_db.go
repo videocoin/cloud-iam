@@ -26,7 +26,7 @@ func (db *database) CreateUserKey(key *models.UserKey) error {
 // GetKey gets an user key.
 func (db *database) GetUserKey(userID string, keyID string) (*models.UserKey, error) {
 	key := &models.UserKey{}
-	if err := db.Find(key, "user_id = ? AND id = ?", userID, keyID).Error; err != nil {
+	if err := db.Find(key, "id = ? AND user_id = ?", keyID, userID).Error; err != nil {
 		return nil, err
 	}
 	return key, nil
@@ -43,5 +43,5 @@ func (db *database) ListUserKeys(userID string) ([]*models.UserKey, error) {
 
 // DeleteKey deletes an user key.
 func (db *database) DeleteUserKey(userID string, keyID string) error {
-	return db.Delete(&models.UserKey{}, "user_id = ? AND key_id = ?", userID, keyID).Error
+	return db.Delete(&models.UserKey{}, "id = ? AND user_id = ?", keyID, userID).Error
 }
