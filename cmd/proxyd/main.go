@@ -7,6 +7,7 @@ import (
 	"github.com/grpc-ecosystem/grpc-gateway/runtime"
 	"github.com/kelseyhightower/envconfig"
 	log "github.com/sirupsen/logrus"
+	iam "github.com/videocoin/videocoinapis/videocoin/iam/v1"
 	"google.golang.org/grpc"
 )
 
@@ -51,10 +52,13 @@ func run(cfg *config) error {
 		}
 	}()
 
+	gw := runtime.NewServeMux()
+	if err := iam.RegisterIAMHandler(ctx, gw, conn); err != nil {
+		return err
+	}
+
 	mux := http.NewServeMux()
 	mux.HandleFunc("/health", handleHealthCheck(conn))
-
-	gw := runtime.NewServeMux()
 	mux.Handle("/", gw)
 
 	srv := &http.Server{
