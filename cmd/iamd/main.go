@@ -77,7 +77,10 @@ func run(cfg *Config) error {
 			return helpers.PubKeyFromBytesPEM(key.PublicKeyData)
 		}
 
-		serviceAccountMatchingFunc := func(token *jwt.Token) bool { return token.Header["kid"] != "" }
+		serviceAccountMatchingFunc := func(token *jwt.Token) bool {
+			_, ok := token.Header["kid"]
+			return ok
+		}
 		authOpts := []auth.AuthOption{
 			auth.WithAuthentication(auth.HMACJWT(cfg.AuthTokenSecret)),
 			auth.WithAuthentication(auth.ServiceAccount(cfg.Hostname, cfg.AuthTokenSecret, pubKeyFunc), serviceAccountMatchingFunc),
