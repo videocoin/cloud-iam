@@ -1,44 +1,34 @@
+---
 kind: pipeline
-name: default
+type: kubernetes
+name: cloud-iam
 
 steps:
-  - name: build
-    image: docker:dind
-    volumes:
-      - name: dockersock
-        path: /var/run
-    commands:
-      - sleep 20
-      - docker build -t "registry.videocoin.net/iam/iam:${DRONE_TAG}" -f docker/Dockerfile.iam .
-      - docker build -t "registry.videocoin.net/iam/metadata:${DRONE_TAG}" -f docker/Dockerfile.metadata .
-      - docker build -t "registry.videocoin.net/iam/proxy:${DRONE_TAG}" -f docker/Dockerfile.proxy .
-  - name: push
-    image: docker:dind
-    environment:
-      USERNAME:
+  - name: build-publish-image
+    image: plugins/docker
+    settings:
+      username:
         from_secret: docker_username
-      PASSWORD:
+      password:
         from_secret: docker_password
-    volumes:
-      - name: dockersock
-        path: /var/run
-    commands:
-      - docker login -u $${USERNAME} -p $${PASSWORD} registry.videocoin.net
-      - docker push "registry.videocoin.net/iam/iam:${DRONE_TAG}"
-      - docker push "registry.videocoin.net/iam/metadata:${DRONE_TAG}"
-      - docker push "registry.videocoin.net/iam/proxy:${DRONE_TAG}"
+      registry: registry.videocoin.net
+      repo: registry.videocoin.net/iam/iam
+      tags: ${DRONE_TAG}
 
-volumes:
-  - name: dockersock
-    temp: {}
-
-services:
-  - name: docker
-    image: docker:dind
-    privileged: true
-    volumes:
-      - name: dockersock
-        path: /var/run
+  - name: slack-notification
+    image: plugins/slack
+    settings:
+      webhook:
+        from_secret: slack_webhook
+      channel: videocoin-monitoring
+      link_names: true
+      username: Drone
+      template: >
+        {{#success build.status}}
+          The build number {{build.number}} from {{build.author_email}} to {{build.source_repo}} succeeded. Check details at https://drone.videocoin.net/{{build.source_repo}}
+        {{else}}
+          The build number {{build.number}} from {{build.author_email}} to {{build.source_repo}} failed. Check details at https://drone.videocoin.net/{{build.source_repo}}
+        {{/success}}
 
 trigger:
   event:
