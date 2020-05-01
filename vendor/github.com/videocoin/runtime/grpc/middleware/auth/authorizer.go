@@ -33,6 +33,14 @@ func RBAC() AuthorizerFunc {
 				"iam.serviceAccountKeys.delete",
 			},
 		},
+		"USER_ROLE_SUPER": {
+			IncludedPermissions: []string{
+				"iam.serviceAccountKeys.create",
+				"iam.serviceAccountKeys.get",
+				"iam.serviceAccountKeys.list",
+				"iam.serviceAccountKeys.delete",
+			},
+		},
 	}
 
 	return func(ctx context.Context, principal interface{}, fullMethod string) error {

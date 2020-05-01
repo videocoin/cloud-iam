@@ -13,7 +13,7 @@ require (
 	github.com/pseidemann/finish v1.0.0
 	github.com/sirupsen/logrus v1.5.0
 	github.com/videocoin/common v0.0.0-20200420001538-c6f2c5f9554c
-	github.com/videocoin/runtime v0.0.0-20200420001230-63d44b789b2a
+	github.com/videocoin/runtime v0.0.0-20200501184532-9da9b595b9a6
 	github.com/videocoin/videocoinapis v0.0.0-20200416232914-74a919f5c32a
 	golang.org/x/sync v0.0.0-20200317015054-43a5402ce75a
 	google.golang.org/grpc v1.28.0
