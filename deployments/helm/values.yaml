@@ -1,0 +1,43 @@
+replicaCount: 1
+
+image:
+  repository: registry.videocoin.net/iam
+  pullPolicy: IfNotPresent
+  pullSecrets:
+    - name: regcred
+  annotations:
+    prometheus.io/scrape: "true"
+    prometheus.io/port: "8080"
+
+serviceAccount:
+  name: default
+
+service:
+  type: NodePort
+  ports:
+    grpc: 9095
+    http: 8080
+
+ingress:
+  enabled: false
+  annotations:
+    kubernetes.io/ingress.class: nginx
+  hosts:
+    - host: symphony-everest.public.dev.videocoin.net
+      paths:
+        - "/"
+  tls:
+    - secretName:
+      hosts:
+        - symphony-everest.public.dev.videocoin.net
+
+resources: {}
+
+nodeSelector: {}
+
+vault:
+  backend: dev-videocoin-net
+  paths:
+    dbUri: videocoin/v1/networks/everest-dev/iam/db
+    authTokenSecret: videocoin/v1/networks/everest-dev/iam/auth
+  

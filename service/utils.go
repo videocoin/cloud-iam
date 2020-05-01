@@ -6,6 +6,7 @@ import (
 	"time"
 
 	guuid "github.com/google/uuid"
+
 	"github.com/videocoin/cloud-iam/datastore/models"
 	"github.com/videocoin/cloud-iam/helpers"
 )

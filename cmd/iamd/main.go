@@ -3,72 +3,69 @@ package main
 import (
 	"context"
 	"fmt"
-	"net"
+	"net/http"
 	"os"
-	"os/signal"
-	"syscall"
 
-	jwt "github.com/dgrijalva/jwt-go"
+	"github.com/grpc-ecosystem/grpc-gateway/runtime"
 	"github.com/kelseyhightower/envconfig"
-	log "github.com/sirupsen/logrus"
-	"github.com/videocoin/cloud-iam/datastore"
-	"github.com/videocoin/cloud-iam/helpers"
-	"github.com/videocoin/cloud-iam/service"
-	"github.com/videocoin/common/grpcutil"
-	"github.com/videocoin/runtime/grpc/middleware/auth"
-	iam "github.com/videocoin/videocoinapis/videocoin/iam/v1"
-	"golang.org/x/sync/errgroup"
-	"google.golang.org/grpc"
-	"google.golang.org/grpc/health"
 	healthpb "google.golang.org/grpc/health/grpc_health_v1"
+
+	"github.com/videocoin/cloud-iam/datastore"
+	"github.com/videocoin/cloud-iam/service"
+	"github.com/videocoin/common/logging"
+	"github.com/videocoin/common/server"
+	iam "github.com/videocoin/videocoinapis/videocoin/iam/v1"
+	v1 "github.com/videocoin/videocoinapis/videocoin/iam/v1"
 )
 
 const serviceName = "iam"
 
 type Config struct {
+	HTTPListenPort  int    `default:"8080"`
+	GRPCListenPort  int    `default:"9095"`
 	LogLevel        string `default:"info"`
-	RPCAddr         string `default:"0.0.0.0:5000"`
 	DBURI           string `default:"root:@tcp(127.0.0.1:3306)/videocoin?charset=utf8&parseTime=True&loc=Local"`
 	Hostname        string `default:"iam.videocoin.network"`
 	AuthTokenSecret string `required:"true"`
+	KeyLimitPerUser int    `default:"10"`
 }
 
 func main() {
 	cfg := new(Config)
 	if err := envconfig.Process(serviceName, cfg); err != nil {
-		log.Fatal(err)
+		fmt.Fprintln(os.Stderr, err)
+		os.Exit(1)
 	}
 
-	lvl, err := log.ParseLevel(cfg.LogLevel)
-	if err != nil {
-		log.Fatal(err)
+	if err := logging.Setup(cfg.LogLevel); err != nil {
+		fmt.Fprintln(os.Stderr, err)
+		os.Exit(1)
 	}
-	log.SetLevel(lvl)
 
 	if err := run(cfg); err != nil {
-		log.Fatal(err)
+		logging.Fatalln(err)
 	}
 }
 
 func run(cfg *Config) error {
-	ctx, cancel := context.WithCancel(context.Background())
-	defer cancel()
+	servercfg := server.DefaultConfig
+	servercfg.HTTPListenPort = cfg.HTTPListenPort
+	servercfg.GRPCListenPort = cfg.GRPCListenPort
+	servercfg.Log = logging.Global()
 
-	stop := make(chan os.Signal, 1)
-	signal.Notify(stop, os.Interrupt, syscall.SIGTERM)
-	defer signal.Stop(stop)
+	srv, err := server.New(servercfg)
+	if err != nil {
+		return err
+	}
+	defer srv.Shutdown()
 
-	errgrp, ctx := errgroup.WithContext(ctx)
+	ds, err := datastore.Open(cfg.DBURI)
+	if err != nil {
+		return err
+	}
+	defer ds.Close()
 
-	healthSrv := health.NewServer()
-	var grpcSrv *grpc.Server
-	errgrp.Go(func() error {
-		ds, err := datastore.Open(cfg.DBURI)
-		if err != nil {
-			return err
-		}
-		defer ds.Close()
-
+	/*
 		pubKeyFunc := func(ctx context.Context, user string, keyID string) (interface{}, error) {
 			key, err := ds.GetUserKey(user, keyID)
 			if err != nil {
@@ -81,38 +78,43 @@ func run(cfg *Config) error {
 			_, ok := token.Header["kid"]
 			return ok
 		}
-		authOpts := []auth.AuthOption{
-			auth.WithAuthentication(auth.HMACJWT(cfg.AuthTokenSecret)),
-			auth.WithAuthentication(auth.ServiceAccount(cfg.Hostname, cfg.AuthTokenSecret, pubKeyFunc), serviceAccountMatchingFunc),
-			auth.WithAuthorization(auth.RBAC()),
-		}
-		grpcSrv = grpc.NewServer(grpcutil.DefaultServerOptsWithAuth(log.NewEntry(log.StandardLogger()), auth.NewAuthnzHandler(authOpts...).HandleAuthnz)...)
 
-		iam.RegisterIAMServer(grpcSrv, service.New(ds))
-		healthpb.RegisterHealthServer(grpcSrv, healthSrv)
-		healthSrv.SetServingStatus(fmt.Sprintf("grpc.health.v1.%s", serviceName), healthpb.HealthCheckResponse_SERVING)
+			authOpts := []auth.AuthOption{
+				auth.WithAuthentication(auth.HMACJWT(cfg.AuthTokenSecret)),
+				auth.WithAuthentication(auth.ServiceAccount(cfg.Hostname, cfg.AuthTokenSecret, pubKeyFunc), serviceAccountMatchingFunc),
+				auth.WithAuthorization(auth.RBAC()),
+			}
+	*/
 
-		lis, err := net.Listen("tcp", cfg.RPCAddr)
+	svc := service.New(ds)
+	iam.RegisterIAMServer(srv.GRPC, svc)
+	healthpb.RegisterHealthServer(srv.GRPC, svc)
+
+	ctx := context.Background()
+	ctx, cancel := context.WithCancel(ctx)
+	defer cancel()
+
+	srv.HTTP.HandleFunc("/health", handleHealthCheck(svc))
+
+	mux := runtime.NewServeMux()
+	if err := v1.RegisterIAMHandlerServer(ctx, mux, svc); err != nil {
+		return err
+	}
+	srv.HTTP.PathPrefix("/").Handler(mux)
+
+	return srv.Run()
+}
+
+func handleHealthCheck(srv healthpb.HealthServer) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		resp, err := srv.Check(context.Background(), new(healthpb.HealthCheckRequest))
 		if err != nil {
-			return err
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
 		}
-		return grpcSrv.Serve(lis)
-	})
-
-	select {
-	case <-stop:
-		break
-	case <-ctx.Done():
-		break
+		if resp.Status == healthpb.HealthCheckResponse_NOT_SERVING {
+			http.Error(w, "Service Unavailable", http.StatusServiceUnavailable)
+			return
+		}
 	}
-
-	cancel()
-
-	healthSrv.SetServingStatus(fmt.Sprintf("grpc.health.v1.%s", serviceName), healthpb.HealthCheckResponse_NOT_SERVING)
-
-	if grpcSrv != nil {
-		grpcSrv.GracefulStop()
-	}
-
-	return errgrp.Wait()
 }

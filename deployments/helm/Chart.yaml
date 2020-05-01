@@ -1,0 +1,6 @@
+apiVersion: v2
+name: iam
+description: A Helm chart for IAM
+type: application
+version: 0.1.8
+appVersion: v0.1.0-dev.38

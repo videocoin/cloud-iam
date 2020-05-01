@@ -1,44 +1,58 @@
+---
 kind: pipeline
-name: default
+type: kubernetes
+name: cloud-iam
 
 steps:
-  - name: build
-    image: docker:dind
-    volumes:
-      - name: dockersock
-        path: /var/run
+  - name: tests
+    image: golang:1.14
     commands:
+      - go test ./... -v
       - sleep 20
-      - docker build -t "registry.videocoin.net/iam/iam:${DRONE_TAG}" -f docker/Dockerfile.iam .
-      - docker build -t "registry.videocoin.net/iam/metadata:${DRONE_TAG}" -f docker/Dockerfile.metadata .
-      - docker build -t "registry.videocoin.net/iam/proxy:${DRONE_TAG}" -f docker/Dockerfile.proxy .
-  - name: push
-    image: docker:dind
+
+  - name: build-publish-image
+    image: plugins/docker
+    settings:
+      username:
+        from_secret: docker_username
+      password:
+        from_secret: docker_password
+      registry: registry.videocoin.net
+      repo: registry.videocoin.net/cloud-iam/iam
+      tags: ${DRONE_TAG}
+
+  - name: lint-chart
+    image: pelotech/drone-helm3
+    settings:
+      mode: lint
+      chart: ./deployments/helm
+
+  - name: publish-chart
+    image: devth/helm:v3.1.1
     environment:
       USERNAME:
-        from_secret: docker_username
+        from_secret: registry_username
       PASSWORD:
-        from_secret: docker_password
-    volumes:
-      - name: dockersock
-        path: /var/run
+        from_secret: registry_password
     commands:
-      - docker login -u $${USERNAME} -p $${PASSWORD} registry.videocoin.net
-      - docker push "registry.videocoin.net/iam/iam:${DRONE_TAG}"
-      - docker push "registry.videocoin.net/iam/metadata:${DRONE_TAG}"
-      - docker push "registry.videocoin.net/iam/proxy:${DRONE_TAG}"
+      - helm repo add iam https://registry.videocoin.net/chartrepo/cloud-iam --username $$USERNAME --password $$PASSWORD
+      - helm plugin install https://github.com/chartmuseum/helm-push
+      - helm push ./deployments/helm iam --username $$USERNAME --password $$PASSWORD
 
-volumes:
-  - name: dockersock
-    temp: {}
-
-services:
-  - name: docker
-    image: docker:dind
-    privileged: true
-    volumes:
-      - name: dockersock
-        path: /var/run
+  - name: slack-notification
+    image: plugins/slack
+    settings:
+      webhook:
+        from_secret: slack_webhook
+      channel: videocoin-monitoring
+      link_names: true
+      username: Drone
+      template: >
+        {{#success build.status}}
+          The build number {{build.number}} from {{build.author_email}} to {{build.source_repo}} succeeded. Check details at https://drone.videocoin.net/{{build.source_repo}}
+        {{else}}
+          The build number {{build.number}} from {{build.author_email}} to {{build.source_repo}} failed. Check details at https://drone.videocoin.net/{{build.source_repo}}
+        {{/success}}
 
 trigger:
   event:

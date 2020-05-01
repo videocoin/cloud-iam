@@ -6,12 +6,14 @@ import (
 
 	"github.com/golang/protobuf/ptypes/empty"
 	"github.com/jinzhu/gorm"
+	"google.golang.org/grpc/codes"
+	healthpb "google.golang.org/grpc/health/grpc_health_v1"
+	"google.golang.org/grpc/status"
+
 	"github.com/videocoin/cloud-iam/datastore"
-	"github.com/videocoin/common/log"
+	"github.com/videocoin/common/logging"
 	"github.com/videocoin/runtime/grpc/middleware/auth"
 	iam "github.com/videocoin/videocoinapis/videocoin/iam/v1"
-	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/status"
 )
 
 type server struct{ ds datastore.DataStore }
@@ -32,7 +34,7 @@ func (s *server) CreateKey(ctx context.Context, empty *empty.Empty) (*iam.Key, e
 
 	key, err := s.createUserKey(user)
 	if err != nil {
-		log.Errorln(err)
+		logging.Errorln(err)
 		return nil, status.Error(codes.Internal, err.Error())
 	}
 
@@ -68,10 +70,10 @@ func (s *server) GetKey(ctx context.Context, req *iam.GetKeyRequest) (*iam.Key, 
 	key, err := s.getUserKey(user, req.KeyId)
 	if err != nil {
 		if gorm.IsRecordNotFoundError(err) {
-			log.Debugln(err)
+			logging.Debugln(err)
 			return nil, status.Error(codes.NotFound, err.Error())
 		}
-		log.Errorln(err)
+		logging.Errorln(err)
 		return nil, status.Error(codes.Internal, err.Error())
 	}
 
@@ -101,7 +103,7 @@ func (s *server) ListKeys(ctx context.Context, req *iam.ListKeysRequest) (*iam.L
 
 	keys, err := s.listUserKeys(user)
 	if err != nil {
-		log.Errorln(err)
+		logging.Errorln(err)
 		return nil, status.Error(codes.Internal, err.Error())
 	}
 
@@ -134,7 +136,7 @@ func (s *server) DeleteKey(ctx context.Context, req *iam.DeleteKeyRequest) (*emp
 	}
 
 	if err := s.deleteUserKey(user, req.KeyId); err != nil {
-		log.Errorln(err)
+		logging.Errorln(err)
 		return nil, status.Error(codes.Internal, err.Error())
 	}
 
@@ -143,4 +145,14 @@ func (s *server) DeleteKey(ctx context.Context, req *iam.DeleteKeyRequest) (*emp
 
 func (s *server) deleteUserKey(userID string, keyID string) error {
 	return s.ds.DeleteUserKey(userID, keyID)
+}
+
+func (s *server) Check(ctx context.Context, req *healthpb.HealthCheckRequest) (*healthpb.HealthCheckResponse, error) {
+	return &healthpb.HealthCheckResponse{
+		Status: healthpb.HealthCheckResponse_SERVING,
+	}, nil
+}
+
+func (s *server) Watch(*healthpb.HealthCheckRequest, healthpb.Health_WatchServer) error {
+	return nil
 }
