@@ -4,16 +4,33 @@ type: kubernetes
 name: cloud-iam
 
 steps:
-  - name: build-publish-image
+  - name: build-publish-iam-image
     image: plugins/docker
     settings:
+      dockerfile: docker/Dockerfile.iam
       username:
         from_secret: docker_username
       password:
         from_secret: docker_password
       registry: registry.videocoin.net
       repo: registry.videocoin.net/iam/iam
-      tags: ${DRONE_TAG}
+      tags:
+        - latest
+        - ${DRONE_TAG}
+
+  - name: build-publish-proxy-image
+    image: plugins/docker
+    settings:
+      dockerfile: docker/Dockerfile.proxy
+      username:
+        from_secret: docker_username
+      password:
+        from_secret: docker_password
+      registry: registry.videocoin.net
+      repo: registry.videocoin.net/iam/proxy
+      tags:
+        - latest
+        - ${DRONE_TAG}
 
   - name: slack-notification
     image: plugins/slack
