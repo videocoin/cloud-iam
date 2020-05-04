@@ -3,10 +3,11 @@ package auth
 import (
 	"context"
 
-	jwt "github.com/dgrijalva/jwt-go"
 	grpc_auth "github.com/grpc-ecosystem/go-grpc-middleware/auth"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
+
+	jwt "github.com/videocoin/jwt-go"
 )
 
 type AuthOption interface {

@@ -7,9 +7,10 @@ import (
 	"net/url"
 	"time"
 
-	jwt "github.com/dgrijalva/jwt-go"
 	"github.com/google/uuid"
 	grpc_auth "github.com/grpc-ecosystem/go-grpc-middleware/auth"
+
+	jwt "github.com/videocoin/jwt-go"
 )
 
 var (

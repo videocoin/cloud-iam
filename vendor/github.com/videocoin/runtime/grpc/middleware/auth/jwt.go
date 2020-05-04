@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"strings"
 
-	jwt "github.com/dgrijalva/jwt-go"
+	jwt "github.com/videocoin/jwt-go"
 )
 
 // note: the original method contains a lot of logic that is not required.
