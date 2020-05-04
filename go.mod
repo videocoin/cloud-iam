@@ -11,9 +11,9 @@ require (
 	github.com/kelseyhightower/envconfig v1.4.0
 	github.com/pseidemann/finish v1.0.0
 	github.com/sirupsen/logrus v1.5.0
-	github.com/videocoin/common v0.0.0-20200504023628-3bc82ba958d3
-	github.com/videocoin/jwt-go v3.2.0+incompatible
-	github.com/videocoin/runtime v0.0.0-20200504023057-7416db3c3afb
+	github.com/videocoin/common v0.0.0-20200504024428-c3cec69a9ea1
+	github.com/videocoin/jwt-go v3.2.1-0.20200430165216-a1f30e94987c+incompatible
+	github.com/videocoin/runtime v0.0.0-20200504024356-ad33a143f22d
 	github.com/videocoin/videocoinapis v0.0.0-20200416232914-74a919f5c32a
 	golang.org/x/sync v0.0.0-20200317015054-43a5402ce75a
 	google.golang.org/grpc v1.28.0

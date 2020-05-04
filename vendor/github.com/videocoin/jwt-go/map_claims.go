@@ -30,6 +30,7 @@ func (m MapClaims) VerifyExpiresAt(cmp int64, req bool) bool {
 	return req == false
 }
 
+/*
 // Compares the iat claim against cmp.
 // If required is false, this method will return true if the value matches or is unset
 func (m MapClaims) VerifyIssuedAt(cmp int64, req bool) bool {
@@ -42,6 +43,7 @@ func (m MapClaims) VerifyIssuedAt(cmp int64, req bool) bool {
 	}
 	return req == false
 }
+*/
 
 // Compares the iss claim against cmp.
 // If required is false, this method will return true if the value matches or is unset
@@ -76,10 +78,12 @@ func (m MapClaims) Valid() error {
 		vErr.Errors |= ValidationErrorExpired
 	}
 
-	if m.VerifyIssuedAt(now, false) == false {
-		vErr.Inner = errors.New("Token used before issued")
-		vErr.Errors |= ValidationErrorIssuedAt
-	}
+	/*
+		if m.VerifyIssuedAt(now, false) == false {
+			vErr.Inner = errors.New("Token used before issued")
+			vErr.Errors |= ValidationErrorIssuedAt
+		}
+	*/
 
 	if m.VerifyNotBefore(now, false) == false {
 		vErr.Inner = errors.New("Token is not valid yet")

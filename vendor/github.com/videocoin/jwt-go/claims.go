@@ -41,10 +41,12 @@ func (c StandardClaims) Valid() error {
 		vErr.Errors |= ValidationErrorExpired
 	}
 
-	if c.VerifyIssuedAt(now, false) == false {
-		vErr.Inner = fmt.Errorf("Token used before issued")
-		vErr.Errors |= ValidationErrorIssuedAt
-	}
+	/*
+		if c.VerifyIssuedAt(now, false) == false {
+			vErr.Inner = fmt.Errorf("Token used before issued")
+			vErr.Errors |= ValidationErrorIssuedAt
+		}
+	*/
 
 	if c.VerifyNotBefore(now, false) == false {
 		vErr.Inner = fmt.Errorf("token is not valid yet")
@@ -70,11 +72,13 @@ func (c *StandardClaims) VerifyExpiresAt(cmp int64, req bool) bool {
 	return verifyExp(c.ExpiresAt, cmp, req)
 }
 
+/*
 // Compares the iat claim against cmp.
 // If required is false, this method will return true if the value matches or is unset
 func (c *StandardClaims) VerifyIssuedAt(cmp int64, req bool) bool {
 	return verifyIat(c.IssuedAt, cmp, req)
 }
+*/
 
 // Compares the iss claim against cmp.
 // If required is false, this method will return true if the value matches or is unset
@@ -108,12 +112,14 @@ func verifyExp(exp int64, now int64, required bool) bool {
 	return now <= exp
 }
 
+/*
 func verifyIat(iat int64, now int64, required bool) bool {
 	if iat == 0 {
 		return !required
 	}
 	return now >= iat
 }
+*/
 
 func verifyIss(iss string, cmp string, required bool) bool {
 	if iss == "" {
