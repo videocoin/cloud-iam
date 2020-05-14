@@ -1,8 +1,7 @@
 package datastore
 
 import (
-	// mysql driver
-	_ "github.com/jinzhu/gorm/dialects/mysql"
+	_ "github.com/jinzhu/gorm/dialects/postgres"
 
 	"github.com/jinzhu/gorm"
 	"github.com/videocoin/cloud-iam/datastore/models"

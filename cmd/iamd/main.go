@@ -28,7 +28,7 @@ const serviceName = "iam"
 type Config struct {
 	LogLevel        string `default:"info"`
 	RPCAddr         string `default:"0.0.0.0:5000"`
-	DBURI           string `default:"root:@tcp(127.0.0.1:3306)/videocoin?charset=utf8&parseTime=True&loc=Local"`
+	DBURI           string `required:"true"`
 	Hostname        string `default:"iam.videocoin.network"`
 	UserInfoURI     string `default:"https://studio.dev.videocoin.network/api/v1/user"`
 	AuthTokenSecret string `required:"true"`

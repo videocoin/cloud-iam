@@ -2,8 +2,6 @@
 github.com/beorn7/perks/quantile
 # github.com/cespare/xxhash/v2 v2.1.1
 github.com/cespare/xxhash/v2
-# github.com/go-sql-driver/mysql v1.4.1
-github.com/go-sql-driver/mysql
 # github.com/golang/protobuf v1.3.5
 github.com/golang/protobuf/descriptor
 github.com/golang/protobuf/jsonpb
@@ -43,7 +41,7 @@ github.com/hashicorp/golang-lru
 github.com/hashicorp/golang-lru/simplelru
 # github.com/jinzhu/gorm v1.9.12
 github.com/jinzhu/gorm
-github.com/jinzhu/gorm/dialects/mysql
+github.com/jinzhu/gorm/dialects/postgres
 # github.com/jinzhu/inflection v1.0.0
 github.com/jinzhu/inflection
 # github.com/julienschmidt/httprouter v1.2.0
@@ -52,6 +50,11 @@ github.com/julienschmidt/httprouter
 github.com/kelseyhightower/envconfig
 # github.com/konsorten/go-windows-terminal-sequences v1.0.1
 github.com/konsorten/go-windows-terminal-sequences
+# github.com/lib/pq v1.1.1
+github.com/lib/pq
+github.com/lib/pq/hstore
+github.com/lib/pq/oid
+github.com/lib/pq/scram
 # github.com/matttproud/golang_protobuf_extensions v1.0.1
 github.com/matttproud/golang_protobuf_extensions/pbutil
 # github.com/opentracing/opentracing-go v1.1.0
@@ -103,8 +106,6 @@ golang.org/x/text/secure/bidirule
 golang.org/x/text/transform
 golang.org/x/text/unicode/bidi
 golang.org/x/text/unicode/norm
-# google.golang.org/appengine v1.6.5
-google.golang.org/appengine/cloudsql
 # google.golang.org/genproto v0.0.0-20200317114155-1f3552e48f24
 google.golang.org/genproto/googleapis/api/annotations
 google.golang.org/genproto/googleapis/api/httpbody
