@@ -20,7 +20,7 @@ type DataStore interface {
 
 // Open gets a handle for a database.
 func Open(uri string) (DataStore, error) {
-	db, err := gorm.Open("mysql", uri)
+	db, err := gorm.Open("postgres", uri)
 	if err != nil {
 		return nil, err
 	}
