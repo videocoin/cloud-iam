@@ -11,7 +11,6 @@ require (
 	github.com/kelseyhightower/envconfig v1.4.0
 	github.com/pseidemann/finish v1.0.0
 	github.com/sirupsen/logrus v1.5.0
-	github.com/stretchr/objx v0.1.1 // indirect
 	github.com/videocoin/common v0.0.0-20200514011019-0602e97fe6da
 	github.com/videocoin/jwt-go v3.2.1-0.20200430165216-a1f30e94987c+incompatible
 	github.com/videocoin/runtime v0.0.0-20200514010729-b9ed0c34ffba
