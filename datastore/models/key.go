@@ -20,7 +20,7 @@ type UserKey struct {
 
 // TableName set Key's table name to be `user_keys`.
 func (k *UserKey) TableName() string {
-	return "user_keys" // note: 'keys' is a reserved word in mysql
+	return "user_keys"
 }
 
 // Proto returns an IAM key.
