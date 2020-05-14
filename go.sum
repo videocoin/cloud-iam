@@ -202,12 +202,12 @@ github.com/stretchr/testify v1.4.0 h1:2E4SXV/wtOkTonXsotYi4li6zVWxYlZuYNCXe9XRJy
 github.com/stretchr/testify v1.4.0/go.mod h1:j7eGeouHqKxXV5pUuKE4zz7dFj8WfuZ+81PSLYec5m4=
 github.com/stretchr/testify v1.5.1 h1:nOGnQDM7FYENwehXlg/kFVnos3rEvtKTjRvOWSzb6H4=
 github.com/stretchr/testify v1.5.1/go.mod h1:5W2xD1RspED5o8YsWQXVCued0rvSQ+mT+I5cxcmMvtA=
-github.com/videocoin/common v0.0.0-20200504024428-c3cec69a9ea1 h1:75mecqvWxp2gKP1OZlc4yfcMHZL6aZC5F1Y2+DGEZcw=
-github.com/videocoin/common v0.0.0-20200504024428-c3cec69a9ea1/go.mod h1:UmRH3yaigR/vRR7rfz7VSktdtJ0HLPT2EIVCo4MMPEY=
+github.com/videocoin/common v0.0.0-20200514011019-0602e97fe6da h1:2F+N4/z5lophRUPyulY0njsX/SGO1KbBbvQukrvC+KA=
+github.com/videocoin/common v0.0.0-20200514011019-0602e97fe6da/go.mod h1:PFMuM0QoHcI7qil36OHN6AdRiOkmFcOdNOL1JtBNL+k=
 github.com/videocoin/jwt-go v3.2.1-0.20200430165216-a1f30e94987c+incompatible h1:ccjzAgkm4wMmG4daWbT6UfV+ucE2GhqQFtHre/U46Bs=
 github.com/videocoin/jwt-go v3.2.1-0.20200430165216-a1f30e94987c+incompatible/go.mod h1:kJv+mVCJXaFCNBHIwsU0aZMxVTT1XtHFG1XIMhb2y1Y=
-github.com/videocoin/runtime v0.0.0-20200504024356-ad33a143f22d h1:W9Wjca3souRDWjHzX4tAQQfVMA3ez6Uk8TOeOPjdNJY=
-github.com/videocoin/runtime v0.0.0-20200504024356-ad33a143f22d/go.mod h1:DYGKEw+C7/JrOyWqqM5L8ZYDYkTMgmzxaN5AxRZH0e4=
+github.com/videocoin/runtime v0.0.0-20200514010729-b9ed0c34ffba h1:WO3micD7wUd+KE9OVQKydLbFnWHd2MQ1I00HpjmNTyQ=
+github.com/videocoin/runtime v0.0.0-20200514010729-b9ed0c34ffba/go.mod h1:DYGKEw+C7/JrOyWqqM5L8ZYDYkTMgmzxaN5AxRZH0e4=
 github.com/videocoin/videocoinapis v0.0.0-20200416232914-74a919f5c32a h1:QCgl0d0LkNsIom6rShV0oPZdAMRXtPcICBHxuBiX6XA=
 github.com/videocoin/videocoinapis v0.0.0-20200416232914-74a919f5c32a/go.mod h1:CBucjp4FIWr8ZGTrYHT5UeeozaKEgo2vIYJHZHVmiSg=
 github.com/yuin/goldmark v1.1.25/go.mod h1:3hX8gzYuyVAZsxl0MRgGTJEmQBFcNTphYh9decYSb74=

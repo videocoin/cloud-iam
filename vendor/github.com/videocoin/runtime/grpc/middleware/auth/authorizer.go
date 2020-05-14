@@ -12,7 +12,7 @@ import (
 )
 
 // RBAC handles role based access authorization.
-func RBAC() AuthorizerFunc {
+func RBAC(userInfoEndpoint string) AuthorizerFunc {
 	authzCache := NewAuthzCache(AuthzCacheSize)
 
 	// fix me: mock data
@@ -76,7 +76,7 @@ func RBAC() AuthorizerFunc {
 			return fmt.Errorf("permission not found")
 		}
 
-		userRole, err := getUserRole(tokenStr)
+		userRole, err := getUserRole(tokenStr, userInfoEndpoint)
 		if err != nil {
 			return err
 		}
@@ -99,8 +99,8 @@ func RBAC() AuthorizerFunc {
 	}
 }
 
-func getUserRole(tokenStr string) (string, error) {
-	req, err := http.NewRequest("GET", "https://studio.dev.videocoin.network/api/v1/user", nil)
+func getUserRole(tokenStr string, endpoint string) (string, error) {
+	req, err := http.NewRequest("GET", endpoint, nil)
 	if err != nil {
 		return "", err
 	}

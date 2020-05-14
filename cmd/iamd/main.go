@@ -30,6 +30,7 @@ type Config struct {
 	RPCAddr         string `default:"0.0.0.0:5000"`
 	DBURI           string `default:"root:@tcp(127.0.0.1:3306)/videocoin?charset=utf8&parseTime=True&loc=Local"`
 	Hostname        string `default:"iam.videocoin.network"`
+	UserInfoURI     string `default:"https://studio.dev.videocoin.network/api/v1/user"`
 	AuthTokenSecret string `required:"true"`
 }
 
@@ -84,7 +85,7 @@ func run(cfg *Config) error {
 		authOpts := []auth.AuthOption{
 			auth.WithAuthentication(auth.HMACJWT(cfg.AuthTokenSecret)),
 			auth.WithAuthentication(auth.ServiceAccount(cfg.Hostname, cfg.AuthTokenSecret, pubKeyFunc), serviceAccountMatchingFunc),
-			auth.WithAuthorization(auth.RBAC()),
+			auth.WithAuthorization(auth.RBAC(cfg.UserInfoURI)),
 		}
 		grpcSrv = grpc.NewServer(grpcutil.DefaultServerOptsWithAuth(log.NewEntry(log.StandardLogger()), auth.NewAuthnzHandler(authOpts...).HandleAuthnz)...)
 
